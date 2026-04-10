@@ -12,6 +12,7 @@ body{font-family:'DM Sans',sans-serif;background:#060d1a;color:#f1f5f9;min-heigh
 body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(56,189,248,.033) 1px,transparent 1px),linear-gradient(90deg,rgba(56,189,248,.033) 1px,transparent 1px);background-size:52px 52px;pointer-events:none;z-index:0;}
 .hero-glow{position:fixed;top:-240px;left:50%;transform:translateX(-50%);width:1000px;height:680px;background:radial-gradient(ellipse at 50% 30%,rgba(37,99,235,.16) 0%,transparent 65%);pointer-events:none;z-index:0;}
 .page{position:relative;z-index:1;max-width:1020px;margin:0 auto;padding:0 28px 100px;}
+
 /* HEADER */
 header{display:flex;align-items:center;justify-content:space-between;padding:30px 0 0;flex-wrap:wrap;gap:16px;}
 .logo-group{display:flex;align-items:center;gap:14px;}
@@ -94,6 +95,23 @@ h1.hero-title .accent{background:linear-gradient(90deg,#38bdf8,#818cf8);-webkit-
 .calc-cta{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#0d9488;}
 .calc-cta svg{width:13px;height:13px;transition:transform .2s;}
 .calc-card:hover .calc-cta svg{transform:translateX(4px);}
+
+/* BONUS SECTION */
+.bonus-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:0;}
+.bonus-card{display:flex;align-items:center;gap:24px;background:#0c1524;border:1px solid #1e293b;border-radius:14px;padding:24px 28px;text-decoration:none;color:inherit;transition:border-color .2s,transform .18s;position:relative;overflow:hidden;}
+.bonus-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--bc);border-radius:14px 14px 0 0;transform:scaleX(0);transform-origin:left;transition:transform .25s;}
+.bonus-card:hover{border-color:var(--bc);transform:translateY(-3px);}
+.bonus-card:hover::before{transform:scaleX(1);}
+.bonus-icon-wrap{width:48px;height:48px;border-radius:11px;flex-shrink:0;background:var(--bbg);display:flex;align-items:center;justify-content:center;}
+.bonus-body{flex:1;}
+.bonus-tag{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--bc);margin-bottom:5px;}
+.bonus-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:#f1f5f9;margin-bottom:5px;letter-spacing:-.02em;}
+.bonus-desc{font-size:13px;color:#475569;line-height:1.6;}
+.bonus-pills{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px;}
+.bonus-pill{background:#0a1010;border:1px solid #134e4a;border-radius:20px;padding:4px 11px;font-size:10px;font-weight:500;color:var(--bc);opacity:.8;}
+.bonus-arrow{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--bc);flex-shrink:0;}
+.bonus-arrow svg{width:13px;height:13px;transition:transform .2s;}
+.bonus-card:hover .bonus-arrow svg{transform:translateX(4px);}
 
 /* FOOTER */
 .playbook-footer{border-top:1px solid #0f1c2e;padding-top:32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
@@ -204,7 +222,7 @@ h1.hero-title .accent{background:linear-gradient(90deg,#38bdf8,#818cf8);-webkit-
 
   <div class="scripts-grid">
 
-    <a class="script-card" href="./playbook/goal-syntax-script.html" target="_blank"
+    <a class="script-card" href="./goal-syntax-script.html" target="_blank"
        style="--c:#3b82f6;--cbg:rgba(59,130,246,.1)">
       <div class="sc-num">Script 01</div>
       <div class="sc-icon">
@@ -226,7 +244,7 @@ h1.hero-title .accent{background:linear-gradient(90deg,#38bdf8,#818cf8);-webkit-
       </div>
     </a>
 
-    <a class="script-card" href="./playbook/problem-syntax-script.html" target="_blank"
+    <a class="script-card" href="./problem-syntax-script.html" target="_blank"
        style="--c:#7c3aed;--cbg:rgba(124,58,237,.1)">
       <div class="sc-num">Script 02</div>
       <div class="sc-icon">
@@ -248,7 +266,7 @@ h1.hero-title .accent{background:linear-gradient(90deg,#38bdf8,#818cf8);-webkit-
       </div>
     </a>
 
-    <a class="script-card" href="./playbook/pt-pivot-script.html" target="_blank"
+    <a class="script-card" href="./pt-pivot-script.html" target="_blank"
        style="--c:#0d9488;--cbg:rgba(13,148,136,.1)">
       <div class="sc-num">Script 03</div>
       <div class="sc-icon">
@@ -279,7 +297,7 @@ h1.hero-title .accent{background:linear-gradient(90deg,#38bdf8,#818cf8);-webkit-
     </div>
   </div>
 
-  <a class="calc-card" href="./playbook/ifca-calculator.html" target="_blank">
+  <a class="calc-card" href="./ifca-calculator.html" target="_blank">
     <div class="calc-icon-wrap">
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
         <rect x="3" y="3" width="22" height="22" rx="4" stroke="#0d9488" stroke-width="1.7" fill="none"/>
@@ -316,6 +334,39 @@ h1.hero-title .accent{background:linear-gradient(90deg,#38bdf8,#818cf8);-webkit-
       </div>
     </div>
   </a>
+
+  <div class="sdiv">
+    <div>
+      <div class="sdiv-label">Bonus Resources</div>
+      <div class="sdiv-title">Deep-dive objection handling</div>
+    </div>
+  </div>
+
+  <div class="bonus-grid">
+    <a class="bonus-card" href="./money-objection.html" target="_blank"
+       style="--bc:#f59e0b;--bbg:rgba(245,158,11,.1)">
+      <div class="bonus-icon-wrap">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="#f59e0b" stroke-width="1.6" fill="none"/>
+          <path d="M12 7v1.5c0 1.5 1.5 2 2.5 2.5S16 13 14.5 14c-.9.6-1.8.8-2.5.8m0-7.8H10m2 0h2M12 14.8V17m0-2.2H10m2 0h1.5" stroke="#f59e0b" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="bonus-body">
+        <div class="bonus-tag">Objection Handling · Triple Tie-Down</div>
+        <div class="bonus-title">Money &amp; Financial Objection</div>
+        <div class="bonus-desc">A three-step sequence to identify, isolate, and close through financial objections — without offering a payment plan until conviction is fully locked in.</div>
+        <div class="bonus-pills">
+          <div class="bonus-pill">Isolate the True Objection</div>
+          <div class="bonus-pill">Cash on Hand / Open Wallet</div>
+          <div class="bonus-pill">Custom Payment Plan Close</div>
+        </div>
+      </div>
+      <div class="bonus-arrow">
+        Open
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h10M7 2l5 5-5 5"/></svg>
+      </div>
+    </a>
+  </div>
 
   <footer class="playbook-footer">
     <div class="pf-brand">IFCA · Impact Fitness Coaching Academy</div>
