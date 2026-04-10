@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IFCA Business Calculator</title>
+</head>
+<body>
+    <h1>IFCA Business Calculator</h1>
+    <p>This calculator helps you to understand the business benefits of IFCA.</p>
+    <form>
+        <label for="amount">Initial Investment:</label>
+        <input type="number" id="amount" name="amount" required>
+        <label for="rate">Expected Rate of Return (%):</label>
+        <input type="number" id="rate" name="rate" required>
+        <label for="years">Number of Years:</label>
+        <input type="number" id="years" name="years" required>
+        <input type="submit" value="Calculate">
+    </form>
+    <div id="result"></div>
+    <script>
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const amount = parseFloat(document.getElementById('amount').value);
+            const rate = parseFloat(document.getElementById('rate').value) / 100;
+            const years = parseFloat(document.getElementById('years').value);
+            const futureValue = amount * Math.pow(1 + rate, years);
+            document.getElementById('result').textContent = `Future Value: ${futureValue.toFixed(2)}`;
+        });
+    </script>
+</body>
+</html>
