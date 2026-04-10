@@ -1,25 +1,785 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>IFCA Business Calculator</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IFCA — Business Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<style>
+:root {
+  --navy: #0f172a; --bg: #f1f5f9; --white: #fff;
+  --text: #1e293b; --muted: #64748b; --border: #e2e8f0;
+  --blue: #2563eb; --blue-l: #eff6ff;
+  --green: #16a34a; --green-l: #f0fdf4;
+  --red: #dc2626; --red-l: #fef2f2;
+  --amber: #d97706; --amber-l: #fffbeb;
+  --purple: #7c3aed; --purple-l: #f5f3ff;
+  --teal: #0d9488; --teal-l: #f0fdfa;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html,body { height:100%; overflow:hidden; font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); font-size:13px; }
+input[type=number] { -moz-appearance:textfield; }
+input[type=number]::-webkit-outer-spin-button, input[type=number]::-webkit-inner-spin-button { -webkit-appearance:none; }
+
+/* HEADER */
+.header { height:52px; background:var(--navy); display:flex; align-items:center; justify-content:space-between; padding:0 20px; flex-shrink:0; }
+.brand { font-family:'Syne',sans-serif; font-size:15px; font-weight:800; color:#f8fafc; letter-spacing:-.3px; margin-right:24px; }
+.tab-nav { display:flex; gap:2px; }
+.tab-nav button { padding:6px 14px; border:none; border-radius:6px; font-size:12px; font-weight:500; cursor:pointer; font-family:'DM Sans',sans-serif; background:transparent; color:#94a3b8; transition:all .15s; }
+.tab-nav button.active { background:rgba(255,255,255,.12); color:#f1f5f9; }
+.tab-nav button:hover:not(.active) { background:rgba(255,255,255,.06); color:#cbd5e1; }
+.header-right { display:flex; align-items:center; gap:10px; }
+.share-btn { display:flex; align-items:center; gap:6px; padding:6px 14px; border:1px solid rgba(255,255,255,.15); background:transparent; border-radius:6px; font-size:12px; font-weight:500; color:#94a3b8; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all .15s; }
+.share-btn:hover { background:rgba(255,255,255,.07); color:#e2e8f0; }
+.share-btn.active { background:rgba(99,102,241,.3); border-color:rgba(99,102,241,.5); color:#c7d2fe; }
+.reset-btn { padding:6px 12px; border:1px solid rgba(255,255,255,.1); background:transparent; border-radius:6px; font-size:11px; color:#64748b; cursor:pointer; font-family:'DM Sans',sans-serif; }
+.reset-btn:hover { color:#94a3b8; }
+
+/* APP LAYOUT */
+#app { display:flex; flex-direction:column; height:100vh; }
+.panels { flex:1; overflow:hidden; display:flex; }
+.panel { display:none; flex:1; overflow:hidden; }
+.panel.active { display:flex; }
+
+/* TWO-PANE LAYOUT */
+.inputs-col { width:320px; min-width:320px; background:var(--white); border-right:1px solid var(--border); overflow-y:auto; transition:width .25s, min-width .25s, opacity .2s; }
+.inputs-col.hidden { width:0; min-width:0; opacity:0; overflow:hidden; }
+.results-col { flex:1; overflow-y:auto; padding:20px 22px 40px; }
+
+/* INPUT SECTIONS */
+.input-section { padding:14px 16px; border-bottom:1px solid var(--border); }
+.input-section:last-child { border-bottom:none; }
+.section-title { font-family:'Syne',sans-serif; font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin-bottom:12px; display:flex; align-items:center; gap:7px; }
+.section-title .step-badge { width:18px; height:18px; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:800; color:#fff; flex-shrink:0; }
+.field { margin-bottom:10px; }
+.field:last-child { margin-bottom:0; }
+.field label { display:block; font-size:11.5px; font-weight:500; color:var(--text); margin-bottom:4px; }
+.field label .hint { font-weight:400; color:var(--muted); font-size:10.5px; }
+.field-row { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.field input { width:100%; height:34px; padding:0 10px; border:1px solid var(--border); border-radius:6px; font-family:'DM Sans',sans-serif; font-size:13px; color:var(--text); background:#fafafa; outline:none; transition:border .15s; }
+.field input:focus { border-color:#3b82f6; background:#fff; }
+.field .prefix { position:relative; }
+.field .prefix input { padding-left:22px; }
+.field .prefix::before { content:attr(data-pre); position:absolute; left:9px; top:50%; transform:translateY(-50%); font-size:13px; color:var(--muted); pointer-events:none; }
+.field .suffix { position:relative; }
+.field .suffix input { padding-right:24px; }
+.field .suffix::after { content:attr(data-suf); position:absolute; right:9px; top:50%; transform:translateY(-50%); font-size:12px; color:var(--muted); pointer-events:none; }
+
+/* RESULTS */
+.results-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:16px; }
+.results-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+.results-grid-4 { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:10px; margin-bottom:16px; }
+.metric-card { background:var(--white); border:1px solid var(--border); border-radius:10px; padding:14px 16px; }
+.metric-card.accent-red { background:var(--red-l); border-color:#fecaca; }
+.metric-card.accent-green { background:var(--green-l); border-color:#bbf7d0; }
+.metric-card.accent-blue { background:var(--blue-l); border-color:#bfdbfe; }
+.metric-card.accent-amber { background:var(--amber-l); border-color:#fde68a; }
+.metric-card.accent-purple { background:var(--purple-l); border-color:#ddd6fe; }
+.metric-card.accent-teal { background:var(--teal-l); border-color:#99f6e4; }
+.metric-card.big { padding:18px 20px; }
+.card-label { font-size:10px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+.card-value { font-family:'Syne',sans-serif; font-weight:800; line-height:1; }
+.card-value.xl { font-size:32px; }
+.card-value.lg { font-size:22px; }
+.card-value.md { font-size:17px; }
+.card-value.red { color:var(--red); }
+.card-value.green { color:var(--green); }
+.card-value.blue { color:var(--blue); }
+.card-value.amber { color:var(--amber); }
+.card-value.teal { color:var(--teal); }
+.card-value.purple { color:var(--purple); }
+.card-sub { font-size:11px; color:var(--muted); margin-top:5px; line-height:1.4; }
+
+/* SECTION HEADERS IN RESULTS */
+.results-section-title { font-family:'Syne',sans-serif; font-size:11px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--muted); margin-bottom:10px; margin-top:4px; display:flex; align-items:center; gap:6px; }
+.results-section-title::after { content:''; flex:1; height:1px; background:var(--border); }
+
+/* CHARTS */
+.chart-card { background:var(--white); border:1px solid var(--border); border-radius:10px; padding:16px 18px; margin-bottom:14px; }
+.chart-title { font-size:12px; font-weight:600; color:var(--text); margin-bottom:14px; }
+.chart-wrap { position:relative; }
+.chart-wrap.h200 { height:200px; }
+.chart-wrap.h160 { height:160px; }
+.chart-wrap.h240 { height:240px; }
+
+/* KPI HEALTH GRID */
+.kpi-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px; }
+.kpi-item { background:var(--white); border:1px solid var(--border); border-radius:8px; padding:10px 12px; display:flex; align-items:center; gap:10px; }
+.kpi-item.pass { background:var(--green-l); border-color:#bbf7d0; }
+.kpi-item.fail { background:var(--red-l); border-color:#fecaca; }
+.kpi-item.empty { background:#fafafa; }
+.kpi-status { font-size:16px; flex-shrink:0; width:20px; text-align:center; }
+.kpi-info { flex:1; min-width:0; }
+.kpi-name { font-size:11px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.kpi-vals { font-size:10.5px; color:var(--muted); margin-top:2px; }
+.kpi-val-main { font-weight:600; }
+.kpi-val-main.pass { color:var(--green); }
+.kpi-val-main.fail { color:var(--red); }
+.kpi-benchmark { color:var(--muted); }
+
+/* FUNNEL */
+.funnel { display:flex; flex-direction:column; gap:4px; }
+.funnel-row { display:flex; align-items:center; gap:10px; padding:7px 0; }
+.funnel-label { width:130px; font-size:11.5px; color:var(--text); font-weight:500; flex-shrink:0; text-align:right; }
+.funnel-bar-wrap { flex:1; height:22px; background:#f1f5f9; border-radius:4px; overflow:hidden; }
+.funnel-bar { height:100%; border-radius:4px; transition:width .4s ease; min-width:2px; }
+.funnel-val { width:55px; font-family:'Syne',sans-serif; font-size:13px; font-weight:700; flex-shrink:0; }
+
+/* FOOTER */
+.calc-footer { font-size:10px; color:#94a3b8; text-align:center; padding:12px 0 4px; }
+
+/* SHARE MODE tweaks */
+body.share-mode .inputs-col { display:none; }
+</style>
 </head>
 <body>
-    <h1>IFCA Business Calculator</h1>
-    <p>This is where you can input your data to calculate potential bonuses!</p>
-    <form>
-        <label for="sales">Sales Amount:</label>
-        <input type="number" id="sales" name="sales"><br>
-        <label for="bonusRate">Bonus Rate (%):</label>
-        <input type="number" id="bonusRate" name="bonusRate"><br>
-        <button type="button" onclick="calculateBonus()">Calculate Bonus</button>
-    </form>
-    <h2>Bonus: <span id="bonusOutput">0</span></h2>
-    <script>
-        function calculateBonus() {
-            var sales = document.getElementById('sales').value;
-            var bonusRate = document.getElementById('bonusRate').value;
-            var bonus = (sales * (bonusRate / 100));
-            document.getElementById('bonusOutput').innerText = bonus.toFixed(2);
-        }
-    </script>
+<div id="app">
+  <div class="header">
+    <div style="display:flex;align-items:center">
+      <span class="brand">IFCA</span>
+      <nav class="tab-nav">
+        <button class="active" onclick="switchTab('goal',this)">Goal Calculator</button>
+        <button onclick="switchTab('biz',this)">Business Diagnostic</button>
+        <button onclick="switchTab('pt',this)">PT Pivot</button>
+      </nav>
+    </div>
+    <div class="header-right">
+      <button class="reset-btn" onclick="resetCurrent()">↺ Reset</button>
+      <button class="share-btn" id="share-btn" onclick="toggleShare()">⊳ Share View</button>
+    </div>
+  </div>
+
+  <div class="panels">
+
+    <!-- ═══════════════════════════════════════ GOAL CALCULATOR ═══ -->
+    <div class="panel active" id="panel-goal">
+      <div class="inputs-col" id="inputs-goal">
+
+        <div class="input-section">
+          <div class="section-title"><span class="step-badge" style="background:#1d4ed8">1</span>Their Situation</div>
+          <div class="field-row">
+            <div class="field"><label>Current Monthly Income</label><div class="prefix" data-pre="$"><input type="number" id="g-cur" value="2000" oninput="calcGoal()"></div></div>
+            <div class="field"><label>Monthly Goal</label><div class="prefix" data-pre="$"><input type="number" id="g-goal" value="10000" oninput="calcGoal()"></div></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Hours Working / Month</label><input type="number" id="g-hrs" value="160" oninput="calcGoal()"></div>
+            <div class="field"><label>Months Stuck</label><input type="number" id="g-stuck" value="6" oninput="calcGoal()"></div>
+          </div>
+        </div>
+
+        <div class="input-section">
+          <div class="section-title"><span class="step-badge" style="background:#1d4ed8">2</span>Offer</div>
+          <div class="field-row">
+            <div class="field"><label>Front-End Package Price</label><div class="prefix" data-pre="$"><input type="number" id="g-fe" value="3000" oninput="calcGoal()"></div></div>
+            <div class="field"><label>Back-End Price</label><div class="prefix" data-pre="$"><input type="number" id="g-be" value="5000" oninput="calcGoal()"></div></div>
+          </div>
+          <div class="field"><label>Back-End Conversion Rate <span class="hint">(% of FE clients who upgrade)</span></label><div class="suffix" data-suf="%"><input type="number" id="g-be-conv" value="50" oninput="calcGoal()"></div></div>
+        </div>
+
+        <div class="input-section">
+          <div class="section-title"><span class="step-badge" style="background:#1d4ed8">3</span>Assumptions</div>
+          <div class="field-row">
+            <div class="field"><label>Close Rate</label><div class="suffix" data-suf="%"><input type="number" id="g-close" value="45" oninput="calcGoal()"></div></div>
+            <div class="field"><label>Show Rate</label><div class="suffix" data-suf="%"><input type="number" id="g-show" value="75" oninput="calcGoal()"></div></div>
+          </div>
+          <div class="field"><label>Cost Per Lead (Ads)</label><div class="prefix" data-pre="$"><input type="number" id="g-cpl" value="5" oninput="calcGoal()"></div></div>
+        </div>
+
+      </div><!-- /inputs-goal -->
+
+      <div class="results-col" id="results-goal">
+        <div class="results-section-title">Cost of Inaction</div>
+        <div class="results-grid">
+          <div class="metric-card accent-red big">
+            <div class="card-label">Left Behind / Month</div>
+            <div class="card-value xl red" id="g-coi-mo">—</div>
+            <div class="card-sub" id="g-coi-mo-sub"></div>
+          </div>
+          <div class="metric-card accent-red big">
+            <div class="card-label">Left Behind / Year</div>
+            <div class="card-value xl red" id="g-coi-yr">—</div>
+            <div class="card-sub">every year this stays the same</div>
+          </div>
+          <div class="metric-card accent-amber big">
+            <div class="card-label">Already Gone</div>
+            <div class="card-value xl amber" id="g-already">—</div>
+            <div class="card-sub" id="g-already-sub"></div>
+          </div>
+        </div>
+
+        <div class="results-section-title">What It Takes</div>
+        <div class="results-grid-4">
+          <div class="metric-card"><div class="card-label">New Clients / Mo</div><div class="card-value lg blue" id="g-clients">—</div></div>
+          <div class="metric-card"><div class="card-label">Live Calls / Mo</div><div class="card-value lg blue" id="g-live">—</div></div>
+          <div class="metric-card"><div class="card-label">Booked Calls / Mo</div><div class="card-value lg blue" id="g-booked">—</div></div>
+          <div class="metric-card"><div class="card-label">Leads Needed / Mo</div><div class="card-value lg blue" id="g-leads">—</div></div>
+        </div>
+        <div class="metric-card" style="margin-bottom:14px">
+          <div class="card-label">Estimated Monthly Ad Spend</div>
+          <div style="display:flex;align-items:baseline;gap:16px">
+            <div class="card-value lg blue" id="g-adspend">—</div>
+            <div class="card-sub" id="g-adspend-sub"></div>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-title">Pipeline Funnel — Leads to Closes</div>
+          <div id="g-funnel" class="funnel"></div>
+        </div>
+
+        <div class="results-section-title">The Upside</div>
+        <div class="results-grid">
+          <div class="metric-card accent-green">
+            <div class="card-label">Front-End Revenue / Mo</div>
+            <div class="card-value lg green" id="g-fe-rev">—</div>
+          </div>
+          <div class="metric-card accent-green">
+            <div class="card-label">Back-End Revenue / Mo</div>
+            <div class="card-value lg green" id="g-be-rev">—</div>
+            <div class="card-sub" id="g-be-clients"></div>
+          </div>
+          <div class="metric-card accent-green big">
+            <div class="card-label">Total Monthly Revenue</div>
+            <div class="card-value lg green" id="g-total-mo">—</div>
+            <div class="card-sub">FE + BE combined</div>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-title">12-Month Projection</div>
+          <div class="chart-wrap h200"><canvas id="g-proj-chart"></canvas></div>
+        </div>
+
+        <div class="calc-footer">IFCA · Impact Fitness Coaching Academy · impactcoachacademy.com</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ BUSINESS DIAGNOSTIC ═══ -->
+    <div class="panel" id="panel-biz">
+      <div class="inputs-col" id="inputs-biz">
+
+        <div class="input-section">
+          <div class="section-title"><span class="step-badge" style="background:#4338ca">①</span>Traffic</div>
+          <div class="field-row">
+            <div class="field"><label>Monthly Ad Spend</label><div class="prefix" data-pre="$"><input type="number" id="b-adspend" value="" placeholder="0" oninput="calcBiz()"></div></div>
+            <div class="field"><label>Total Leads (Paid + Organic)</label><input type="number" id="b-leads" value="" placeholder="0" oninput="calcBiz()"></div>
+          </div>
+          <div class="field"><label>Organic / Referral Leads</label><input type="number" id="b-organic" value="" placeholder="0" oninput="calcBiz()"></div>
+        </div>
+
+        <div class="input-section">
+          <div class="section-title"><span class="step-badge" style="background:#4338ca">②</span>Pipeline</div>
+          <div class="field-row">
+            <div class="field"><label>Scheduled Calls (Booked)</label><input type="number" id="b-sched" value="" placeholder="0" oninput="calcBiz()"></div>
+            <div class="field"><label>Live Calls (Showed Up)</label><input type="number" id="b-live" value="" placeholder="0" oninput="calcBiz()"></div>
+          </div>
+        </div>
+
+        <div class="input-section">
+          <div class="section-title"><span class="step-badge" style="background:#4338ca">③</span>Sales Conversion</div>
+          <div class="field-row">
+            <div class="field"><label>New Closes This Month</label><input type="number" id="b-closes" value="" placeholder="0" oninput="calcBiz()"></div>
+            <div class="field"><label>Front-End Price (Avg)</label><div class="prefix" data-pre="$"><input type="number" id="b-fe-price" value="3000" oninput="calcBiz()"></div></div>
+          </div>
+          <div class="field"><label>Upfront Cash Collected ($)</label><div class="prefix" data-pre="$"><input type="number" id="b-cash" value="" placeholder="0" oninput="calcBiz()"></div></div>
+        </div>
+
+        <div class="input-section">
+          <div class="section-title"><span class="step-badge" style="background:#4338ca">④</span>Back-End</div>
+          <div class="field-row">
+            <div class="field"><label>FE → BE Conv Rate</label><div class="suffix" data-suf="%"><input type="number" id="b-febe" value="50" oninput="calcBiz()"></div></div>
+            <div class="field"><label>Back-End Price (Avg)</label><div class="prefix" data-pre="$"><input type="number" id="b-be-price" value="5000" oninput="calcBiz()"></div></div>
+          </div>
+        </div>
+
+        <div class="input-section">
+          <div class="section-title"><span class="step-badge" style="background:#4338ca">⑤</span>Financials</div>
+          <div class="field"><label>Gross Revenue (Cash Collected)</label><div class="prefix" data-pre="$"><input type="number" id="b-gross" value="" placeholder="0" oninput="calcBiz()"></div></div>
+          <div class="field-row">
+            <div class="field"><label>Labor / Team Expenses</label><div class="prefix" data-pre="$"><input type="number" id="b-labor" value="" placeholder="0" oninput="calcBiz()"></div></div>
+            <div class="field"><label>Marketing / Ads</label><div class="prefix" data-pre="$"><input type="number" id="b-mktg" value="" placeholder="0" oninput="calcBiz()"></div></div>
+          </div>
+          <div class="field"><label>Overhead / Ops</label><div class="prefix" data-pre="$"><input type="number" id="b-overhead" value="" placeholder="0" oninput="calcBiz()"></div></div>
+        </div>
+
+      </div><!-- /inputs-biz -->
+
+      <div class="results-col" id="results-biz">
+        <div class="results-section-title">KPI Health Dashboard</div>
+        <div class="kpi-grid" id="b-kpi-grid">
+          <!-- rendered by JS -->
+        </div>
+
+        <div class="results-section-title">Revenue Summary</div>
+        <div class="results-grid">
+          <div class="metric-card accent-blue">
+            <div class="card-label">Contracted FE Revenue</div>
+            <div class="card-value lg blue" id="b-fe-rev">—</div>
+          </div>
+          <div class="metric-card accent-green">
+            <div class="card-label">Contracted BE Revenue</div>
+            <div class="card-value lg green" id="b-be-rev">—</div>
+            <div class="card-sub" id="b-be-clients"></div>
+          </div>
+          <div class="metric-card accent-green">
+            <div class="card-label">Total Contracted Revenue</div>
+            <div class="card-value lg green" id="b-total-rev">—</div>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-title">Pipeline Flow</div>
+          <div id="b-funnel" class="funnel"></div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-title">P&L Breakdown</div>
+          <div class="chart-wrap h240"><canvas id="b-pl-chart"></canvas></div>
+        </div>
+
+        <div class="calc-footer">IFCA · Impact Fitness Coaching Academy · impactcoachacademy.com</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ PT PIVOT ═══ -->
+    <div class="panel" id="panel-pt">
+      <div class="inputs-col" id="inputs-pt">
+
+        <div class="input-section">
+          <div class="section-title"><span class="step-badge" style="background:#0d9488">1</span>In-Person Situation</div>
+          <div class="field-row">
+            <div class="field"><label>Sessions / Week</label><input type="number" id="p-sessions" value="20" oninput="calcPT()"></div>
+            <div class="field"><label>Avg Session Rate</label><div class="prefix" data-pre="$"><input type="number" id="p-rate" value="120" oninput="calcPT()"></div></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Evening Sessions / Week</label><input type="number" id="p-evenings" value="8" oninput="calcPT()"></div>
+            <div class="field"><label>Current Monthly Income</label><div class="prefix" data-pre="$"><input type="number" id="p-cur" value="0" placeholder="auto" oninput="calcPT()"></div></div>
+          </div>
+        </div>
+
+        <div class="input-section">
+          <div class="section-title"><span class="step-badge" style="background:#0d9488">2</span>Online Offer</div>
+          <div class="field-row">
+            <div class="field"><label>90-Day Package Price</label><div class="prefix" data-pre="$"><input type="number" id="p-pkg" value="1500" oninput="calcPT()"></div></div>
+            <div class="field"><label>Back-End Monthly Rate</label><div class="prefix" data-pre="$"><input type="number" id="p-be" value="350" oninput="calcPT()"></div></div>
+          </div>
+          <div class="field"><label>BE Conversion Rate <span class="hint">(FE clients → monthly)</span></label><div class="suffix" data-suf="%"><input type="number" id="p-be-conv" value="50" oninput="calcPT()"></div></div>
+        </div>
+
+        <div class="input-section">
+          <div class="section-title"><span class="step-badge" style="background:#0d9488">3</span>Goals</div>
+          <div class="field-row">
+            <div class="field"><label>Monthly Online Goal</label><div class="prefix" data-pre="$"><input type="number" id="p-goal" value="5000" oninput="calcPT()"></div></div>
+            <div class="field"><label>Close Rate</label><div class="suffix" data-suf="%"><input type="number" id="p-close" value="45" oninput="calcPT()"></div></div>
+          </div>
+        </div>
+
+      </div><!-- /inputs-pt -->
+
+      <div class="results-col" id="results-pt">
+        <div class="results-section-title">The Ceiling vs The Opportunity</div>
+        <div class="results-grid">
+          <div class="metric-card accent-amber">
+            <div class="card-label">In-Person Ceiling (Max)</div>
+            <div class="card-value lg amber" id="p-ceiling">—</div>
+            <div class="card-sub">maxed at 35 sessions/week</div>
+          </div>
+          <div class="metric-card accent-teal">
+            <div class="card-label">Online Goal</div>
+            <div class="card-value lg teal" id="p-goal-disp">—</div>
+            <div class="card-sub" id="p-clients-needed"></div>
+          </div>
+          <div class="metric-card accent-red">
+            <div class="card-label">Cost of Staying Put / Year</div>
+            <div class="card-value lg red" id="p-coi-yr">—</div>
+            <div class="card-sub" id="p-coi-sub"></div>
+          </div>
+        </div>
+
+        <div class="results-section-title">The Evening Freedom Math</div>
+        <div class="results-grid">
+          <div class="metric-card accent-amber">
+            <div class="card-label">Evening Income / Month</div>
+            <div class="card-value lg amber" id="p-evening-inc">—</div>
+            <div class="card-sub" id="p-evening-hrs"></div>
+          </div>
+          <div class="metric-card accent-teal big">
+            <div class="card-label">Online Clients to Replace Evenings</div>
+            <div class="card-value xl teal" id="p-replace-clients">—</div>
+            <div class="card-sub">at your current package price</div>
+          </div>
+          <div class="metric-card accent-green">
+            <div class="card-label">Hours Freed / Week</div>
+            <div class="card-value xl green" id="p-hrs-freed">—</div>
+            <div class="card-sub">evening sessions eliminated</div>
+          </div>
+        </div>
+
+        <div class="results-section-title">Three Currencies Path</div>
+        <div class="results-grid-2" style="margin-bottom:14px">
+          <div class="metric-card accent-blue">
+            <div class="card-label">Phase 1 — Network (Months 1–2)</div>
+            <div class="card-value md blue" id="p-net-rev">—</div>
+            <div class="card-sub" id="p-net-sub">First 3 clients from warm network</div>
+          </div>
+          <div class="metric-card accent-green">
+            <div class="card-label">Phase 3 — Full Hybrid (Month 6+)</div>
+            <div class="card-value md green" id="p-hybrid-rev">—</div>
+            <div class="card-sub">network + content + ads running</div>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-title">12-Month Hybrid Trajectory</div>
+          <div class="chart-wrap h240"><canvas id="p-traj-chart"></canvas></div>
+        </div>
+
+        <div class="calc-footer">IFCA · Impact Fitness Coaching Academy · impactcoachacademy.com</div>
+      </div>
+    </div>
+
+  </div><!-- /panels -->
+</div><!-- /app -->
+
+<script>
+// ─── helpers ──────────────────────────────────────────────────────────
+const v = id => parseFloat(document.getElementById(id).value) || 0;
+const el = id => document.getElementById(id);
+const $ = id => document.getElementById(id);
+
+function fmt$(n){ if(!n && n!==0) return '—'; return '$'+Math.round(n).toLocaleString(); }
+function fmtN(n){ if(!n && n!==0) return '—'; return Math.round(n).toLocaleString(); }
+function fmtPct(n){ if(!n && n!==0) return '—'; return (n*100).toFixed(1)+'%'; }
+function fmtX(n){ if(!n && n!==0) return '—'; return n.toFixed(1)+'x'; }
+
+let gProjChart = null, bPlChart = null, pTrajChart = null;
+
+// ─── GOAL CALCULATOR ──────────────────────────────────────────────────
+function calcGoal(){
+  const cur   = v('g-cur')   || 0;
+  const goal  = v('g-goal')  || 10000;
+  const hrs   = v('g-hrs')   || 160;
+  const stuck = v('g-stuck') || 6;
+  const fe    = v('g-fe')    || 3000;
+  const be    = v('g-be')    || 5000;
+  const bec   = (v('g-be-conv')||50)/100;
+  const cr    = (v('g-close')||45)/100;
+  const sr    = (v('g-show') ||75)/100;
+  const cpl   = v('g-cpl')   || 5;
+
+  // COI
+  const gap   = Math.max(0, goal - cur);
+  const coiMo = gap;
+  const coiYr = gap * 12;
+  const gone  = gap * stuck;
+
+  // What it takes
+  const clients = fe > 0 ? Math.ceil(goal / fe) : 0;
+  const live    = cr > 0 ? Math.ceil(clients / cr) : 0;
+  const booked  = sr > 0 ? Math.ceil(live / sr) : 0;
+  const leads   = Math.ceil(booked / 0.05);
+  const adsp    = leads * cpl;
+
+  // Upside
+  const feRev   = clients * fe;
+  const beClts  = Math.floor(clients * bec);
+  const beRev   = beClts * be;
+  const totalMo = feRev + beRev;
+  const yr_fe   = feRev * 12;
+  const yr_both = totalMo * 12;
+
+  // Render
+  $('g-coi-mo').textContent = fmt$(coiMo);
+  $('g-coi-mo-sub').textContent = 'every month you stay here';
+  $('g-coi-yr').textContent = fmt$(coiYr);
+  $('g-already').textContent = fmt$(gone);
+  $('g-already-sub').textContent = `after ${stuck} months, that's gone`;
+
+  $('g-clients').textContent  = fmtN(clients);
+  $('g-live').textContent     = fmtN(live);
+  $('g-booked').textContent   = fmtN(booked);
+  $('g-leads').textContent    = fmtN(leads);
+  $('g-adspend').textContent  = fmt$(adsp);
+  $('g-adspend-sub').textContent = `at ${fmt$(cpl)}/lead`;
+
+  $('g-fe-rev').textContent   = fmt$(feRev);
+  $('g-be-rev').textContent   = fmt$(beRev);
+  $('g-be-clients').textContent = beClts + ' back-end clients/mo';
+  $('g-total-mo').textContent = fmt$(totalMo);
+
+  // Funnel
+  const max = leads || 1;
+  $('g-funnel').innerHTML = [
+    { label:'Leads/Month', val:leads, color:'#3b82f6' },
+    { label:'Booked Calls', val:booked, color:'#6366f1' },
+    { label:'Live Calls', val:live, color:'#8b5cf6' },
+    { label:'New Clients', val:clients, color:'#16a34a' },
+  ].map(r=>`
+    <div class="funnel-row">
+      <div class="funnel-label">${r.label}</div>
+      <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:${r.val/max*100}%;background:${r.color}"></div></div>
+      <div class="funnel-val" style="color:${r.color}">${fmtN(r.val)}</div>
+    </div>`).join('');
+
+  // 12-month chart
+  const labels = ['M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12'];
+  const feOnly  = labels.map(()=>feRev);
+  const withBE  = labels.map(()=>totalMo);
+
+  if(gProjChart) gProjChart.destroy();
+  gProjChart = new Chart($('g-proj-chart'), {
+    type:'bar',
+    data:{
+      labels,
+      datasets:[
+        { label:'Front-End Only', data:feOnly, backgroundColor:'#bfdbfe', borderRadius:4 },
+        { label:'FE + Back-End', data:withBE, backgroundColor:'#16a34a', borderRadius:4 },
+      ]
+    },
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ labels:{ font:{ family:'DM Sans', size:11 }, boxWidth:12, padding:16 } } },
+      scales:{ y:{ ticks:{ callback:v=>'$'+v.toLocaleString(), font:{size:10} }, grid:{color:'#f1f5f9'} }, x:{ grid:{display:false}, ticks:{font:{size:10}} } }
+    }
+  });
+}
+
+// ─── BUSINESS DIAGNOSTIC ──────────────────────────────────────────────
+function calcBiz(){
+  const adsp   = v('b-adspend') || 0;
+  const leads  = v('b-leads')   || 0;
+  const organ  = v('b-organic') || 0;
+  const sched  = v('b-sched')   || 0;
+  const live   = v('b-live')    || 0;
+  const closes = v('b-closes')  || 0;
+  const feP    = v('b-fe-price')|| 3000;
+  const cash   = v('b-cash')    || 0;
+  const febeC  = (v('b-febe')||50)/100;
+  const beP    = v('b-be-price')|| 5000;
+  const gross  = v('b-gross')   || 0;
+  const labor  = v('b-labor')   || 0;
+  const mktg   = v('b-mktg')    || 0;
+  const ovhd   = v('b-overhead')|| 0;
+
+  // Auto-calcs
+  const cpl            = leads  > 0 ? adsp / leads   : 0;
+  const showRate       = sched  > 0 ? live / sched   : 0;
+  const l2cRate        = leads  > 0 ? sched / leads  : 0;
+  const costLive       = live   > 0 ? adsp / live    : 0;
+  const closeRate      = live   > 0 ? closes / live  : 0;
+  const cFE            = closes * feP;
+  const cashCollRate   = cFE    > 0 ? cash / cFE     : 0;
+  const cpa            = closes > 0 ? adsp / closes  : 0;
+  const cROAS          = adsp   > 0 ? cFE  / adsp    : 0;
+  const collROAS       = adsp   > 0 ? cash / adsp    : 0;
+  const beClients      = Math.floor(closes * febeC);
+  const beRev          = beClients * beP;
+  const totalContract  = cFE + beRev;
+  const totalOpex      = labor + mktg + ovhd;
+  const netProfit      = gross - totalOpex;
+  const netMargin      = gross > 0 ? netProfit / gross : 0;
+  const laborM         = gross > 0 ? labor / gross : 0;
+  const mktgM          = gross > 0 ? mktg  / gross : 0;
+  const ovhdM          = gross > 0 ? ovhd  / gross : 0;
+
+  // Revenue
+  $('b-fe-rev').textContent  = fmt$(cFE);
+  $('b-be-rev').textContent  = fmt$(beRev);
+  $('b-be-clients').textContent = beClients + ' BE clients';
+  $('b-total-rev').textContent = fmt$(totalContract);
+
+  // KPI grid
+  const kpis = [
+    { name:'CPL', val:cpl, bench:10, pass:cpl>0&&cpl<=10, fmt:fmt$, dir:'under', benchLabel:'< $10' },
+    { name:'Show Rate', val:showRate, bench:.70, pass:showRate>0&&showRate>=.70, fmt:fmtPct, dir:'over', benchLabel:'> 70%' },
+    { name:'Lead → Call Rate', val:l2cRate, bench:.05, pass:l2cRate>0&&l2cRate>=.05, fmt:fmtPct, dir:'over', benchLabel:'> 5%' },
+    { name:'Cost Per Live Call', val:costLive, bench:100, pass:costLive>0&&costLive<=100, fmt:fmt$, dir:'under', benchLabel:'< $100' },
+    { name:'Close Rate', val:closeRate, bench:.30, pass:closeRate>0&&closeRate>=.30, fmt:fmtPct, dir:'over', benchLabel:'> 30%' },
+    { name:'Cash Collection Rate', val:cashCollRate, bench:.50, pass:cashCollRate>0&&cashCollRate>=.50, fmt:fmtPct, dir:'over', benchLabel:'> 50%' },
+    { name:'CPA', val:cpa, bench:500, pass:cpa>0&&cpa<=500, fmt:fmt$, dir:'under', benchLabel:'< $500' },
+    { name:'Contracted ROAS', val:cROAS, bench:5, pass:cROAS>0&&cROAS>=5, fmt:fmtX, dir:'over', benchLabel:'> 5x' },
+    { name:'Collected ROAS', val:collROAS, bench:2, pass:collROAS>0&&collROAS>=2, fmt:fmtX, dir:'over', benchLabel:'> 2x' },
+    { name:'FE → BE Conv', val:febeC, bench:.50, pass:febeC>=.50, fmt:fmtPct, dir:'over', benchLabel:'> 50%' },
+    { name:'Net Margin', val:netMargin, bench:.50, pass:netMargin>0&&netMargin>=.50, fmt:fmtPct, dir:'over', benchLabel:'> 50%' },
+  ];
+
+  const hasData = leads>0||sched>0||closes>0||gross>0;
+  $('b-kpi-grid').innerHTML = kpis.map(k=>{
+    const empty = !hasData && k.name!=='FE → BE Conv';
+    const cls   = empty ? 'empty' : (k.pass ? 'pass' : 'fail');
+    const icon  = empty ? '·' : (k.pass ? '✅' : '❌');
+    const vcls  = empty ? '' : (k.pass ? 'pass' : 'fail');
+    const disp  = empty ? '—' : k.fmt(k.val);
+    return `<div class="kpi-item ${cls}">
+      <div class="kpi-status">${icon}</div>
+      <div class="kpi-info">
+        <div class="kpi-name">${k.name}</div>
+        <div class="kpi-vals">
+          <span class="kpi-val-main ${vcls}">${disp}</span>
+          <span class="kpi-benchmark"> · target ${k.benchLabel}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Pipeline funnel
+  const maxB = leads||1;
+  $('b-funnel').innerHTML = [
+    { label:'Total Leads', val:leads, color:'#4338ca' },
+    { label:'Scheduled Calls', val:sched, color:'#6366f1' },
+    { label:'Live Calls', val:live, color:'#8b5cf6' },
+    { label:'New Closes', val:closes, color:'#16a34a' },
+  ].map(r=>`
+    <div class="funnel-row">
+      <div class="funnel-label">${r.label}</div>
+      <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:${r.val/maxB*100}%;background:${r.color}"></div></div>
+      <div class="funnel-val" style="color:${r.color}">${fmtN(r.val)}</div>
+    </div>`).join('');
+
+  // P&L chart
+  if(bPlChart) bPlChart.destroy();
+  bPlChart = new Chart($('b-pl-chart'), {
+    type:'bar',
+    data:{
+      labels:['Labor','Marketing','Overhead','Net Profit'],
+      datasets:[{
+        data: [labor, mktg, ovhd, Math.max(0, netProfit)],
+        backgroundColor: ['#fde68a','#bfdbfe','#ddd6fe', netProfit>0?'#bbf7d0':'#fecaca'],
+        borderRadius: 6,
+      }]
+    },
+    options:{ responsive:true, maintainAspectRatio:false, indexAxis:'y',
+      plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label:ctx=>' '+fmt$(ctx.raw) } } },
+      scales:{
+        x:{ ticks:{ callback:v=>'$'+v.toLocaleString(), font:{size:10} }, grid:{color:'#f1f5f9'} },
+        y:{ grid:{display:false}, ticks:{font:{size:11, weight:'600'}} }
+      }
+    }
+  });
+}
+
+// ─── PT PIVOT ─────────────────────────────────────────────────────────
+function calcPT(){
+  const sessions  = v('p-sessions') || 20;
+  const rate      = v('p-rate')     || 120;
+  const evenings  = v('p-evenings') || 8;
+  const curInput  = v('p-cur')      || 0;
+  const pkg       = v('p-pkg')      || 1500;
+  const beRate    = v('p-be')       || 350;
+  const beConv    = (v('p-be-conv')||50)/100;
+  const goal      = v('p-goal')     || 5000;
+  const cr        = (v('p-close')||45)/100;
+
+  // Current income (auto if blank)
+  const curIncome   = curInput > 0 ? curInput : sessions * rate * 4;
+  const ceiling     = 35 * rate * 4;         // maxed at 35 sessions
+  const eveningInc  = evenings * rate * 4;
+  const eveningHrs  = evenings * 4;
+
+  // Goal math
+  const clientsGoal = pkg > 0 ? Math.ceil(goal / pkg) : 0;
+  const replaceEvs  = pkg > 0 ? Math.ceil(eveningInc / pkg) : 0;
+  const hrsFreed    = eveningHrs;
+
+  // COI
+  const coiMo       = Math.max(0, goal - curIncome);
+  const coiYr       = coiMo * 12;
+
+  // Three currencies path
+  const netClients  = Math.min(3, clientsGoal);
+  const netRev      = curIncome + (netClients * pkg);
+
+  // Month 6+ hybrid
+  const hybridFE    = clientsGoal * pkg;
+  const hybridBE    = Math.floor(clientsGoal * beConv) * beRate;
+  const hybridTotal = curIncome + hybridFE + hybridBE;
+
+  // Render
+  $('p-ceiling').textContent   = fmt$(ceiling);
+  $('p-goal-disp').textContent = fmt$(goal);
+  $('p-clients-needed').textContent = clientsGoal + ' online clients needed';
+  $('p-coi-yr').textContent    = fmt$(coiYr);
+  $('p-coi-sub').textContent   = fmt$(coiMo)+' every month you wait';
+
+  $('p-evening-inc').textContent   = fmt$(eveningInc);
+  $('p-evening-hrs').textContent   = eveningHrs + ' hours/month freed';
+  $('p-replace-clients').textContent = replaceEvs || '—';
+  $('p-hrs-freed').textContent      = hrsFreed;
+
+  $('p-net-rev').textContent    = fmt$(netRev);
+  $('p-net-sub').textContent    = netClients + ' network clients = ' + fmt$(netClients*pkg) + '/mo online';
+  $('p-hybrid-rev').textContent = fmt$(hybridTotal);
+
+  // 12-month chart
+  const labels = ['M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12'];
+  const inpOnly = labels.map(()=>curIncome);
+  const hybrid  = labels.map((_, i) => {
+    if(i < 2)  return curIncome + netClients * pkg;
+    if(i < 4)  return curIncome + (netClients+1) * pkg;
+    if(i < 6)  return curIncome + (netClients+2) * pkg + netClients * beRate;
+    if(i < 9)  return curIncome + clientsGoal * pkg + Math.floor(clientsGoal*.3)*beRate;
+    return hybridTotal;
+  });
+
+  if(pTrajChart) pTrajChart.destroy();
+  pTrajChart = new Chart($('p-traj-chart'), {
+    type:'line',
+    data:{
+      labels,
+      datasets:[
+        { label:'In-Person Only', data:inpOnly, borderColor:'#f59e0b', backgroundColor:'rgba(245,158,11,.08)', tension:.3, borderWidth:2, pointRadius:3 },
+        { label:'Hybrid (Online + In-Person)', data:hybrid, borderColor:'#0d9488', backgroundColor:'rgba(13,148,136,.1)', tension:.3, borderWidth:3, pointRadius:3, fill:true },
+      ]
+    },
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ labels:{ font:{ family:'DM Sans', size:11 }, boxWidth:12, padding:16 } } },
+      scales:{
+        y:{ ticks:{ callback:v=>'$'+v.toLocaleString(), font:{size:10} }, grid:{color:'#f1f5f9'} },
+        x:{ grid:{display:false}, ticks:{font:{size:10}} }
+      }
+    }
+  });
+}
+
+// ─── TAB + SHARE CONTROLS ──────────────────────────────────────────────
+let currentTab = 'goal';
+function switchTab(tab, btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-nav button').forEach(b=>b.classList.remove('active'));
+  $('panel-'+tab).classList.add('active');
+  btn.classList.add('active');
+  currentTab = tab;
+}
+
+let shareMode = false;
+function toggleShare(){
+  shareMode = !shareMode;
+  document.body.classList.toggle('share-mode', shareMode);
+  $('share-btn').classList.toggle('active', shareMode);
+  $('share-btn').textContent = shareMode ? '✕ Exit Share View' : '⊳ Share View';
+}
+
+function resetCurrent(){
+  const inputs = $('inputs-'+currentTab).querySelectorAll('input');
+  const defaults = {
+    'g-cur':'2000','g-goal':'10000','g-hrs':'160','g-stuck':'6',
+    'g-fe':'3000','g-be':'5000','g-be-conv':'50','g-close':'45','g-show':'75','g-cpl':'5',
+    'b-fe-price':'3000','b-febe':'50','b-be-price':'5000',
+    'p-sessions':'20','p-rate':'120','p-evenings':'8','p-cur':'0',
+    'p-pkg':'1500','p-be':'350','p-be-conv':'50','p-goal':'5000','p-close':'45',
+  };
+  inputs.forEach(inp => {
+    inp.value = defaults[inp.id] !== undefined ? defaults[inp.id] : '';
+  });
+  if(currentTab==='goal') calcGoal();
+  if(currentTab==='biz')  calcBiz();
+  if(currentTab==='pt')   calcPT();
+}
+
+// ─── INIT ──────────────────────────────────────────────────────────────
+calcGoal();
+calcBiz();
+calcPT();
+</script>
 </body>
 </html>
