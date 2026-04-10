@@ -1,1 +1,333 @@
-<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=./playbook/index.html"></head><body></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IFCA Sales Playbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:#060d1a;color:#f1f5f9;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(56,189,248,.033) 1px,transparent 1px),linear-gradient(90deg,rgba(56,189,248,.033) 1px,transparent 1px);background-size:52px 52px;pointer-events:none;z-index:0;}
+.hero-glow{position:fixed;top:-240px;left:50%;transform:translateX(-50%);width:1000px;height:680px;background:radial-gradient(ellipse at 50% 30%,rgba(37,99,235,.16) 0%,transparent 65%);pointer-events:none;z-index:0;}
+.page{position:relative;z-index:1;max-width:1020px;margin:0 auto;padding:0 28px 100px;}
+
+/* HEADER */
+header{display:flex;align-items:center;justify-content:space-between;padding:30px 0 0;flex-wrap:wrap;gap:16px;}
+.logo-group{display:flex;align-items:center;gap:14px;}
+.logo-name{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#38bdf8;line-height:1;}
+.logo-sub{font-size:10px;color:#334155;letter-spacing:.07em;text-transform:uppercase;margin-top:3px;}
+.header-tag{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#334155;border:1px solid #1e293b;border-radius:6px;padding:5px 13px;}
+
+/* HERO */
+.hero{padding:64px 0 56px;text-align:center;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#38bdf8;margin-bottom:24px;}
+.hero-eyebrow::before,.hero-eyebrow::after{content:'';display:block;width:32px;height:1px;background:#38bdf8;opacity:.4;}
+h1.hero-title{font-family:'Syne',sans-serif;font-size:clamp(36px,6vw,60px);font-weight:800;line-height:1.08;letter-spacing:-.04em;color:#f8fafc;margin-bottom:20px;}
+h1.hero-title .accent{background:linear-gradient(90deg,#38bdf8,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{font-size:17px;color:#64748b;line-height:1.7;max-width:520px;margin:0 auto 44px;}
+
+/* VALUES */
+.values-row{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;}
+.value-pill{display:flex;align-items:center;gap:10px;background:#0c1524;border:1px solid #1e293b;border-radius:100px;padding:9px 18px;}
+.value-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.v-label{font-size:9px;color:#475569;text-transform:uppercase;letter-spacing:.09em;margin-bottom:1px;}
+.v-name{font-family:'Syne',sans-serif;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#e2e8f0;}
+
+/* SECTION DIVIDER */
+.sdiv{display:flex;align-items:center;gap:16px;margin:56px 0 28px;}
+.sdiv::before,.sdiv::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,#1e293b,transparent);}
+.sdiv-label{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#38bdf8;text-align:center;}
+.sdiv-title{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:#f1f5f9;margin-top:4px;letter-spacing:-.03em;text-align:center;}
+
+/* CREED */
+.creed-block{background:#0c1524;border:1px solid #1e293b;border-radius:16px;padding:44px 52px;margin:0 0 56px;position:relative;overflow:hidden;}
+.creed-block::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#38bdf8,#4f46e5);}
+.creed-block::after{content:'"';position:absolute;right:44px;bottom:-20px;font-family:Georgia,serif;font-size:220px;line-height:1;color:rgba(56,189,248,.04);user-select:none;pointer-events:none;}
+.creed-eyebrow{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#38bdf8;margin-bottom:22px;}
+.creed-intro{font-family:'Syne',sans-serif;font-size:21px;font-weight:700;color:#f1f5f9;line-height:1.35;margin-bottom:28px;max-width:560px;}
+.creed-items{display:flex;flex-direction:column;gap:16px;margin-bottom:28px;}
+.creed-item{display:flex;gap:16px;align-items:flex-start;}
+.creed-num{font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:#38bdf8;background:#0d1f35;border:1px solid #1e3a5f;border-radius:6px;padding:4px 9px;flex-shrink:0;margin-top:2px;}
+.creed-text{font-size:15px;color:#94a3b8;line-height:1.7;}
+.creed-callout{background:#0a1929;border:1px solid #1e3a5f;border-radius:10px;padding:18px 22px;display:flex;gap:14px;align-items:flex-start;position:relative;z-index:1;}
+.callout-bolt{width:26px;height:26px;border-radius:6px;background:#0d2744;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+.callout-text{font-size:13.5px;color:#64748b;line-height:1.65;font-style:italic;}
+.callout-text strong{color:#cbd5e1;font-style:normal;font-weight:500;}
+
+/* SCRIPT CARDS */
+.scripts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:14px;}
+.script-card{display:flex;flex-direction:column;background:#0c1524;border:1px solid #1e293b;border-radius:14px;padding:26px 24px;text-decoration:none;color:inherit;transition:border-color .2s,transform .18s;position:relative;overflow:hidden;}
+.script-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--c);border-radius:14px 14px 0 0;transform:scaleX(0);transform-origin:left;transition:transform .25s;}
+.script-card:hover{border-color:var(--c);transform:translateY(-4px);}
+.script-card:hover::before{transform:scaleX(1);}
+.sc-num{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--c);margin-bottom:14px;}
+.sc-icon{width:42px;height:42px;border-radius:10px;margin-bottom:18px;display:flex;align-items:center;justify-content:center;background:var(--cbg);flex-shrink:0;}
+.sc-who{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--c);margin-bottom:8px;opacity:.85;}
+.sc-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:#f1f5f9;margin-bottom:10px;letter-spacing:-.03em;line-height:1.25;}
+.sc-desc{font-size:13px;color:#475569;line-height:1.7;flex:1;margin-bottom:20px;}
+.sc-desc em{color:#64748b;font-style:italic;}
+.sc-when{background:#080f1c;border:1px solid #1e293b;border-radius:8px;padding:10px 13px;margin-bottom:20px;}
+.sc-when-label{font-size:9px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#334155;margin-bottom:5px;}
+.sc-when-text{font-size:12px;color:#475569;line-height:1.55;}
+.sc-cta{display:flex;align-items:center;gap:7px;margin-top:auto;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--c);}
+.sc-cta svg{width:13px;height:13px;transition:transform .2s;}
+.script-card:hover .sc-cta svg{transform:translateX(4px);}
+
+/* CALCULATOR CARD */
+.calc-card{background:#0c1524;border:1px solid #1e293b;border-radius:14px;padding:32px 36px;display:flex;gap:36px;align-items:flex-start;text-decoration:none;color:inherit;position:relative;overflow:hidden;margin-bottom:56px;transition:border-color .2s,transform .18s;}
+.calc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#0d9488,#14b8a6);transform:scaleX(0);transform-origin:left;transition:transform .25s;border-radius:14px 14px 0 0;}
+.calc-card:hover{border-color:#0d9488;transform:translateY(-3px);}
+.calc-card:hover::before{transform:scaleX(1);}
+.calc-icon-wrap{width:58px;height:58px;border-radius:13px;flex-shrink:0;background:rgba(13,148,136,.1);display:flex;align-items:center;justify-content:center;}
+.calc-right{flex:1;}
+.calc-eyebrow{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#0d9488;margin-bottom:8px;}
+.calc-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:#f1f5f9;margin-bottom:10px;letter-spacing:-.03em;}
+.calc-desc{font-size:14px;color:#475569;line-height:1.7;margin-bottom:20px;max-width:600px;}
+.calc-tabs{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:22px;}
+.calc-tab{background:#0a1e1c;border:1px solid #134e4a;border-radius:20px;padding:6px 14px;font-size:11px;font-weight:500;color:#14b8a6;letter-spacing:.04em;}
+.calc-tab .tab-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:currentColor;margin-right:7px;opacity:.7;}
+.calc-features{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px;}
+.calc-feat{background:#080f1c;border:1px solid #1e293b;border-radius:9px;padding:12px 14px;}
+.cf-title{font-size:11px;font-weight:600;color:#e2e8f0;margin-bottom:4px;}
+.cf-desc{font-size:11px;color:#334155;line-height:1.55;}
+.calc-cta{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#0d9488;}
+.calc-cta svg{width:13px;height:13px;transition:transform .2s;}
+.calc-card:hover .calc-cta svg{transform:translateX(4px);}
+
+/* FOOTER */
+.playbook-footer{border-top:1px solid #0f1c2e;padding-top:32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.pf-brand{font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:#1e3a5f;letter-spacing:.1em;text-transform:uppercase;}
+.pf-values{display:flex;gap:18px;}
+.pf-v{font-size:10px;color:#1e3a5f;letter-spacing:.07em;text-transform:uppercase;}
+.pf-meta{font-size:10px;color:#1e293b;}
+
+@media(max-width:740px){
+  .scripts-grid{grid-template-columns:1fr;}
+  .creed-block{padding:30px 24px;}
+  .calc-card{flex-direction:column;gap:22px;padding:26px 24px;}
+  .calc-features{grid-template-columns:1fr 1fr;}
+  header{flex-direction:column;align-items:flex-start;}
+}
+@media(max-width:480px){
+  h1.hero-title{font-size:34px;}
+  .calc-features{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div class="hero-glow"></div>
+<div class="page">
+
+  <header>
+    <div class="logo-group">
+      <svg width="44" height="52" viewBox="0 0 44 52" fill="none" aria-hidden="true">
+        <path d="M22 2L3 9.5V27C3 38.5 12.5 48 22 51C31.5 48 41 38.5 41 27V9.5L22 2Z"
+              stroke="url(#ls)" stroke-width="2.2" fill="none" stroke-linejoin="round"/>
+        <line x1="11" y1="20" x2="33" y2="20" stroke="url(#ls)" stroke-width="2" stroke-linecap="round"/>
+        <line x1="11" y1="26" x2="33" y2="26" stroke="url(#ls)" stroke-width="2" stroke-linecap="round"/>
+        <line x1="11" y1="32" x2="33" y2="32" stroke="url(#ls)" stroke-width="2" stroke-linecap="round"/>
+        <line x1="13" y1="38" x2="31" y2="38" stroke="url(#ls)" stroke-width="2" stroke-linecap="round"/>
+        <defs>
+          <linearGradient id="ls" x1="3" y1="2" x2="41" y2="51" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#38bdf8"/>
+            <stop offset="100%" stop-color="#2563eb"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <div>
+        <div class="logo-name">IFCA</div>
+        <div class="logo-sub">Impact Fitness Coaching Academy</div>
+      </div>
+    </div>
+    <div class="header-tag">Sales Playbook · 2026</div>
+  </header>
+
+  <div class="hero">
+    <div class="hero-eyebrow">Enrollment Advisor Playbook</div>
+    <h1 class="hero-title">Close with <span class="accent">clarity.</span><br>Lead with conviction.</h1>
+    <p class="hero-sub">Every script, diagnostic, and math tool your team needs to run world-class enrollment calls — in one place.</p>
+    <div class="values-row">
+      <div class="value-pill">
+        <div class="value-dot" style="background:#38bdf8"></div>
+        <div><div class="v-label">Relentless</div><div class="v-name">Growth</div></div>
+      </div>
+      <div class="value-pill">
+        <div class="value-dot" style="background:#c4a55a"></div>
+        <div><div class="v-label">Extreme</div><div class="v-name">Ownership</div></div>
+      </div>
+      <div class="value-pill">
+        <div class="value-dot" style="background:#818cf8"></div>
+        <div><div class="v-label">Authentic</div><div class="v-name">Connection</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sdiv">
+    <div>
+      <div class="sdiv-label">The Foundation</div>
+      <div class="sdiv-title">The Enrollment Advisor Creed</div>
+    </div>
+  </div>
+
+  <div class="creed-block">
+    <div class="creed-eyebrow">Our only job as an enrollment advisor</div>
+    <div class="creed-intro">"Our job is not to sell.<br>Our job is to serve."</div>
+    <div class="creed-items">
+      <div class="creed-item">
+        <div class="creed-num">01</div>
+        <div class="creed-text">To help our prospects make the best decision for themselves — or to fully understand whether we can actually help this person achieve their desired outcome.</div>
+      </div>
+      <div class="creed-item">
+        <div class="creed-num">02</div>
+        <div class="creed-text">If we can help them — it's holding them accountable to their own desire and ambition. Not letting them off the hook when the discomfort of change shows up.</div>
+      </div>
+    </div>
+    <div class="creed-callout">
+      <div class="callout-bolt">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M8 1L3 8h4l-1 5 6-7H8l1-5z" stroke="#38bdf8" stroke-width="1.4" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+      <div class="callout-text">
+        <strong>The fundamental problem:</strong> People will fight like hell to stay in their comfort zone. The best enrollment advisors don't manipulate prospects into buying — they help them make the <strong>uncomfortable decision they already know they need to make.</strong> Diagnose first. Prescribe second. Never the other way around.
+      </div>
+    </div>
+  </div>
+
+  <div class="sdiv">
+    <div>
+      <div class="sdiv-label">The Scripts</div>
+      <div class="sdiv-title">Choose the right syntax for the call</div>
+    </div>
+  </div>
+
+  <div class="scripts-grid">
+
+    <a class="script-card" href="./goal-syntax-script.html" target="_blank"
+       style="--c:#3b82f6;--cbg:rgba(59,130,246,.1)">
+      <div class="sc-num">Script 01</div>
+      <div class="sc-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M10 1.5L12 7h6L13.5 11l2 6L10 13.5 4.5 17l2-6L2 7h6L10 1.5z"
+                stroke="#3b82f6" stroke-width="1.5" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+      <div class="sc-who">Starting from scratch · &lt; $2K/month</div>
+      <div class="sc-title">Goal Syntax Script</div>
+      <div class="sc-desc">For prospects with no established coaching business or under $2K/month in consistent revenue. The problem is the <em>absence</em> of a business. Discovery builds desire and surfaces the cost of inaction. Pitch from aspiration — not problem-solving.</div>
+      <div class="sc-when">
+        <div class="sc-when-label">Use this when</div>
+        <div class="sc-when-text">Prospect is in a job, just starting out, or has under $2K/month with no traction. Fear and uncertainty are the dominant emotions.</div>
+      </div>
+      <div class="sc-cta">
+        Open Script
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h10M7 2l5 5-5 5"/></svg>
+      </div>
+    </a>
+
+    <a class="script-card" href="./problem-syntax-script.html" target="_blank"
+       style="--c:#7c3aed;--cbg:rgba(124,58,237,.1)">
+      <div class="sc-num">Script 02</div>
+      <div class="sc-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <circle cx="10" cy="10" r="8" stroke="#7c3aed" stroke-width="1.5" fill="none"/>
+          <path d="M10 6.5v4.5M10 14v.5" stroke="#7c3aed" stroke-width="1.7" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="sc-who">Established coaches · $2K–$40K+/month</div>
+      <div class="sc-title">Problem Syntax Script</div>
+      <div class="sc-desc">For coaches with an existing business and a specific, identifiable constraint — traffic, pipeline, close rate, or retention. Diagnose the leak first. Every pillar problem-links directly back to their exact constraint.</div>
+      <div class="sc-when">
+        <div class="sc-when-label">Use this when</div>
+        <div class="sc-when-text">Prospect has real revenue but something specific is broken or capped. They know the problem — your job is to quantify it and position IFCA as the precise fix.</div>
+      </div>
+      <div class="sc-cta">
+        Open Script
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h10M7 2l5 5-5 5"/></svg>
+      </div>
+    </a>
+
+    <a class="script-card" href="./pt-pivot-script.html" target="_blank"
+       style="--c:#0d9488;--cbg:rgba(13,148,136,.1)">
+      <div class="sc-num">Script 03</div>
+      <div class="sc-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M4 16L10 4l6 12" stroke="#0d9488" stroke-width="1.5" stroke-linejoin="round" fill="none"/>
+          <path d="M6.5 11.5h7" stroke="#0d9488" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="sc-who">In-person trainers → hybrid / online</div>
+      <div class="sc-title">PT Pivot Script</div>
+      <div class="sc-desc">For in-person trainers transitioning to hybrid or fully online. The Three Currencies framework is the belief-breaker. Lead with the physical and time ceiling — not just the income gap.</div>
+      <div class="sc-when">
+        <div class="sc-when-label">Use this when</div>
+        <div class="sc-when-text">Prospect is a credentialed in-person trainer wanting to go online. Address "no audience, no ads budget, no idea how to deliver" before they become objections.</div>
+      </div>
+      <div class="sc-cta">
+        Open Script
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h10M7 2l5 5-5 5"/></svg>
+      </div>
+    </a>
+
+  </div>
+
+  <div class="sdiv">
+    <div>
+      <div class="sdiv-label">The Tool</div>
+      <div class="sdiv-title">IFCA Business Calculator</div>
+    </div>
+  </div>
+
+  <a class="calc-card" href="./ifca-calculator.html" target="_blank">
+    <div class="calc-icon-wrap">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <rect x="3" y="3" width="22" height="22" rx="4" stroke="#0d9488" stroke-width="1.7" fill="none"/>
+        <path d="M8 10h4M8 14h4M8 18h4M16 10h4M16 14h4M16 18h4" stroke="#0d9488" stroke-width="1.5" stroke-linecap="round"/>
+        <rect x="13" y="5.5" width="7" height="3.5" rx="1.5" fill="#0d9488" opacity=".5"/>
+      </svg>
+    </div>
+    <div class="calc-right">
+      <div class="calc-eyebrow">Live Call Tool · Open at the start of every call</div>
+      <div class="calc-title">IFCA Business Calculator</div>
+      <div class="calc-desc">A screen-share tool that closes deals with math, not pressure. Enter numbers silently during discovery — then flip the screen and let the data speak. The numbers create urgency. You don't have to.</div>
+      <div class="calc-tabs">
+        <div class="calc-tab"><span class="tab-dot"></span>Goal Calculator</div>
+        <div class="calc-tab"><span class="tab-dot"></span>Business Diagnostic</div>
+        <div class="calc-tab"><span class="tab-dot"></span>PT Pivot</div>
+      </div>
+      <div class="calc-features">
+        <div class="calc-feat">
+          <div class="cf-title">COI in real time</div>
+          <div class="cf-desc">Monthly gap, yearly loss, and "already gone" auto-calculate as you fill in discovery numbers. Show after the Knife Turn.</div>
+        </div>
+        <div class="calc-feat">
+          <div class="cf-title">KPI health flags</div>
+          <div class="cf-desc">Business Diagnostic auto-marks ✅ or ❌ against IFCA benchmarks. Let the red flags do the talking after the Knife Turn.</div>
+        </div>
+        <div class="calc-feat">
+          <div class="cf-title">12-month projection</div>
+          <div class="cf-desc">FE-only vs FE + back-end. Show it before the price drop. Let the gap between the two numbers land in silence.</div>
+        </div>
+      </div>
+      <div class="calc-cta">
+        Open Calculator
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h10M7 2l5 5-5 5"/></svg>
+      </div>
+    </div>
+  </a>
+
+  <footer class="playbook-footer">
+    <div class="pf-brand">IFCA · Impact Fitness Coaching Academy</div>
+    <div class="pf-values">
+      <div class="pf-v">Relentless Growth</div>
+      <div class="pf-v">Extreme Ownership</div>
+      <div class="pf-v">Authentic Connection</div>
+    </div>
+    <div class="pf-meta">impactcoachacademy.com</div>
+  </footer>
+
+</div>
+</body>
+</html>
