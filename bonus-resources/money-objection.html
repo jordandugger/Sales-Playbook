@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Money & Financial Objection — IFCA</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:#060d1a;color:#f1f5f9;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(56,189,248,.033) 1px,transparent 1px),linear-gradient(90deg,rgba(56,189,248,.033) 1px,transparent 1px);background-size:52px 52px;pointer-events:none;z-index:0;}
+.hero-glow{position:fixed;top:-240px;left:50%;transform:translateX(-50%);width:1000px;height:680px;background:radial-gradient(ellipse at 50% 30%,rgba(37,99,235,.14) 0%,transparent 65%);pointer-events:none;z-index:0;}
+.page{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:0 28px 100px;}
+
+/* HEADER */
+header{display:flex;align-items:center;justify-content:space-between;padding:30px 0 0;flex-wrap:wrap;gap:16px;}
+.logo-group{display:flex;align-items:center;gap:14px;text-decoration:none;}
+.logo-name{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#38bdf8;line-height:1;}
+.logo-sub{font-size:10px;color:#334155;letter-spacing:.07em;text-transform:uppercase;margin-top:3px;}
+.back-link{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:#334155;text-decoration:none;transition:color .15s;}
+.back-link:hover{color:#64748b;}
+.back-link svg{width:13px;height:13px;}
+
+/* HERO */
+.hero{padding:52px 0 44px;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#f59e0b;margin-bottom:20px;}
+.hero-eyebrow::before,.hero-eyebrow::after{content:'';display:block;width:28px;height:1px;background:#f59e0b;opacity:.45;}
+h1.hero-title{font-family:'Syne',sans-serif;font-size:clamp(30px,5vw,48px);font-weight:800;line-height:1.1;letter-spacing:-.04em;color:#f8fafc;margin-bottom:16px;}
+h1.hero-title .accent{background:linear-gradient(90deg,#f59e0b,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{font-size:16px;color:#64748b;line-height:1.7;max-width:600px;margin-bottom:28px;}
+.covered-pills{display:flex;gap:9px;flex-wrap:wrap;}
+.covered-pill{background:#0c1524;border:1px solid #1e293b;border-radius:20px;padding:6px 14px;font-size:11px;font-weight:500;color:#94a3b8;display:flex;align-items:center;gap:7px;}
+.covered-pill::before{content:'';width:6px;height:6px;border-radius:50%;background:#f59e0b;flex-shrink:0;}
+
+/* LOOM CARD */
+.loom-card{background:#0c1524;border:1px solid #1e293b;border-radius:14px;padding:28px 32px;margin:40px 0;display:flex;gap:28px;align-items:flex-start;position:relative;overflow:hidden;}
+.loom-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#f59e0b,#fbbf24);border-radius:14px 14px 0 0;}
+.loom-icon-wrap{width:52px;height:52px;border-radius:12px;background:rgba(245,158,11,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.loom-content{flex:1;}
+.loom-eyebrow{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#f59e0b;margin-bottom:8px;}
+.loom-title{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:#f1f5f9;margin-bottom:8px;letter-spacing:-.02em;}
+.loom-desc{font-size:13.5px;color:#475569;line-height:1.65;margin-bottom:18px;}
+.loom-btn{display:inline-flex;align-items:center;gap:9px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);border-radius:8px;padding:10px 18px;text-decoration:none;color:#fbbf24;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:background .2s,border-color .2s;}
+.loom-btn:hover{background:rgba(245,158,11,.18);border-color:rgba(245,158,11,.5);}
+.loom-btn svg{width:16px;height:16px;}
+
+/* SECTION DIVIDER */
+.sdiv{display:flex;align-items:center;gap:16px;margin:52px 0 24px;}
+.sdiv::before,.sdiv::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,#1e293b,transparent);}
+.sdiv-inner{text-align:center;white-space:nowrap;}
+.sdiv-label{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#f59e0b;}
+.sdiv-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:#f1f5f9;margin-top:4px;letter-spacing:-.03em;}
+
+/* FRAMEWORK NOTE */
+.framework-note{background:#0c1524;border:1px solid #1e293b;border-left:4px solid #f59e0b;border-radius:0 12px 12px 0;padding:20px 24px;margin-bottom:36px;}
+.fn-label{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#f59e0b;margin-bottom:10px;}
+.fn-text{font-size:14px;color:#94a3b8;line-height:1.7;}
+.fn-text strong{color:#e2e8f0;font-weight:500;}
+.fn-rule{margin-top:14px;padding-top:14px;border-top:1px solid #1e293b;display:flex;gap:12px;align-items:flex-start;}
+.fn-rule-icon{width:22px;height:22px;border-radius:5px;background:#0d2744;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.fn-rule-text{font-size:13px;color:#64748b;line-height:1.6;font-style:italic;}
+.fn-rule-text strong{color:#cbd5e1;font-style:normal;}
+
+/* STEP CARDS */
+.steps{display:flex;flex-direction:column;gap:12px;}
+.step-card{background:#0c1524;border:1px solid #1e293b;border-radius:12px;overflow:hidden;transition:border-color .2s;}
+.step-card:hover{border-color:#334155;}
+.step-head{display:flex;align-items:center;gap:14px;padding:16px 20px;background:transparent;}
+.step-num-wrap{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.step-num{font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:var(--sc);background:var(--scbg);border:1px solid var(--scb);border-radius:7px;padding:4px 10px;letter-spacing:.04em;}
+.step-phase{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#334155;}
+.step-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:#f1f5f9;flex:1;letter-spacing:-.02em;}
+.step-body{padding:0 20px 20px;}
+.step-divider{height:1px;background:#1e293b;margin:0 20px 18px;}
+.say-block{background:#0a1525;border-left:4px solid #3b82f6;border-radius:0 8px 8px 0;padding:14px 16px;margin-bottom:14px;}
+.say-label{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#3b82f6;margin-bottom:9px;}
+.say-text{font-size:14.5px;line-height:1.8;color:#cbd5e1;}
+.say-text p{margin-bottom:8px;}
+.say-text p:last-child{margin-bottom:0;}
+.cue{color:#475569;font-style:italic;font-size:13px;}
+.step-note{font-size:12.5px;color:#475569;line-height:1.6;font-style:italic;background:#080f1c;border-radius:7px;padding:10px 13px;}
+
+/* BUCKETS */
+.buckets{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0;}
+.bucket{background:#080f1c;border:1px solid #1e293b;border-radius:9px;padding:14px 16px;text-align:center;}
+.bucket-icon{width:34px;height:34px;border-radius:8px;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;}
+.bucket-label{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#334155;margin-bottom:4px;}
+.bucket-name{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:#94a3b8;}
+
+/* RULE CARD */
+.rule-card{background:#0c1524;border:1px solid #fee2e2;border-left:4px solid #f43f5e;border-radius:0 12px 12px 0;padding:16px 20px;margin-top:36px;}
+.rule-label{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#be123c;margin-bottom:8px;}
+.rule-items{display:flex;flex-direction:column;gap:8px;}
+.rule-item{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:#94a3b8;line-height:1.6;}
+.rule-item::before{content:'⚠';font-size:12px;flex-shrink:0;margin-top:2px;}
+.rule-item strong{color:#fda4af;font-weight:500;}
+
+/* FOOTER */
+.playbook-footer{border-top:1px solid #0f1c2e;padding-top:32px;margin-top:56px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.pf-brand{font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:#1e3a5f;letter-spacing:.1em;text-transform:uppercase;}
+.pf-meta{font-size:10px;color:#1e293b;}
+
+@media(max-width:600px){
+  .loom-card{flex-direction:column;gap:18px;}
+  .buckets{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div class="hero-glow"></div>
+<div class="page">
+
+  <!-- HEADER -->
+  <header>
+    <a class="logo-group" href="./index.html">
+      <svg width="36" height="42" viewBox="0 0 44 52" fill="none" aria-hidden="true">
+        <path d="M22 2L3 9.5V27C3 38.5 12.5 48 22 51C31.5 48 41 38.5 41 27V9.5L22 2Z" stroke="url(#ls2)" stroke-width="2.2" fill="none" stroke-linejoin="round"/>
+        <line x1="11" y1="20" x2="33" y2="20" stroke="url(#ls2)" stroke-width="2" stroke-linecap="round"/>
+        <line x1="11" y1="26" x2="33" y2="26" stroke="url(#ls2)" stroke-width="2" stroke-linecap="round"/>
+        <line x1="11" y1="32" x2="33" y2="32" stroke="url(#ls2)" stroke-width="2" stroke-linecap="round"/>
+        <line x1="13" y1="38" x2="31" y2="38" stroke="url(#ls2)" stroke-width="2" stroke-linecap="round"/>
+        <defs>
+          <linearGradient id="ls2" x1="3" y1="2" x2="41" y2="51" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#38bdf8"/>
+            <stop offset="100%" stop-color="#2563eb"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <div>
+        <div class="logo-name">IFCA</div>
+        <div class="logo-sub">Impact Fitness Coaching Academy</div>
+      </div>
+    </a>
+    <a class="back-link" href="./index.html">
+      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7H2M7 2L2 7l5 5"/></svg>
+      Back to Playbook
+    </a>
+  </header>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-eyebrow">Objection Handling</div>
+    <h1 class="hero-title">Money &amp; <span class="accent">Financial</span><br>Objection</h1>
+    <p class="hero-sub">A three-step tie-down sequence to identify, isolate, and close through financial objections — without offering a payment plan until conviction is locked in.</p>
+    <div class="covered-pills">
+      <div class="covered-pill">Isolating the True Objection</div>
+      <div class="covered-pill">Cash on Hand / Open Wallet</div>
+      <div class="covered-pill">Creating a Custom Payment Plan</div>
+    </div>
+  </div>
+
+  <!-- LOOM VIDEO -->
+  <div class="loom-card">
+    <div class="loom-icon-wrap">
+      <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+        <circle cx="13" cy="13" r="11" stroke="#f59e0b" stroke-width="1.6" fill="none"/>
+        <path d="M10.5 9.5l7 3.5-7 3.5V9.5z" fill="#f59e0b"/>
+      </svg>
+    </div>
+    <div class="loom-content">
+      <div class="loom-eyebrow">Training Video</div>
+      <div class="loom-title">Triple Tie-Down — Full Walkthrough</div>
+      <div class="loom-desc">Watch the full framework in action: isolating the objection, the open wallet sequence, and closing on a custom plan. Covers every variation — emotional, logistical, and combined.</div>
+      <!-- ── REPLACE THE href BELOW WITH YOUR REAL LOOM URL ── -->
+      <a class="loom-btn" href="PASTE_LOOM_URL_HERE" target="_blank" rel="noopener">
+        <svg viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="7" stroke="#fbbf24" stroke-width="1.4" fill="none"/>
+          <path d="M6.5 5.5l4 2.5-4 2.5V5.5z" fill="#fbbf24"/>
+        </svg>
+        Watch on Loom
+      </a>
+    </div>
+  </div>
+
+  <!-- FRAMEWORK -->
+  <div class="sdiv">
+    <div class="sdiv-inner">
+      <div class="sdiv-label">The Framework</div>
+      <div class="sdiv-title">How this objection works</div>
+    </div>
+  </div>
+
+  <div class="framework-note">
+    <div class="fn-label">Before you run any step</div>
+    <div class="fn-text">
+      When overcoming money/financial objections, you must first identify whether the prospect is giving you an <strong>emotional money objection</strong> (fear, uncertainty, lack of belief in themselves) or a <strong>logistical money objection</strong> (they genuinely don't have access to the funds right now) — or a combination of both.
+      <br><br>
+      Isolating the objection lets you enter the conversation with confidence, knowing exactly what you're actually handling.
+    </div>
+    <div class="fn-rule">
+      <div class="fn-rule-icon">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+          <path d="M6 1v5M6 9v.5" stroke="#f59e0b" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="fn-rule-text">
+        <strong>The goal:</strong> Handle emotional, fear, and uncertainty objections BEFORE you ever offer a payment plan option. Handling finances last — only once conviction is locked — allows logistical money objections to resolve themselves easily.
+      </div>
+    </div>
+  </div>
+
+  <!-- STEPS -->
+  <div class="sdiv">
+    <div class="sdiv-inner">
+      <div class="sdiv-label">Triple Tie-Down</div>
+      <div class="sdiv-title">The sequence — step by step</div>
+    </div>
+  </div>
+
+  <div class="steps">
+
+    <!-- STEP 1 -->
+    <div class="step-card" style="--sc:#f59e0b;--scbg:rgba(245,158,11,.1);--scb:rgba(245,158,11,.25)">
+      <div class="step-head">
+        <div class="step-num-wrap">
+          <div class="step-num">Tie Down #1</div>
+          <div class="step-phase">Isolate the True Objection</div>
+        </div>
+      </div>
+      <div class="step-divider"></div>
+      <div class="step-body">
+        <div class="say-block">
+          <div class="say-label">SAY THIS</div>
+          <div class="say-text">
+            <p>"Investment aside, is there anything else that would keep you less than 100% certain that you would want to work with us to help you get to <span class="cue">[XYZ GOAL]</span>?"</p>
+            <p>"Or is it just a cash flow thing?"</p>
+          </div>
+        </div>
+        <div class="step-note">If they name another concern — address it directly before continuing. The goal is to confirm: the only thing left is the money. Once you have that, move to Tie Down #2.</div>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step-card" style="--sc:#f59e0b;--scbg:rgba(245,158,11,.1);--scb:rgba(245,158,11,.25)">
+      <div class="step-head">
+        <div class="step-num-wrap">
+          <div class="step-num">Tie Down #2</div>
+          <div class="step-phase">If you had it, would you do it?</div>
+        </div>
+      </div>
+      <div class="step-divider"></div>
+      <div class="step-body">
+        <div class="say-block">
+          <div class="say-label">SAY THIS</div>
+          <div class="say-text">
+            <p>"I'm curious — if you had $<span class="cue">[PRICE]</span> completely liquid to you right now... would you do it?"</p>
+            <p>"Would you say you're 10 out of 10 on the process specifically?"</p>
+          </div>
+        </div>
+        <div class="step-note">You need a yes here before moving forward. If they hesitate on the process itself — you have a different objection. Surface it now. If they say yes, you've confirmed it's purely logistical. Now you have permission to help them find a way.</div>
+      </div>
+    </div>
+
+    <!-- PERMISSION BRIDGE -->
+    <div class="step-card" style="--sc:#818cf8;--scbg:rgba(129,140,248,.1);--scb:rgba(129,140,248,.25)">
+      <div class="step-head">
+        <div class="step-num-wrap">
+          <div class="step-num">Permission</div>
+          <div class="step-phase">Bridge to Open Wallet</div>
+        </div>
+      </div>
+      <div class="step-divider"></div>
+      <div class="step-body">
+        <div class="say-block">
+          <div class="say-label">SAY THIS</div>
+          <div class="say-text">
+            <p>"Got it — the last thing we want is for finances to be the thing that holds you back from getting the help you need."</p>
+            <p>"I do have some flexibility here to create something custom for you to make it more digestible. I don't have an option A or option B or anything set in stone..."</p>
+            <p>"...so, do you mind if I ask you a personal question?"</p>
+          </div>
+        </div>
+        <div class="step-note">Wait for them to say yes before asking anything. This micro-permission keeps the conversation collaborative — they invited you in, you're not prying.</div>
+      </div>
+    </div>
+
+    <!-- OPEN WALLET -->
+    <div class="step-card" style="--sc:#818cf8;--scbg:rgba(129,140,248,.1);--scb:rgba(129,140,248,.25)">
+      <div class="step-head">
+        <div class="step-num-wrap">
+          <div class="step-num">Open Wallet</div>
+          <div class="step-phase">Cash on Hand</div>
+        </div>
+      </div>
+      <div class="step-divider"></div>
+      <div class="step-body">
+        <div class="say-block">
+          <div class="say-label">SAY THIS</div>
+          <div class="say-text">
+            <p>"Again, just so I can see if I can help — what would you have available to you today in terms of cash on hand in your checking, savings, or even credit via credit cards?"</p>
+            <p>"Just so I can try to create something more digestible for you."</p>
+          </div>
+        </div>
+        <div class="buckets">
+          <div class="bucket">
+            <div class="bucket-icon" style="background:rgba(59,130,246,.1)">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <rect x="2" y="5" width="14" height="10" rx="2" stroke="#3b82f6" stroke-width="1.4" fill="none"/>
+                <path d="M5 5V4a4 4 0 018 0v1" stroke="#3b82f6" stroke-width="1.4" fill="none"/>
+              </svg>
+            </div>
+            <div class="bucket-label">Bucket 1</div>
+            <div class="bucket-name">Checking</div>
+          </div>
+          <div class="bucket">
+            <div class="bucket-icon" style="background:rgba(129,140,248,.1)">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <circle cx="9" cy="9" r="7" stroke="#818cf8" stroke-width="1.4" fill="none"/>
+                <path d="M9 5.5v2.5l2 2" stroke="#818cf8" stroke-width="1.4" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="bucket-label">Bucket 2</div>
+            <div class="bucket-name">Savings</div>
+          </div>
+          <div class="bucket">
+            <div class="bucket-icon" style="background:rgba(245,158,11,.1)">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <rect x="1.5" y="4" width="15" height="10" rx="2" stroke="#f59e0b" stroke-width="1.4" fill="none"/>
+                <path d="M1.5 8h15" stroke="#f59e0b" stroke-width="1.4"/>
+              </svg>
+            </div>
+            <div class="bucket-label">Bucket 3</div>
+            <div class="bucket-name">Credit</div>
+          </div>
+        </div>
+        <div class="step-note">Probe each bucket specifically. Don't stop at the first number. "And in savings?" / "Any room on credit cards?" — you're building a complete picture, not accepting the first answer as final.</div>
+      </div>
+    </div>
+
+    <!-- TIE DOWN 3 -->
+    <div class="step-card" style="--sc:#22c55e;--scbg:rgba(34,197,94,.1);--scb:rgba(34,197,94,.25)">
+      <div class="step-head">
+        <div class="step-num-wrap">
+          <div class="step-num">Tie Down #3</div>
+          <div class="step-phase">Close on Custom Plan</div>
+        </div>
+      </div>
+      <div class="step-divider"></div>
+      <div class="step-body">
+        <div class="say-block">
+          <div class="say-label">SAY THIS</div>
+          <div class="say-text">
+            <p>"I appreciate you being open and honest with me — let me ask you this."</p>
+            <p>"If I was able to break this up and allow you in today — we'll still treat you like you paid in full."</p>
+            <p>"If I was able to make this more digestible for you today and create something custom based on what you have, would you be ready to get started today?"</p>
+          </div>
+        </div>
+        <div class="step-note">This is the close. You're not asking if they want to do it — you already have that from Tie Down #2. You're only asking if a custom structure makes it possible. Make it easy to say yes.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RULES -->
+  <div class="rule-card">
+    <div class="rule-label">⚠ Critical Rules — Never Break These</div>
+    <div class="rule-items">
+      <div class="rule-item">Never offer a payment plan before running <strong>Tie Down #1 and #2</strong>. Offering a plan before you've confirmed conviction rewards hesitation and creates a price negotiation, not a commitment.</div>
+      <div class="rule-item">If they can't say they're <strong>10/10 on the process</strong> in Tie Down #2, stop. You have a different objection hiding under the money objection. Find it first.</div>
+      <div class="rule-item">Never book a follow-up to "figure out finances." <strong>A follow-up doesn't fix a financial objection</strong> — it just gives it more time to solidify. Close it on the call or lose the deal.</div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="playbook-footer">
+    <div class="pf-brand">IFCA · Impact Fitness Coaching Academy</div>
+    <div class="pf-meta">impactcoachacademy.com</div>
+  </footer>
+
+</div>
+</body>
+</html>
