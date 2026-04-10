@@ -1,0 +1,25 @@
+<html>
+<head>
+    <title>IFCA Business Calculator</title>
+</head>
+<body>
+    <h1>IFCA Business Calculator</h1>
+    <p>This is where you can input your data to calculate potential bonuses!</p>
+    <form>
+        <label for="sales">Sales Amount:</label>
+        <input type="number" id="sales" name="sales"><br>
+        <label for="bonusRate">Bonus Rate (%):</label>
+        <input type="number" id="bonusRate" name="bonusRate"><br>
+        <button type="button" onclick="calculateBonus()">Calculate Bonus</button>
+    </form>
+    <h2>Bonus: <span id="bonusOutput">0</span></h2>
+    <script>
+        function calculateBonus() {
+            var sales = document.getElementById('sales').value;
+            var bonusRate = document.getElementById('bonusRate').value;
+            var bonus = (sales * (bonusRate / 100));
+            document.getElementById('bonusOutput').innerText = bonus.toFixed(2);
+        }
+    </script>
+</body>
+</html>
