@@ -25,6 +25,9 @@ body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text)
 .brand-eyebrow { font-size:9px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#475569; margin-bottom:5px; }
 .brand-title { font-family:'Syne',sans-serif; font-size:16px; font-weight:800; color:#f8fafc; line-height:1.2; letter-spacing:-.3px; }
 .brand-sub { font-size:10px; color:#64748b; margin-top:3px; line-height:1.4; }
+.back-link { display:inline-flex; align-items:center; gap:5px; font-size:10px; font-weight:600; color:#475569; text-decoration:none; text-transform:uppercase; letter-spacing:.1em; margin-bottom:12px; transition:color .15s; }
+.back-link:hover { color:#94a3b8; }
+.back-link svg { width:12px; height:12px; }
 .nav-label { font-size:9px; font-weight:600; letter-spacing:.11em; text-transform:uppercase; color:#374151; padding:14px 16px 6px; }
 .nav-item { display:flex; align-items:center; gap:9px; padding:8px 12px 8px 16px; cursor:pointer; border-left:3px solid transparent; transition:background .12s,border-color .12s; }
 .nav-item:hover { background:rgba(255,255,255,.04); }
@@ -156,6 +159,7 @@ body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text)
 <div id="app">
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">
+      <a href="../index.html" class="back-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg> Back to Playbook</a>
       <div class="brand-eyebrow">IFCA · March 2026</div>
       <div class="brand-title">Goal Syntax Script</div>
       <div class="brand-sub">Starting From Scratch · &lt; $2K/Month</div>
