@@ -172,9 +172,13 @@ body.share-mode .inputs-col { display:none; }
           <div class="section-title"><span class="step-badge" style="background:#1d4ed8">2</span>Offer</div>
           <div class="field-row">
             <div class="field"><label>Front-End Package Price</label><div class="prefix" data-pre="$"><input type="number" id="g-fe" value="3000" oninput="calcGoal()"></div></div>
-            <div class="field"><label>Back-End Price</label><div class="prefix" data-pre="$"><input type="number" id="g-be" value="5000" oninput="calcGoal()"></div></div>
+            <div class="field"><label>FE Length <span class="hint">(months)</span></label><div class="suffix" data-suf="mo"><input type="number" id="g-fe-months" value="6" oninput="calcGoal()"></div></div>
           </div>
-          <div class="field"><label>Back-End Conversion Rate <span class="hint">(% of FE clients who upgrade)</span></label><div class="suffix" data-suf="%"><input type="number" id="g-be-conv" value="50" oninput="calcGoal()"></div></div>
+          <div class="field-row">
+            <div class="field"><label>Back-End Monthly Rate</label><div class="prefix" data-pre="$"><input type="number" id="g-be" value="500" oninput="calcGoal()"></div></div>
+            <div class="field"><label>BE Contract Length <span class="hint">(months)</span></label><div class="suffix" data-suf="mo"><input type="number" id="g-be-months" value="12" oninput="calcGoal()"></div></div>
+          </div>
+          <div class="field"><label>BE Conversion Rate <span class="hint">(% of FE clients who resign)</span></label><div class="suffix" data-suf="%"><input type="number" id="g-be-conv" value="50" oninput="calcGoal()"></div></div>
         </div>
 
         <div class="input-section">
@@ -183,7 +187,7 @@ body.share-mode .inputs-col { display:none; }
             <div class="field"><label>Close Rate</label><div class="suffix" data-suf="%"><input type="number" id="g-close" value="45" oninput="calcGoal()"></div></div>
             <div class="field"><label>Show Rate</label><div class="suffix" data-suf="%"><input type="number" id="g-show" value="75" oninput="calcGoal()"></div></div>
           </div>
-          <div class="field"><label>Cost Per Lead (Ads)</label><div class="prefix" data-pre="$"><input type="number" id="g-cpl" value="5" oninput="calcGoal()"></div></div>
+          <div class="field"><label>Target ROAS <span class="hint">(revenue per $1 in ads)</span></label><div class="suffix" data-suf="x"><input type="number" id="g-roas" value="6" oninput="calcGoal()"></div></div>
         </div>
 
       </div><!-- /inputs-goal -->
@@ -216,11 +220,15 @@ body.share-mode .inputs-col { display:none; }
           <div class="metric-card"><div class="card-label">Leads Needed / Mo</div><div class="card-value lg blue" id="g-leads">—</div></div>
         </div>
         <div class="metric-card" style="margin-bottom:14px">
-          <div class="card-label">Estimated Monthly Ad Spend</div>
+          <div class="card-label">Estimated Monthly Ad Spend <span style="font-size:10px;font-weight:500;color:#64748b;text-transform:none;letter-spacing:0">(at <span id="g-roas-disp">6</span>x ROAS)</span></div>
           <div style="display:flex;align-items:baseline;gap:16px">
             <div class="card-value lg blue" id="g-adspend">—</div>
             <div class="card-sub" id="g-adspend-sub"></div>
           </div>
+        </div>
+        <div id="g-starter-callout" style="background:#f0fdf4;border:1px solid #bbf7d0;border-left:4px solid #16a34a;border-radius:0 8px 8px 0;padding:12px 16px;margin-bottom:14px;display:none">
+          <div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#15803d;margin-bottom:6px">📍 Starter Note — Show This to Them</div>
+          <div style="font-size:13px;color:#166534;line-height:1.65">Month 1–2: <strong>zero ad spend needed.</strong> Your first clients come from your warm network. We only layer in paid ads after you've signed your first clients organically and have a proven offer. Ad spend gets reinvested from revenue — not out of pocket up front.</div>
         </div>
 
         <div class="chart-card">
@@ -243,6 +251,25 @@ body.share-mode .inputs-col { display:none; }
             <div class="card-label">Total Monthly Revenue</div>
             <div class="card-value lg green" id="g-total-mo">—</div>
             <div class="card-sub">FE + BE combined</div>
+          </div>
+        </div>
+
+        <div class="results-section-title">LTV Per Client</div>
+        <div class="results-grid">
+          <div class="metric-card accent-blue">
+            <div class="card-label">Front-End Value</div>
+            <div class="card-value lg blue" id="g-ltv-fe">—</div>
+            <div class="card-sub" id="g-ltv-fe-sub"></div>
+          </div>
+          <div class="metric-card accent-blue">
+            <div class="card-label">Back-End Contract Value</div>
+            <div class="card-value lg blue" id="g-ltv-be">—</div>
+            <div class="card-sub" id="g-ltv-be-sub"></div>
+          </div>
+          <div class="metric-card accent-green big">
+            <div class="card-label">Total LTV / Client</div>
+            <div class="card-value lg green" id="g-ltv-total">—</div>
+            <div class="card-sub" id="g-ltv-total-sub"></div>
           </div>
         </div>
 
@@ -479,16 +506,23 @@ let gProjChart = null, bPlChart = null, pTrajChart = null;
 
 // ─── GOAL CALCULATOR ──────────────────────────────────────────────────
 function calcGoal(){
-  const cur   = v('g-cur')   || 0;
-  const goal  = v('g-goal')  || 10000;
-  const hrs   = v('g-hrs')   || 160;
-  const stuck = v('g-stuck') || 6;
-  const fe    = v('g-fe')    || 3000;
-  const be    = v('g-be')    || 5000;
-  const bec   = (v('g-be-conv')||50)/100;
-  const cr    = (v('g-close')||45)/100;
-  const sr    = (v('g-show') ||75)/100;
-  const cpl   = v('g-cpl')   || 5;
+  const cur      = v('g-cur')       || 0;
+  const goal     = v('g-goal')      || 10000;
+  const hrs      = v('g-hrs')       || 160;
+  const stuck    = v('g-stuck')     || 6;
+  const fe       = v('g-fe')        || 3000;
+  const feMonths = v('g-fe-months') || 6;
+  const be       = v('g-be')        || 500;
+  const beMonths = v('g-be-months') || 12;
+  const bec      = (v('g-be-conv')  || 50)/100;
+  const cr       = (v('g-close')    || 45)/100;
+  const sr       = (v('g-show')     || 75)/100;
+  const roas     = v('g-roas')       || 6;
+
+  // LTV per client
+  const ltvFE    = fe;
+  const ltvBE    = be * beMonths;
+  const ltvTotal = ltvFE + ltvBE;
 
   // COI
   const gap   = Math.max(0, goal - cur);
@@ -496,14 +530,18 @@ function calcGoal(){
   const coiYr = gap * 12;
   const gone  = gap * stuck;
 
-  // What it takes
+  // What it takes (clients = FE packages needed per month)
   const clients = fe > 0 ? Math.ceil(goal / fe) : 0;
   const live    = cr > 0 ? Math.ceil(clients / cr) : 0;
   const booked  = sr > 0 ? Math.ceil(live / sr) : 0;
   const leads   = Math.ceil(booked / 0.05);
-  const adsp    = leads * cpl;
 
-  // Upside
+  // Ad spend via ROAS: spend = FE revenue ÷ ROAS target
+  const feRev_for_adsp = clients * fe;
+  const adsp    = roas > 0 ? Math.round(feRev_for_adsp / roas) : 0;
+  const impliedCpl = leads > 0 ? adsp / leads : 0;
+
+  // Upside — monthly revenue from FE packages + BE recurring
   const feRev   = clients * fe;
   const beClts  = Math.floor(clients * bec);
   const beRev   = beClts * be;
@@ -523,12 +561,24 @@ function calcGoal(){
   $('g-booked').textContent   = fmtN(booked);
   $('g-leads').textContent    = fmtN(leads);
   $('g-adspend').textContent  = fmt$(adsp);
-  $('g-adspend-sub').textContent = `at ${fmt$(cpl)}/lead`;
+  $('g-adspend-sub').textContent = impliedCpl > 0 ? `≈ ${fmt$(Math.round(impliedCpl))}/lead implied` : '';
+  if($('g-roas-disp')) $('g-roas-disp').textContent = roas;
+
+  // Show starter callout when clients ≤ 2 (just getting started scenario)
+  const callout = $('g-starter-callout');
+  if(callout) callout.style.display = clients <= 2 ? 'block' : 'none';
 
   $('g-fe-rev').textContent   = fmt$(feRev);
   $('g-be-rev').textContent   = fmt$(beRev);
-  $('g-be-clients').textContent = beClts + ' back-end clients/mo';
+  $('g-be-clients').textContent = beClts + ' BE clients/mo';
   $('g-total-mo').textContent = fmt$(totalMo);
+
+  $('g-ltv-fe').textContent       = fmt$(ltvFE);
+  $('g-ltv-fe-sub').textContent   = feMonths + '-month FE package';
+  $('g-ltv-be').textContent       = fmt$(ltvBE);
+  $('g-ltv-be-sub').textContent   = fmt$(be) + '/mo × ' + beMonths + ' months';
+  $('g-ltv-total').textContent    = fmt$(ltvTotal);
+  $('g-ltv-total-sub').textContent = 'FE ' + fmt$(ltvFE) + ' + BE ' + fmt$(ltvBE);
 
   // Funnel
   const max = leads || 1;
@@ -800,7 +850,7 @@ function resetCurrent(){
   const inputs = $('inputs-'+currentTab).querySelectorAll('input');
   const defaults = {
     'g-cur':'2000','g-goal':'10000','g-hrs':'160','g-stuck':'6',
-    'g-fe':'3000','g-be':'5000','g-be-conv':'50','g-close':'45','g-show':'75','g-cpl':'5',
+    'g-fe':'3000','g-fe-months':'6','g-be':'500','g-be-months':'12','g-be-conv':'50','g-close':'45','g-show':'75','g-roas':'6',
     'b-fe-price':'3000','b-febe':'50','b-be-price':'5000',
     'p-sessions':'20','p-rate':'120','p-evenings':'8','p-cur':'0',
     'p-pkg':'1500','p-fe-months':'3','p-be':'375','p-be-months':'12','p-be-conv':'50','p-goal':'5000','p-close':'45',
