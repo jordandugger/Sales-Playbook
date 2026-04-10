@@ -361,10 +361,14 @@ body.share-mode .inputs-col { display:none; }
         <div class="input-section">
           <div class="section-title"><span class="step-badge" style="background:#0d9488">2</span>Online Offer</div>
           <div class="field-row">
-            <div class="field"><label>90-Day Package Price</label><div class="prefix" data-pre="$"><input type="number" id="p-pkg" value="1500" oninput="calcPT()"></div></div>
-            <div class="field"><label>Back-End Monthly Rate</label><div class="prefix" data-pre="$"><input type="number" id="p-be" value="350" oninput="calcPT()"></div></div>
+            <div class="field"><label>Front-End Package Price</label><div class="prefix" data-pre="$"><input type="number" id="p-pkg" value="1500" oninput="calcPT()"></div></div>
+            <div class="field"><label>FE Length <span class="hint">(months)</span></label><div class="suffix" data-suf="mo"><input type="number" id="p-fe-months" value="3" oninput="calcPT()"></div></div>
           </div>
-          <div class="field"><label>BE Conversion Rate <span class="hint">(FE clients → monthly)</span></label><div class="suffix" data-suf="%"><input type="number" id="p-be-conv" value="50" oninput="calcPT()"></div></div>
+          <div class="field-row">
+            <div class="field"><label>Back-End Monthly Rate</label><div class="prefix" data-pre="$"><input type="number" id="p-be" value="375" oninput="calcPT()"></div></div>
+            <div class="field"><label>BE Contract Length <span class="hint">(9 or 12 mo)</span></label><div class="suffix" data-suf="mo"><input type="number" id="p-be-months" value="12" oninput="calcPT()"></div></div>
+          </div>
+          <div class="field"><label>BE Conversion Rate <span class="hint">(FE clients who resign)</span></label><div class="suffix" data-suf="%"><input type="number" id="p-be-conv" value="50" oninput="calcPT()"></div></div>
         </div>
 
         <div class="input-section">
@@ -427,6 +431,24 @@ body.share-mode .inputs-col { display:none; }
             <div class="card-label">Phase 3 — Full Hybrid (Month 6+)</div>
             <div class="card-value md green" id="p-hybrid-rev">—</div>
             <div class="card-sub">network + content + ads running</div>
+          </div>
+        </div>
+        <div class="results-section-title">LTV Per Client</div>
+        <div class="results-grid">
+          <div class="metric-card accent-teal">
+            <div class="card-label">Front-End Package</div>
+            <div class="card-value lg teal" id="p-ltv-fe">—</div>
+            <div class="card-sub" id="p-ltv-fe-sub"></div>
+          </div>
+          <div class="metric-card accent-teal">
+            <div class="card-label">Back-End Contract</div>
+            <div class="card-value lg teal" id="p-ltv-be">—</div>
+            <div class="card-sub" id="p-ltv-be-sub"></div>
+          </div>
+          <div class="metric-card accent-green big">
+            <div class="card-label">Total LTV / Client</div>
+            <div class="card-value lg green" id="p-ltv-total">—</div>
+            <div class="card-sub" id="p-ltv-total-sub"></div>
           </div>
         </div>
 
@@ -660,23 +682,30 @@ function calcBiz(){
 
 // ─── PT PIVOT ─────────────────────────────────────────────────────────
 function calcPT(){
-  const sessions  = v('p-sessions') || 20;
-  const rate      = v('p-rate')     || 120;
-  const evenings  = v('p-evenings') || 8;
-  const curInput  = v('p-cur')      || 0;
-  const pkg       = v('p-pkg')      || 1500;
-  const beRate    = v('p-be')       || 350;
-  const beConv    = (v('p-be-conv')||50)/100;
-  const goal      = v('p-goal')     || 5000;
-  const cr        = (v('p-close')||45)/100;
+  const sessions  = v('p-sessions')  || 20;
+  const rate      = v('p-rate')      || 120;
+  const evenings  = v('p-evenings')  || 8;
+  const curInput  = v('p-cur')       || 0;
+  const pkg       = v('p-pkg')       || 1500;
+  const feMonths  = v('p-fe-months') || 3;
+  const beRate    = v('p-be')        || 375;
+  const beMonths  = v('p-be-months') || 12;
+  const beConv    = (v('p-be-conv')  || 50)/100;
+  const goal      = v('p-goal')      || 5000;
+  const cr        = (v('p-close')    || 45)/100;
 
   // Current income (auto if blank)
   const curIncome   = curInput > 0 ? curInput : sessions * rate * 4;
-  const ceiling     = 35 * rate * 4;         // maxed at 35 sessions
+  const ceiling     = 35 * rate * 4;
   const eveningInc  = evenings * rate * 4;
   const eveningHrs  = evenings * 4;
 
-  // Goal math
+  // LTV math: FE package + BE contract
+  const ltvFE       = pkg;
+  const ltvBE       = beRate * beMonths;
+  const ltvTotal    = ltvFE + ltvBE;
+
+  // Goal math — monthly revenue target needs clients paying FE packages
   const clientsGoal = pkg > 0 ? Math.ceil(goal / pkg) : 0;
   const replaceEvs  = pkg > 0 ? Math.ceil(eveningInc / pkg) : 0;
   const hrsFreed    = eveningHrs;
@@ -689,15 +718,16 @@ function calcPT(){
   const netClients  = Math.min(3, clientsGoal);
   const netRev      = curIncome + (netClients * pkg);
 
-  // Month 6+ hybrid
+  // Month 6+ hybrid — monthly revenue from FE + recurring BE
+  const beClients   = Math.floor(clientsGoal * beConv);
   const hybridFE    = clientsGoal * pkg;
-  const hybridBE    = Math.floor(clientsGoal * beConv) * beRate;
+  const hybridBE    = beClients * beRate;
   const hybridTotal = curIncome + hybridFE + hybridBE;
 
   // Render
   $('p-ceiling').textContent   = fmt$(ceiling);
   $('p-goal-disp').textContent = fmt$(goal);
-  $('p-clients-needed').textContent = clientsGoal + ' online clients needed';
+  $('p-clients-needed').textContent = clientsGoal + ' FE clients/month needed';
   $('p-coi-yr').textContent    = fmt$(coiYr);
   $('p-coi-sub').textContent   = fmt$(coiMo)+' every month you wait';
 
@@ -707,8 +737,15 @@ function calcPT(){
   $('p-hrs-freed').textContent      = hrsFreed;
 
   $('p-net-rev').textContent    = fmt$(netRev);
-  $('p-net-sub').textContent    = netClients + ' network clients = ' + fmt$(netClients*pkg) + '/mo online';
+  $('p-net-sub').textContent    = netClients + ' network clients = ' + fmt$(netClients*pkg) + ' in FE revenue';
   $('p-hybrid-rev').textContent = fmt$(hybridTotal);
+
+  $('p-ltv-fe').textContent      = fmt$(ltvFE);
+  $('p-ltv-fe-sub').textContent  = feMonths + '-month front-end package';
+  $('p-ltv-be').textContent      = fmt$(ltvBE);
+  $('p-ltv-be-sub').textContent  = fmt$(beRate) + '/mo × ' + beMonths + ' months';
+  $('p-ltv-total').textContent   = fmt$(ltvTotal);
+  $('p-ltv-total-sub').textContent = 'FE $' + Math.round(ltvFE).toLocaleString() + ' + BE $' + Math.round(ltvBE).toLocaleString();
 
   // 12-month chart
   const labels = ['M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12'];
@@ -766,7 +803,7 @@ function resetCurrent(){
     'g-fe':'3000','g-be':'5000','g-be-conv':'50','g-close':'45','g-show':'75','g-cpl':'5',
     'b-fe-price':'3000','b-febe':'50','b-be-price':'5000',
     'p-sessions':'20','p-rate':'120','p-evenings':'8','p-cur':'0',
-    'p-pkg':'1500','p-be':'350','p-be-conv':'50','p-goal':'5000','p-close':'45',
+    'p-pkg':'1500','p-fe-months':'3','p-be':'375','p-be-months':'12','p-be-conv':'50','p-goal':'5000','p-close':'45',
   };
   inputs.forEach(inp => {
     inp.value = defaults[inp.id] !== undefined ? defaults[inp.id] : '';
