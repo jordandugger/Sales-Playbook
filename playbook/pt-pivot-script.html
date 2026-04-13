@@ -317,6 +317,28 @@ function textBlock(content) {
 // ─────────────────────────────────────────────────────────
 const PHASES = [
   {
+    id: 0, name: "Before You Dial", sub: "Mindset & Foundations", color: "#374151",
+    blocks: [
+      { t: "coach", c: "Internalize these before every PT call. PTs are skeptical buyers — they've heard pitches on the gym floor their entire career and can smell a closer from a mile away. Your certainty in the outcome has to be unshakeable before you dial. If you're not 100% bought in, they won't be either. Review these out loud." },
+      { t: "list", label: "THE 4 CLOSER BELIEFS", items: [
+        "We've helped over 1,300 in-person trainers make this exact transition. It works.",
+        "Every trainer we work with genuinely wants and needs what we offer — the model they're in is already breaking.",
+        "I am doing them a favor. The cost of NOT having this conversation is their health, their family time, and their ceiling.",
+        "If they say no — it's their loss. My job is to diagnose honestly, not to sell at any cost."
+      ]},
+      { t: "coach", c: "You are a doctor, not a salesperson. A doctor diagnoses before prescribing. For PTs specifically: don't assume they want to go fully online. They might want hybrid. Don't assume they hate in-person. They might love their morning clients. Your job is to find out what their life is costing them and show them a better path — not to push them toward something that doesn't fit. If they ask about price early: 'Everything we do is customized to your situation — I honestly don't even know yet what the right path looks like for you. Let me ask you a few questions first.'" },
+      { t: "beliefs", label: "THE 7 BELIEFS — PT-SPECIFIC CHECKLIST", coach: "For PT Syntax, Beliefs #1 (Pain), #4 (Desire), and #2 (Doubt) are the most critical. PTs have vivid, concrete pain — use it. Discovery blocks 1–3 build Pain. Block 4 builds Desire. Block 6 builds Doubt. The Knife Turn lands all three dimensions simultaneously. Every PT-specific objection (no audience, can't charge online, don't know how to deliver) traces back to Belief #7 — trust the methodology. Your pitch kills all three proactively.", rows: [
+        { n: 1, name: "Pain (The Ceiling)", desc: "They believe the in-person model has a hard ceiling — financial, physical, and time-based" },
+        { n: 2, name: "Doubt", desc: "They believe they cannot build the online side alone — they've tried or know they'd make expensive mistakes" },
+        { n: 3, name: "Cost", desc: "They believe staying put costs more than investing — financially, physically, and for their family" },
+        { n: 4, name: "Desire", desc: "They are emotionally connected to what freedom looks like — mornings free, done by 9:30, present for family" },
+        { n: 5, name: "Money", desc: "They have resources and are willing to invest in the right system" },
+        { n: 6, name: "Support", desc: "Their partner will support the decision — or is already frustrated with the current model" },
+        { n: 7, name: "Trust (Methodology)", desc: "IFCA's specific 3-stage path — Affinity Launch → Content → Ads — is the only logical sequence for a trainer starting from a network" },
+      ]}
+    ]
+  },
+  {
     id: 1, name: "Open", sub: "≤ 2 MIN", color: "#0d9488",
     blocks: [
       { t: "say", c: `"Hey [Name] — nice to meet you! Whereabouts are you located?"\n[prospect responds]\n\n"Awesome — and have you come across Jordan or Erin before, or did someone refer you over?"\n[prospect responds]` }
@@ -597,7 +619,7 @@ function jumpTo(id) {
 document.addEventListener('DOMContentLoaded', () => {
   const content = document.getElementById('content');
   content.addEventListener('scroll', () => {
-    let active = 1;
+    let active = 0;
     PHASES.forEach(p => {
       const el = document.getElementById(`phase-${p.id}`);
       if (el && el.offsetTop - 40 <= content.scrollTop) active = p.id;
@@ -613,7 +635,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // ─────────────────────────────────────────────────────────
 renderNav();
 renderContent();
-document.getElementById('nav-1').classList.add('active');
+document.getElementById('nav-0').classList.add('active');
 </script>
 </body>
 </html>
