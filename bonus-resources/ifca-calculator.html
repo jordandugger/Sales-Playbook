@@ -8,7 +8,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
 
-
 :root {
   --navy:#0f172a; --navy2:#1e293b; --bg:#f1f5f9; --white:#fff;
   --text:#1e293b; --muted:#64748b; --border:#e2e8f0;
@@ -24,11 +23,9 @@
 * { box-sizing:border-box; margin:0; padding:0; }
 html,body { height:100%; overflow:hidden; }
 body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); font-size:14px; }
-
 /* ── TAB PANELS ── */
 .tab-panel { display:none; height:calc(100vh - 46px); overflow:hidden; }
 .tab-panel.active { display:flex; }
-
 /* ── TOP NAV ── */
 .topnav { background:var(--navy); display:flex; align-items:center; padding:0 20px; height:46px; flex-shrink:0; border-bottom:1px solid rgba(255,255,255,.07); }
 .brand { font-family:'Syne',sans-serif; font-size:15px; font-weight:800; color:#f8fafc; letter-spacing:-.3px; margin-right:24px; }
@@ -39,173 +36,23 @@ body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text)
 .nav-actions { display:flex; gap:8px; }
 .nav-btn { padding:5px 14px; border:1px solid rgba(255,255,255,.12); background:transparent; border-radius:6px; font-size:12px; font-weight:500; color:#94a3b8; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all .12s; }
 .nav-btn:hover { background:rgba(255,255,255,.08); color:#f8fafc; }
-
-* { box-sizing:border-box; margin:0; padding:0; }
-html,body { height:100%; overflow:hidden; }
-body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); font-size:14px; }
-
-/* ── TOP NAV ── */
-.topnav { background:var(--navy); display:flex; align-items:center; gap:0; padding:0 20px; height:46px; flex-shrink:0; border-bottom:1px solid rgba(255,255,255,.07); }
-.brand { font-family:'Syne',sans-serif; font-size:15px; font-weight:800; color:#f8fafc; letter-spacing:-.3px; margin-right:24px; }
-.nav-tabs { display:flex; gap:2px; flex:1; }
-.nav-tab { padding:6px 14px; border-radius:6px; font-size:12px; font-weight:500; color:#64748b; cursor:pointer; text-decoration:none; transition:all .12s; border:none; background:transparent; font-family:'DM Sans',sans-serif; }
-.nav-tab:hover { color:#cbd5e1; background:rgba(255,255,255,.05); }
-.nav-tab.active { background:rgba(255,255,255,.1); color:#f8fafc; font-weight:600; }
-.nav-actions { display:flex; gap:8px; }
-
-/* ── LAYOUT ── */
-#app { display:flex; height:calc(100vh - 46px); overflow:hidden; }
-
-/* ── SIDEBAR ── */
-.sidebar { width:200px; min-width:200px; background:var(--navy); display:flex; flex-direction:column; overflow-y:auto; }
-.sidebar-brand { padding:18px 16px 14px; border-bottom:1px solid rgba(255,255,255,.07); flex-shrink:0; }
-.brand-eyebrow { font-size:9px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#475569; margin-bottom:5px; }
-.brand-title { font-family:'Syne',sans-serif; font-size:15px; font-weight:800; color:#f8fafc; line-height:1.2; letter-spacing:-.3px; }
-.brand-sub { font-size:10px; color:#64748b; margin-top:3px; line-height:1.4; }
-.nav-label { font-size:9px; font-weight:600; letter-spacing:.11em; text-transform:uppercase; color:#374151; padding:14px 16px 6px; }
-.nav-item { display:flex; align-items:center; gap:9px; padding:8px 12px 8px 16px; cursor:pointer; border-left:3px solid transparent; transition:background .12s,border-color .12s; }
-.nav-item:hover { background:rgba(255,255,255,.04); }
-.nav-item.active { background:rgba(255,255,255,.06); border-left-color:var(--teal); }
-.nav-dot { width:22px; height:22px; border-radius:5px; display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-size:10px; font-weight:800; color:#fff; flex-shrink:0; background:var(--teal); }
-.nav-text { flex:1; overflow:hidden; }
-.nav-name { font-size:12px; font-weight:500; color:#cbd5e1; white-space:nowrap; }
-.nav-sub { font-size:10px; color:#475569; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.sidebar-tip { margin:12px 14px; background:rgba(13,148,136,.12); border:1px solid rgba(13,148,136,.2); border-radius:7px; padding:10px 12px; }
-.tip-label { font-size:9px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#5eead4; margin-bottom:5px; }
-.tip-text { font-size:11px; color:#94a3b8; line-height:1.5; }
-
-/* ── MAIN ── */
-.main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
-.topbar { background:var(--white); border-bottom:1px solid var(--border); padding:10px 24px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; gap:12px; }
-.doc-title { font-family:'Syne',sans-serif; font-size:14px; font-weight:700; color:var(--text); letter-spacing:-.2px; }
-.doc-meta { font-size:11px; color:var(--muted); }
-.reset-btn { padding:5px 14px; border:1px solid var(--border); background:var(--white); border-radius:6px; font-size:12px; font-weight:500; color:var(--muted); cursor:pointer; font-family:'DM Sans',sans-serif; transition:all .12s; }
-.reset-btn:hover { background:var(--red-bg); border-color:var(--red); color:var(--red); }
-.content { flex:1; overflow-y:auto; padding:20px 28px 60px; display:flex; flex-direction:column; gap:16px; }
-
-/* ── STEP CARDS ── */
-.step-card { background:var(--white); border:1px solid var(--border); border-radius:10px; overflow:hidden; scroll-margin-top:12px; }
-.step-head { display:flex; align-items:center; gap:12px; padding:12px 18px; }
-.step-num { font-family:'Syne',sans-serif; font-size:11px; font-weight:800; width:26px; height:26px; display:flex; align-items:center; justify-content:center; border-radius:6px; color:#fff; flex-shrink:0; }
-.step-info { flex:1; }
-.step-name { font-family:'Syne',sans-serif; font-size:14px; font-weight:700; letter-spacing:-.2px; }
-.step-sub { font-size:10.5px; color:var(--muted); margin-top:1px; }
-.step-body { padding:16px 18px; border-top:1px solid var(--border); display:flex; flex-direction:column; gap:12px; }
-
-/* ── INPUT ROWS ── */
-.input-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-.input-grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
-.input-group { display:flex; flex-direction:column; gap:5px; }
-.input-label { font-size:10px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
-.input-label .req { color:var(--teal); }
-.input-field { padding:8px 12px; background:var(--input-bg); border:1.5px solid var(--input-border); border-radius:7px; font-size:15px; font-weight:600; color:var(--input-text); font-family:'DM Sans',sans-serif; width:100%; transition:border-color .12s, box-shadow .12s; }
-.input-field:focus { outline:none; border-color:#0284c7; box-shadow:0 0 0 3px rgba(14,165,233,.15); }
-.input-hint { font-size:10.5px; color:var(--muted); margin-top:1px; line-height:1.4; }
-
-/* ── ASSUMPTION INPUTS (adjustable but secondary) ── */
-.assumption-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
-.assumption-group { display:flex; flex-direction:column; gap:4px; }
-.assumption-label { font-size:9px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
-.assumption-field { padding:6px 10px; background:#f8fafc; border:1px solid var(--border); border-radius:6px; font-size:13px; font-weight:500; color:var(--text); font-family:'DM Sans',sans-serif; width:100%; }
-.assumption-field:focus { outline:none; border-color:var(--teal); background:var(--teal-bg); }
-
-/* ── COI SECTION ── */
-.coi-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
-.coi-card { border-radius:8px; padding:14px 16px; text-align:center; }
-.coi-card.primary { background:var(--red-bg); border:1.5px solid var(--red-border); }
-.coi-card.secondary { background:#fff7ed; border:1.5px solid #fed7aa; }
-.coi-card.already { background:#fef9c3; border:1.5px solid #fde047; }
-.coi-label { font-size:9px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; margin-bottom:6px; }
-.coi-card.primary .coi-label { color:var(--red); }
-.coi-card.secondary .coi-label { color:#9a3412; }
-.coi-card.already .coi-label { color:#713f12; }
-.coi-number { font-family:'Syne',sans-serif; font-size:26px; font-weight:800; line-height:1; margin-bottom:5px; }
-.coi-card.primary .coi-number { color:var(--red); }
-.coi-card.secondary .coi-number { color:#ea580c; }
-.coi-card.already .coi-number { color:#ca8a04; }
-.coi-desc { font-size:11px; color:var(--muted); line-height:1.4; }
-.coi-note { background:var(--amber-bg); border:1px solid var(--amber-border); border-radius:7px; padding:10px 14px; font-size:12px; color:var(--amber); display:none; }
-.coi-note.show { display:block; }
-
-/* ── HERO NUMBER ── */
-.hero-box { background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 100%); border-radius:12px; padding:24px 28px; text-align:center; position:relative; overflow:hidden; }
-.hero-box::before { content:''; position:absolute; top:-30px; right:-30px; width:120px; height:120px; border-radius:50%; background:rgba(13,148,136,.15); }
-.hero-eyebrow { font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:#5eead4; margin-bottom:8px; }
-.hero-number { font-family:'Syne',sans-serif; font-size:64px; font-weight:800; color:#f8fafc; line-height:1; }
-.hero-unit { font-family:'Syne',sans-serif; font-size:18px; font-weight:700; color:#94a3b8; margin-top:4px; }
-.hero-sub { font-size:13px; color:#64748b; margin-top:10px; line-height:1.5; }
-.hero-math { font-size:12px; color:#5eead4; margin-top:6px; }
-.organic-note { background:rgba(13,148,136,.12); border:1px solid rgba(13,148,136,.25); border-radius:7px; padding:10px 14px; margin-top:12px; font-size:12px; color:#5eead4; line-height:1.5; }
-
-/* ── FUNNEL ── */
-.funnel { display:flex; flex-direction:column; gap:0; }
-.funnel-row { display:flex; align-items:center; gap:0; }
-.funnel-block { flex:1; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; border:1px solid var(--border); }
-.funnel-row:first-child .funnel-block { border-radius:8px 8px 0 0; border-bottom:none; }
-.funnel-row:last-child .funnel-block { border-radius:0 0 8px 8px; }
-.funnel-row:not(:first-child):not(:last-child) .funnel-block { border-bottom:none; }
-.funnel-label { font-size:12px; font-weight:500; color:var(--text); }
-.funnel-value { font-family:'Syne',sans-serif; font-size:16px; font-weight:800; }
-.funnel-arrow { width:36px; display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:16px; flex-shrink:0; }
-.funnel-note { font-size:11px; color:var(--muted); margin-top:8px; padding:9px 12px; background:var(--bg); border-radius:6px; border:1px solid var(--border); }
-
-/* ── UPSIDE GRID ── */
-.upside-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
-.upside-card { border-radius:8px; padding:12px 14px; }
-.upside-card.fe { background:var(--teal-bg); border:1.5px solid var(--teal-border); }
-.upside-card.be { background:var(--blue-bg); border:1.5px solid var(--blue-border); }
-.upside-card.total { background:var(--green-bg); border:1.5px solid var(--green-border); }
-.upside-card.ltv { background:#f5f3ff; border:1.5px solid #ddd6fe; }
-.upside-label { font-size:9px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; margin-bottom:5px; }
-.upside-card.fe .upside-label { color:var(--teal); }
-.upside-card.be .upside-label { color:var(--blue); }
-.upside-card.total .upside-label { color:var(--green); }
-.upside-card.ltv .upside-label { color:#6d28d9; }
-.upside-number { font-family:'Syne',sans-serif; font-size:22px; font-weight:800; line-height:1; }
-.upside-card.fe .upside-number { color:var(--teal); }
-.upside-card.be .upside-number { color:var(--blue); }
-.upside-card.total .upside-number { color:var(--green); }
-.upside-card.ltv .upside-number { color:#6d28d9; }
-.upside-sub { font-size:11px; color:var(--muted); margin-top:3px; line-height:1.4; }
-
-/* ── PROJECTION SECTION ── */
-.proj-totals { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
-.proj-total { border-radius:8px; padding:12px 16px; text-align:center; }
-.proj-total.fe-only { background:#f8fafc; border:1.5px solid var(--border); }
-.proj-total.fe-be { background:var(--green-bg); border:1.5px solid var(--green-border); }
-.proj-total-label { font-size:9px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
-.proj-total.fe-be .proj-total-label { color:var(--green); }
-.proj-total-num { font-family:'Syne',sans-serif; font-size:28px; font-weight:800; }
-.proj-total.fe-only .proj-total-num { color:var(--text); }
-.proj-total.fe-be .proj-total-num { color:var(--green); }
-.proj-total-sub { font-size:11px; color:var(--muted); margin-top:3px; }
-.chart-wrap { position:relative; height:220px; }
-.cost-staying { background:var(--red-bg); border:1px solid var(--red-border); border-radius:8px; padding:12px 16px; margin-top:12px; display:flex; align-items:center; gap:14px; }
-.cost-staying-icon { font-size:24px; flex-shrink:0; }
-.cost-staying-label { font-size:10px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--red); margin-bottom:3px; }
-.cost-staying-val { font-family:'Syne',sans-serif; font-size:20px; font-weight:800; color:var(--red); }
-.cost-staying-desc { font-size:11px; color:#9f1239; margin-top:2px; line-height:1.4; }
-
-/* ── DIVIDER ── */
-.section-divider { font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); padding:4px 0 6px; }
-
-/* ── SCROLLBAR ── */
+/* ── SHARED APP LAYOUT (within each tab panel) ── */
+#gc-app,#bd-app,#pt-app{display:flex;height:100%;overflow:hidden;width:100%;}
+.tab-panel .app-inner { display:flex; height:100%; overflow:hidden; width:100%; }
 ::-webkit-scrollbar { width:5px; }
 ::-webkit-scrollbar-track { background:transparent; }
 ::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:10px; }
-
-/* ── FOOTER ── */
-.calc-footer { font-size:10px; color:#94a3b8; text-align:center; padding:12px 0 4px; }
+ {
+  --navy:#0f172a; --bg:#f1f5f9; --white:#fff;
+  --text:#1e293b; --muted:#64748b; --border:#e2e8f0;
+  --green:#16a34a; --green-bg:#f0fdf4; --green-border:#86efac;
+  --red:#dc2626; --red-bg:#fff1f2; --red-border:#fca5a5;
+  --amber:#b45309; --amber-bg:#fffbeb; --amber-border:#fcd34d;
+  --blue:#1d4ed8; --blue-bg:#eff6ff; --blue-border:#93c5fd;
+  --teal:#0d9488; --teal-bg:#f0fdfa; --teal-border:#5eead4;
+  --input-bg:#e0f2fe; --input-border:#0ea5e9; --input-text:#0c4a6e;
+}
 * { box-sizing:border-box; margin:0; padding:0; }
-html,body { height:100%; overflow:hidden; }
-body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); font-size:14px; }
-
-
-
-
-
-
-
 
 /* ── SIDEBAR ── */
 .sidebar { width:200px; min-width:200px; background:var(--navy); display:flex; flex-direction:column; overflow-y:auto; }
@@ -241,7 +88,7 @@ body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text)
 .step-info { flex:1; }
 .step-name { font-family:'Syne',sans-serif; font-size:14px; font-weight:700; letter-spacing:-.2px; }
 .step-sub { font-size:10.5px; color:var(--muted); margin-top:1px; }
-.step-body { padding:16px 18px; border-top:1px solid var(--border); display:flex; flex-direction:column; gap:12px; }
+.step-
 
 /* ── KPI TABLE ── */
 .kpi-table { width:100%; border-collapse:collapse; font-size:13px; }
@@ -321,9 +168,6 @@ body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text)
 
 
 .calc-footer { font-size:10px; color:#94a3b8; text-align:center; padding:12px 0 4px; }
-* { box-sizing:border-box; margin:0; padding:0; }
-html,body { height:100%; overflow:hidden; font-family:'DM Sans',sans-serif; font-size:14px; color:var(--text); background:var(--bg); }
-
 /* ── TOP NAV ── */
 
 
@@ -331,11 +175,11 @@ html,body { height:100%; overflow:hidden; font-family:'DM Sans',sans-serif; font
 
 
 
-.nav-actions { display:flex; gap:8px; }
-.nav-btn { padding:5px 14px; border:1px solid rgba(255,255,255,.12); background:transparent; border-radius:6px; font-size:12px; font-weight:500; color:#94a3b8; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all .12s; }
-.nav-btn:hover { background:rgba(255,255,255,.08); color:#f8fafc; }
-.nav-btn.share { background:var(--teal); border-color:var(--teal); color:#fff; }
-.nav-btn.share:hover { background:#0f766e; }
+
+
+
+
+
 
 /* ── TWO-COLUMN LAYOUT ── */
 
@@ -368,7 +212,7 @@ html,body { height:100%; overflow:hidden; font-family:'DM Sans',sans-serif; font
 .out-card-icon { font-size:14px; flex-shrink:0; }
 .out-card-title { font-family:'Syne',sans-serif; font-size:13px; font-weight:700; letter-spacing:-.1px; }
 .out-card-sub { font-size:10px; color:var(--muted); margin-top:1px; }
-.out-card-body { padding:14px 16px; border-top:1px solid var(--border); }
+.out-card-
 
 /* ── METRIC GRIDS ── */
 .metric-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
@@ -495,17 +339,8 @@ html,body { height:100%; overflow:hidden; font-family:'DM Sans',sans-serif; font
 
 /* ── FOOTER ── */
 .calc-footer { font-size:10px; color:#94a3b8; text-align:center; padding:8px 0 0; }
-
-
-
-
-
-/* ── PT CHART OVERRIDE ── */
+/* PT chart override */
 #tab-pt .chart-wrap { height:240px; }
-
-::-webkit-scrollbar { width:5px; }
-::-webkit-scrollbar-track { background:transparent; }
-::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:10px; }
 
 </style>
 </head>
@@ -514,20 +349,17 @@ html,body { height:100%; overflow:hidden; font-family:'DM Sans',sans-serif; font
 <nav class="topnav">
   <div class="brand">IFCA</div>
   <div class="nav-tabs">
-    <button class="nav-tab active" onclick="switchTab('goal', this)">Goal Calculator</button>
-    <button class="nav-tab" onclick="switchTab('bd', this)">Business Diagnostic</button>
-    <button class="nav-tab" onclick="switchTab('pt', this)">PT Pivot</button>
+    <button class="nav-tab active" id="nav-goal" onclick="switchTab('goal')">Goal Calculator</button>
+    <button class="nav-tab" id="nav-bd" onclick="switchTab('bd')">Business Diagnostic</button>
+    <button class="nav-tab" id="nav-pt" onclick="switchTab('pt')">PT Pivot</button>
   </div>
   <div class="nav-actions">
     <button class="nav-btn" onclick="resetActive()">↺ Reset</button>
   </div>
 </nav>
 
-<!-- ═══════════════════════════════════════════════════════════════════
-     TAB 1: GOAL CALCULATOR
-════════════════════════════════════════════════════════════════════ -->
 <div id="tab-goal" class="tab-panel active">
-<div id="g-app">
+<div id="gc-app">
   <aside class="sidebar">
     <div class="sidebar-brand">
       <div class="brand-eyebrow">IFCA · April 2026</div>
@@ -536,27 +368,27 @@ html,body { height:100%; overflow:hidden; font-family:'DM Sans',sans-serif; font
     </div>
     <div class="nav-label">Steps</div>
     <nav>
-      <div class="nav-item active" onclick="gNav('gs1')">
+      <div class="nav-item active" onclick="gcNav('gc-s1')">
         <div class="nav-dot">1</div>
         <div class="nav-text"><div class="nav-name">Their Situation</div><div class="nav-sub">Enter during Block 5</div></div>
       </div>
-      <div class="nav-item" onclick="gNav('gs2')">
+      <div class="nav-item" onclick="gcNav('gc-s2')">
         <div class="nav-dot" style="background:#dc2626">2</div>
         <div class="nav-text"><div class="nav-name">Cost of Inaction</div><div class="nav-sub">Show after Knife Turn</div></div>
       </div>
-      <div class="nav-item" onclick="gNav('gs3')">
+      <div class="nav-item" onclick="gcNav('gc-s3')">
         <div class="nav-dot" style="background:#b45309">3</div>
         <div class="nav-text"><div class="nav-name">Offer Setup</div><div class="nav-sub">Adjust for their situation</div></div>
       </div>
-      <div class="nav-item" onclick="gNav('gs4')">
+      <div class="nav-item" onclick="gcNav('gc-s4')">
         <div class="nav-dot" style="background:#16a34a">4</div>
         <div class="nav-text"><div class="nav-name">Clients Needed</div><div class="nav-sub">Pre-pitch hero number</div></div>
       </div>
-      <div class="nav-item" onclick="gNav('gs5')">
+      <div class="nav-item" onclick="gcNav('gc-s5')">
         <div class="nav-dot" style="background:#4338ca">5</div>
         <div class="nav-text"><div class="nav-name">Pipeline Math</div><div class="nav-sub">Use during Pillar 2</div></div>
       </div>
-      <div class="nav-item" onclick="gNav('gs6')">
+      <div class="nav-item" onclick="gcNav('gc-s6')">
         <div class="nav-dot" style="background:#15803d">6</div>
         <div class="nav-text"><div class="nav-name">12-Month Projection</div><div class="nav-sub">Show before price drop</div></div>
       </div>
@@ -573,13 +405,13 @@ html,body { height:100%; overflow:hidden; font-family:'DM Sans',sans-serif; font
         <div class="doc-title">Prospect Math Calculator</div>
         <div class="doc-meta">Live Call Tool · Enter blue fields during discovery · Everything else auto-calculates</div>
       </div>
-      <button class="reset-btn" onclick="gReset()">↺ Reset</button>
+      <button class="reset-btn" onclick="gcReset()">↺ Reset</button>
     </div>
 
-    <div class="content" id="g-content">
+    <div class="content" id="gc-content">
 
       <!-- STEP 1 -->
-      <div class="step-card" id="g-s1">
+      <div class="step-card" id="gc-s1">
         <div class="step-head" style="background:#f8fafc">
           <div class="step-num" style="background:#0d9488">1</div>
           <div class="step-info">
@@ -591,24 +423,24 @@ html,body { height:100%; overflow:hidden; font-family:'DM Sans',sans-serif; font
           <div class="input-grid">
             <div class="input-group">
               <div class="input-label">Current Monthly Income <span class="req">●</span></div>
-              <input class="input-field" id="g-currentIncome" type="number" value="3500" oninput="gCalc()" placeholder="e.g. 3500">
+              <input class="input-field" id="gc-currentIncome" type="number" value="3500" oninput="gcCalc()" placeholder="e.g. 3500">
               <div class="input-hint">What they take home right now. Ask: "What's your monthly take-home today, roughly?"</div>
             </div>
             <div class="input-group">
               <div class="input-label">Monthly Goal <span class="req">●</span></div>
-              <input class="input-field" id="g-monthlyGoal" type="number" value="8000" oninput="gCalc()" placeholder="e.g. 8000">
+              <input class="input-field" id="gc-monthlyGoal" type="number" value="8000" oninput="gcCalc()" placeholder="e.g. 8000">
               <div class="input-hint">What they want to make. Follow up: "Why that number? What would that change for you?"</div>
             </div>
           </div>
           <div class="input-grid">
             <div class="input-group">
               <div class="input-label">Months Stuck / Thinking About This <span class="req">●</span></div>
-              <input class="input-field" id="monthsStuck" type="number" value="6" oninput="gCalc()" placeholder="e.g. 6">
+              <input class="input-field" id="monthsStuck" type="number" value="6" oninput="gcCalc()" placeholder="e.g. 6">
               <div class="input-hint">Feeds the "Already Gone" cost of inaction number. Ask naturally in Block 6.</div>
             </div>
             <div class="input-group">
               <div class="input-label">Hours Working / Month</div>
-              <input class="input-field" id="hoursPerMonth" type="number" value="180" oninput="gCalc()" placeholder="e.g. 180" style="background:#f8fafc;border-color:var(--border);color:var(--text)">
+              <input class="input-field" id="hoursPerMonth" type="number" value="180" oninput="gcCalc()" placeholder="e.g. 180" style="background:#f8fafc;border-color:var(--border);color:var(--text)">
               <div class="input-hint">Optional. Shows their effective hourly rate vs. what's possible online.</div>
             </div>
           </div>
@@ -620,7 +452,7 @@ html,body { height:100%; overflow:hidden; font-family:'DM Sans',sans-serif; font
       </div>
 
       <!-- STEP 2 -->
-      <div class="step-card" id="g-s2">
+      <div class="step-card" id="gc-s2">
         <div class="step-head" style="background:#fff1f2">
           <div class="step-num" style="background:#dc2626">2</div>
           <div class="step-info">
@@ -656,7 +488,7 @@ html,body { height:100%; overflow:hidden; font-family:'DM Sans',sans-serif; font
       </div>
 
       <!-- STEP 3 -->
-      <div class="step-card" id="g-s3">
+      <div class="step-card" id="gc-s3">
         <div class="step-head" style="background:#fffbeb">
           <div class="step-num" style="background:#b45309">3</div>
           <div class="step-info">
@@ -669,24 +501,24 @@ html,body { height:100%; overflow:hidden; font-family:'DM Sans',sans-serif; font
           <div class="input-grid">
             <div class="input-group">
               <div class="input-label">Front-End Program Price <span class="req">●</span></div>
-              <input class="input-field" id="g-fePrice" type="number" value="3000" oninput="gCalc()" placeholder="3000">
+              <input class="input-field" id="gc-fePrice" type="number" value="3000" oninput="gcCalc()" placeholder="3000">
               <div class="input-hint">Default $3,000 / 6 months ($500/mo). Adjust up to $4–5K with credentials or niche.</div>
             </div>
             <div class="input-group">
               <div class="input-label">Cash Collected Rate <span class="req">●</span></div>
-              <input class="input-field" id="g-cashCollectedRate" type="number" value="40" min="0" max="100" oninput="gCalc()" placeholder="40">
+              <input class="input-field" id="gc-cashCollectedRate" type="number" value="40" min="0" max="100" oninput="gcCalc()" placeholder="40">
               <div class="input-hint">% collected upfront vs. payment plan. IFCA target: 40–60%. Affects real cash flow.</div>
             </div>
           </div>
           <div class="input-grid">
             <div class="input-group">
               <div class="input-label">Back-End Program Price</div>
-              <input class="assumption-field" id="g-bePrice" type="number" value="3375" oninput="gCalc()" style="font-size:14px;padding:7px 10px">
+              <input class="assumption-field" id="gc-bePrice" type="number" value="3375" oninput="gcCalc()" style="font-size:14px;padding:7px 10px">
               <div class="input-hint">Default: 9 months × $375/mo = $3,375. Less than FE to make re-sign easy.</div>
             </div>
             <div class="input-group">
               <div class="input-label">BE Conversion Rate</div>
-              <input class="assumption-field" id="g-beConvRate" type="number" value="50" min="0" max="100" oninput="gCalc()" style="font-size:14px;padding:7px 10px">
+              <input class="assumption-field" id="gc-beConvRate" type="number" value="50" min="0" max="100" oninput="gcCalc()" style="font-size:14px;padding:7px 10px">
               <div class="input-hint">% of FE clients who re-sign to BE. IFCA benchmark: 50%.</div>
             </div>
           </div>
@@ -694,17 +526,17 @@ html,body { height:100%; overflow:hidden; font-family:'DM Sans',sans-serif; font
           <div class="assumption-grid">
             <div class="assumption-group">
               <div class="assumption-label">IFCA Close Rate (%)</div>
-              <input class="assumption-field" id="g-closeRate" type="number" value="45" min="1" max="100" oninput="gCalc()">
+              <input class="assumption-field" id="gc-closeRate" type="number" value="45" min="1" max="100" oninput="gcCalc()">
               <div class="input-hint" style="font-size:10px">Default 45%. Range: 30–50%.</div>
             </div>
             <div class="assumption-group">
               <div class="assumption-label">Show Rate (%)</div>
-              <input class="assumption-field" id="showRate" type="number" value="75" min="1" max="100" oninput="gCalc()">
+              <input class="assumption-field" id="showRate" type="number" value="75" min="1" max="100" oninput="gcCalc()">
               <div class="input-hint" style="font-size:10px">Default 75%. Warm: 75–80%. Cold: 55–65%.</div>
             </div>
             <div class="assumption-group">
               <div class="assumption-label">Cost Per Lead ($)</div>
-              <input class="assumption-field" id="cpl" type="number" value="5" min="1" oninput="gCalc()">
+              <input class="assumption-field" id="cpl" type="number" value="5" min="1" oninput="gcCalc()">
               <div class="input-hint" style="font-size:10px">Default $5. Fitness: $4–$8 typical.</div>
             </div>
           </div>
@@ -712,7 +544,7 @@ html,body { height:100%; overflow:hidden; font-family:'DM Sans',sans-serif; font
       </div>
 
       <!-- STEP 4 -->
-      <div class="step-card" id="g-s4">
+      <div class="step-card" id="gc-s4">
         <div class="step-head" style="background:var(--green-bg)">
           <div class="step-num" style="background:#16a34a">4</div>
           <div class="step-info">
@@ -735,7 +567,7 @@ html,body { height:100%; overflow:hidden; font-family:'DM Sans',sans-serif; font
       </div>
 
       <!-- STEP 5 -->
-      <div class="step-card" id="g-s5">
+      <div class="step-card" id="gc-s5">
         <div class="step-head" style="background:#f5f3ff">
           <div class="step-num" style="background:#4338ca">5</div>
           <div class="step-info">
@@ -781,7 +613,7 @@ html,body { height:100%; overflow:hidden; font-family:'DM Sans',sans-serif; font
       </div>
 
       <!-- STEP 6 -->
-      <div class="step-card" id="g-s6">
+      <div class="step-card" id="gc-s6">
         <div class="step-head" style="background:var(--green-bg)">
           <div class="step-num" style="background:#15803d">6</div>
           <div class="step-info">
@@ -832,7 +664,7 @@ html,body { height:100%; overflow:hidden; font-family:'DM Sans',sans-serif; font
             </div>
           </div>
           <div class="chart-wrap">
-            <canvas id="g-projChart"></canvas>
+            <canvas id="gc-projChart"></canvas>
           </div>
 
           <!-- cost of staying put -->
@@ -851,13 +683,8 @@ html,body { height:100%; overflow:hidden; font-family:'DM Sans',sans-serif; font
     </div>
   </div>
 </div>
-
-
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════════════
-     TAB 2: BUSINESS DIAGNOSTIC
-════════════════════════════════════════════════════════════════════ -->
 <div id="tab-bd" class="tab-panel">
 <div id="bd-app">
   <aside class="sidebar">
@@ -868,31 +695,31 @@ html,body { height:100%; overflow:hidden; font-family:'DM Sans',sans-serif; font
     </div>
     <div class="nav-label">Sections</div>
     <nav>
-      <div class="nav-item active" onclick="bdNav('bds1')">
+      <div class="nav-item active" onclick="bdNav('bd-s1')">
         <div class="nav-dot" style="background:#dc2626">①</div>
         <div class="nav-text"><div class="nav-name">Traffic</div><div class="nav-sub">CPL, leads, ad spend</div></div>
       </div>
-      <div class="nav-item" onclick="bdNav('bds2')">
+      <div class="nav-item" onclick="bdNav('bd-s2')">
         <div class="nav-dot" style="background:#ea580c">②</div>
         <div class="nav-text"><div class="nav-name">Pipeline</div><div class="nav-sub">Show rate, cost/call</div></div>
       </div>
-      <div class="nav-item" onclick="bdNav('bds3')">
+      <div class="nav-item" onclick="bdNav('bd-s3')">
         <div class="nav-dot" style="background:#b45309">③</div>
         <div class="nav-text"><div class="nav-name">Sales Conversion</div><div class="nav-sub">Close rate, ROAS, CCR</div></div>
       </div>
-      <div class="nav-item" onclick="bdNav('bds4')">
+      <div class="nav-item" onclick="bdNav('bd-s4')">
         <div class="nav-dot" style="background:#4338ca">④</div>
         <div class="nav-text"><div class="nav-name">Back-End</div><div class="nav-sub">FE→BE, LTV</div></div>
       </div>
-      <div class="nav-item" onclick="bdNav('bds5')">
+      <div class="nav-item" onclick="bdNav('bd-s5')">
         <div class="nav-dot" style="background:#374151">⑤</div>
         <div class="nav-text"><div class="nav-name">KPI Health</div><div class="nav-sub">All flags at a glance</div></div>
       </div>
-      <div class="nav-item" onclick="bdNav('bds6')">
+      <div class="nav-item" onclick="bdNav('bd-s6')">
         <div class="nav-dot" style="background:#6d28d9">⑥</div>
         <div class="nav-text"><div class="nav-name">Fix This Scenario</div><div class="nav-sub">Before / after impact</div></div>
       </div>
-      <div class="nav-item" onclick="bdNav('bds7')">
+      <div class="nav-item" onclick="bdNav('bd-s7')">
         <div class="nav-dot" style="background:#15803d">⑦</div>
         <div class="nav-text"><div class="nav-name">12-Month Projection</div><div class="nav-sub">Show before price drop</div></div>
       </div>
@@ -1219,14 +1046,10 @@ html,body { height:100%; overflow:hidden; font-family:'DM Sans',sans-serif; font
     </div>
   </div>
 </div>
-
-
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════════════
-     TAB 3: PT PIVOT
-════════════════════════════════════════════════════════════════════ -->
 <div id="tab-pt" class="tab-panel">
+<div class="app-inner">
 <!-- TOP NAV -->
 <div id="pt-app">
 
@@ -1535,86 +1358,82 @@ html,body { height:100%; overflow:hidden; font-family:'DM Sans',sans-serif; font
     <div class="calc-footer">IFCA · Impact Fitness Coaching Academy · PT Pivot Calculator · Closer use only</div>
   </div>
 </div>
-
-
+</div>
 </div>
 
 <script>
 
-// ── TAB SWITCHING ──────────────────────────────────────────────────
-let activeTab = 'goal';
-function switchTab(tab, el) {
+// ── SHARED HELPERS ──────────────────────────────────────────────────────────
+function fmt(n)    { if(isNaN(n)||n==null) return '$—'; return '$'+Math.round(n).toLocaleString(); }
+function fmtNum(n) { if(isNaN(n)||n==null) return '—'; return Math.ceil(n).toLocaleString(); }
+function fmtPct(n) { if(!n&&n!==0) return '—'; return (n*100).toFixed(1)+'%'; }
+function fmtX(n)   { if(!n&&n!==0) return '—'; return n.toFixed(1)+'×'; }
+
+// ── TAB SWITCHING ────────────────────────────────────────────────────────────
+let _activeTab = 'goal';
+function switchTab(tab) {
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('tab-' + tab).classList.add('active');
-  if (el) el.classList.add('active');
-  activeTab = tab;
-  // Re-render chart for newly visible tab
-  setTimeout(() => {
-    if (tab === 'goal') gCalc();
+  document.getElementById('nav-' + tab).classList.add('active');
+  _activeTab = tab;
+  // Charts must be re-rendered when container becomes visible
+  setTimeout(function() {
+    if (tab === 'goal') gcCalc();
     else if (tab === 'bd') bdCalc();
     else if (tab === 'pt') ptCalc();
-  }, 50);
+  }, 30);
 }
 function resetActive() {
-  if (activeTab === 'goal') gReset();
-  else if (activeTab === 'bd') bdReset();
-  else if (activeTab === 'pt') ptReset();
+  if (_activeTab === 'goal') gcReset();
+  else if (_activeTab === 'bd') bdReset();
+  else if (_activeTab === 'pt') ptReset();
 }
 
-// ── SHARED HELPERS ──────────────────────────────────────────────────
-function fmt(n) { if (isNaN(n) || n === null || n === undefined) return '$—'; return '$' + Math.round(n).toLocaleString(); }
-function fmtNum(n) { if (isNaN(n) || n === null) return '—'; return Math.ceil(n).toLocaleString(); }
-function fmtPct(n) { if (!n && n !== 0) return '—'; return (n * 100).toFixed(1) + '%'; }
-function fmtX(n) { if (!n && n !== 0) return '—'; return n.toFixed(1) + '×'; }
-
-
-// ═══════════════════════════════════════════════════════════════════
-// GOAL CALCULATOR JS
-// ═══════════════════════════════════════════════════════════════════
-let gChart = null;
-const gv = id => { const GPFX=['fePrice','bePrice','beConvRate','cashCollectedRate','closeRate','monthlyGoal','currentIncome']; const pid = GPFX.includes(id) ? 'g-'+id : id; return parseFloat(document.getElementById(pid)?.value)||0; };
+// ════════════════════════════════════════════════════════
+// GOAL CALCULATOR
+// ════════════════════════════════════════════════════════
+let gcChart = null;
+const gcv = id => parseFloat(document.getElementById(id)?.value) || 0;
 
 
 
 
-
-
-function gNav(id) {
+function gcNav(id) {
   document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
-  document.querySelectorAll('.nav-item').forEach((el, i) => {
+  document.querySelector('#tab-goal').querySelectorAll('.nav-item').forEach((el, i) => {
     el.classList.toggle('active', el.getAttribute('onclick') === `scrollTo('${id}')`);
   });
 }
 
-function gReset() {
-  document.getElementById('g-currentIncome').value = 3500;
-  document.getElementById('g-monthlyGoal').value = 8000;
+function gcReset() {
+  document.getElementById('gc-currentIncome').value = 3500;
+  document.getElementById('gc-monthlyGoal').value = 8000;
   document.getElementById('monthsStuck').value = 6;
   document.getElementById('hoursPerMonth').value = 180;
-  document.getElementById('g-fePrice').value = 3000;
-  document.getElementById('g-cashCollectedRate').value = 40;
-  document.getElementById('g-bePrice').value = 3375;
-  document.getElementById('g-beConvRate').value = 50;
-  document.getElementById('g-closeRate').value = 45;
+  document.getElementById('gc-fePrice').value = 3000;
+  document.getElementById('gc-cashCollectedRate').value = 40;
+  document.getElementById('gc-bePrice').value = 3375;
+  document.getElementById('gc-beConvRate').value = 50;
+  document.getElementById('gc-closeRate').value = 45;
   document.getElementById('showRate').value = 75;
   document.getElementById('cpl').value = 5;
-  gCalc();
+  gcCalc();
 }
 
-function gCalc() {
+function gcCalc() {
   // Inputs
-  const currentIncome = ggv('currentIncome');
-  const monthlyGoal   = ggv('monthlyGoal');
-  const monthsStuck   = v('monthsStuck');
-  const hours         = v('hoursPerMonth');
-  const fePrice       = ggv('fePrice');
-  const ccr           = ggv('cashCollectedRate') / 100;
-  const bePrice       = ggv('bePrice');
-  const beConv        = ggv('beConvRate') / 100;
-  const closeRate     = ggv('closeRate') / 100;
-  const showRate      = v('showRate') / 100;
-  const cpl           = v('cpl');
+  const currentIncome = gcv('gc-currentIncome');
+  const monthlyGoal   = gcv('gc-monthlyGoal');
+  const monthsStuck   = gcv('monthsStuck');
+  const hours         = gcv('hoursPerMonth');
+  const fePrice       = gcv('gc-fePrice');
+  const ccr           = gcv('gc-cashCollectedRate') / 100;
+  const bePrice       = gcv('gc-bePrice');
+  const beConv        = gcv('gc-beConvRate') / 100;
+  const closeRate     = gcv('gc-closeRate') / 100;
+  const showRate      = gcv('showRate') / 100;
+  const cpl           = gcv('cpl');
 
   // ── STEP 1: hourly ──
   if (hours > 0 && currentIncome > 0) {
@@ -1707,8 +1526,8 @@ function gCalc() {
   // ── SYNC TO LOCALSTORAGE (for PT Pivot) ──
   try {
     localStorage.setItem('ifca_offer', JSON.stringify({
-      fePrice, bePrice: ggv('bePrice'), beConvRate: ggv('beConvRate'),
-      cashCollectedRate: ggv('cashCollectedRate'), closeRate: ggv('closeRate'),
+      fePrice, bePrice: gcv('gc-bePrice'), beConvRate: gcv('gc-beConvRate'),
+      cashCollectedRate: gcv('gc-cashCollectedRate'), closeRate: gcv('gc-closeRate'),
       monthlyGoal
     }));
   } catch(e) {}
@@ -1754,9 +1573,9 @@ function gCalc() {
 
   // Chart
   const labels = ['M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12'];
-  if (gChart) { gChart.destroy(); }
-  const ctx = document.getElementById('g-projChart').getContext('2d');
-  gChart = new Chart(ctx, {
+  if (chart) { gcChart.destroy(); }
+  const ctx = document.getElementById('gc-projChart').getContext('2d');
+  gcChart = new Chart(ctx, {
     type: 'line',
     data: {
       labels,
@@ -1829,29 +1648,27 @@ function gCalc() {
 
 // Scroll tracking
 document.addEventListener('DOMContentLoaded', () => {
-  const content = document.getElementById('g-content');
-  const steps = ['gs1','gs2','gs3','gs4','gs5','gs6'];
+  const content = document.getElementById('gc-content');
+  const steps = ['gc-s1','gc-s2','gc-s3','gc-s4','gc-s5','gc-s6'];
   content.addEventListener('scroll', () => {
-    let active = 'gs1';
+    let active = 'gc-s1';
     steps.forEach(id => {
       const el = document.getElementById(id);
       if (el && el.offsetTop - 50 <= content.scrollTop) active = id;
     });
-    document.querySelectorAll('.nav-item').forEach((el, i) => {
-      el.classList.toggle('active', el.getAttribute('onclick') === `gNav('${steps[i]}')`);
+    document.querySelector('#tab-goal').querySelectorAll('.nav-item').forEach((el, i) => {
+      el.classList.toggle('active', el.getAttribute('onclick') === `gcNav('${steps[i]}')`);
     });
   });
-  gCalc();
+  gcCalc();
 });
 
 
-// ═══════════════════════════════════════════════════════════════════
-// BUSINESS DIAGNOSTIC JS
-// ═══════════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════
+// BUSINESS DIAGNOSTIC
+// ════════════════════════════════════════════════════════
 let bdChart = null;
-const bdv = id => { const BPFX=['fePrice','bePrice','beConvRate']; const pid = BPFX.includes(id) ? 'bd-'+id : id; return parseFloat(document.getElementById(pid)?.value)||0; };
-
-
+const bdv = id => parseFloat(document.getElementById(id)?.value) || 0;
 
 
 function status(val, benchmark, direction) {
@@ -1873,7 +1690,7 @@ function bdNav(id) {
 
 function bdReset() {
   ['adSpend','totalLeads','organicLeads','bookedCalls','liveCalls',
-   'newCloses','fePrice','cashCollected','beConvRate','bePrice'].forEach(id => {
+   'newCloses','bd-fePrice','cashCollected','bd-beConvRate','bd-bePrice'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = '';
   });
@@ -1888,10 +1705,10 @@ function bdCalc() {
   const bookedCalls  = bdv('bookedCalls');
   const liveCalls    = bdv('liveCalls');
   const newCloses    = bdv('newCloses');
-  const fePrice      = bdbdv('fePrice') || 3000;
+  const fePrice      = bdv('bd-fePrice') || 3000;
   const cashColl     = bdv('cashCollected');
-  const beConvPct    = bdbdv('beConvRate');
-  const bePrice      = bdbdv('bePrice') || 3375;
+  const beConvPct    = bdv('bd-beConvRate');
+  const bePrice      = bdv('bd-bePrice') || 3375;
 
   // ── AUTO-CALCS ──
   const cpl          = (adSpend > 0 && totalLeads > 0) ? adSpend / totalLeads : 0;
@@ -2071,7 +1888,7 @@ function bdCalc() {
   document.getElementById('proj-optimized-sub').textContent = diff > 0 ? `${fmt(diff)} more than current pace · BE kicks in at month 7` : 'With constraint fixed + back-end running';
 
   const labels = ['M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12'];
-  if (bdChart) { bdChart.destroy(); }
+  if (chart) { bdChart.destroy(); }
   const ctx = document.getElementById('bd-projChart').getContext('2d');
   bdChart = new Chart(ctx, {
     type: 'line',
@@ -2130,14 +1947,14 @@ function bdCalc() {
 
 document.addEventListener('DOMContentLoaded', () => {
   const content = document.getElementById('bd-content');
-  const steps = ['bds1','bds2','bds3','bds4','bds5','bds6','bds7'];
+  const steps = ['bd-s1','bd-s2','bd-s3','bd-s4','bd-s5','bd-s6','bd-s7'];
   content.addEventListener('scroll', () => {
-    let active = 'bds1';
+    let active = 'bd-s1';
     steps.forEach(id => {
       const el = document.getElementById(id);
       if (el && el.offsetTop - 50 <= content.scrollTop) active = id;
     });
-    document.querySelectorAll('.nav-item').forEach((el, i) => {
+    document.querySelector('#tab-bd').querySelectorAll('.nav-item').forEach((el, i) => {
       el.classList.toggle('active', el.getAttribute('onclick') === `bdNav('${steps[i]}')`);
     });
   });
@@ -2145,24 +1962,21 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// ═══════════════════════════════════════════════════════════════════
-// PT PIVOT JS
-// ═══════════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════
+// PT PIVOT
+// ════════════════════════════════════════════════════════
 let ptChart = null;
-const ptCeil = n => Math.ceil(n);
-const ptv = id => { const PPFX=['fePrice','bePrice','beConvRate','cashCollectedRate','closeRate','monthlyGoal','currentIncome']; const pid = PPFX.includes(id) ? 'pt-'+id : id; return parseFloat(document.getElementById(pid)?.value)||0; };
-
+const ptv = id => parseFloat(document.getElementById(id)?.value) || 0;
 
 
 // ── HELPERS ──
-
-// fmt shared globally: n => (!n && n !== 0) ? '$—' : '$' + Math.round(n).toLocaleString();
-
+// fmt is global
+const ptCeil = n => Math.ptCeil(n);
 
 // ── LOCALSTORAGE SYNC ──
 const OFFER_KEY = 'ifca_offer';
 
-function ptLoadOfferFromStorage() {
+function ptLoadOffer() {
   try {
     const saved = JSON.parse(localStorage.getItem(OFFER_KEY) || '{}');
     if (saved.fePrice)         document.getElementById('pt-fePrice').value         = saved.fePrice;
@@ -2178,18 +1992,18 @@ function ptLoadOfferFromStorage() {
   } catch(e) {}
 }
 
-function ptSaveOfferToStorage() {
+function ptSaveOffer() {
   try {
     const data = {
-      fePrice: ptptv('fePrice'), bePrice: ptptv('bePrice'),
-      beConvRate: ptptv('beConvRate'), cashCollectedRate: ptptv('cashCollectedRate'),
-      closeRate: ptptv('closeRate'), monthlyGoal: ptptv('monthlyGoal')
+      fePrice: ptv('pt-fePrice'), bePrice: ptv('pt-bePrice'),
+      beConvRate: ptv('pt-beConvRate'), cashCollectedRate: ptv('pt-cashCollectedRate'),
+      closeRate: ptv('pt-closeRate'), monthlyGoal: ptv('pt-monthlyGoal')
     };
     localStorage.setItem(OFFER_KEY, JSON.stringify(data));
   } catch(e) {}
 }
 
-function ptSaveAndCalc() { ptSaveOfferToStorage(); ptCalc(); }
+function ptSaveAndCalc() { ptSaveOffer(); ptCalc(); }
 
 // ── MAIN CALC ──
 function ptCalc() {
@@ -2197,15 +2011,15 @@ function ptCalc() {
   const sessions     = ptv('sessionsPerWeek') || 20;
   const rate         = ptv('avgRate') || 120;
   const eveningSess  = ptv('eveningSessions') || 8;
-  const incomeInput  = ptptv('currentIncome');
+  const incomeInput  = ptv('pt-currentIncome');
   const contacts     = ptv('networkContacts') || 200;
   const transClients = ptv('transitionClients') || 0;
-  const fePrice      = ptptv('fePrice') || 3000;
-  const bePrice      = ptptv('bePrice') || 3375;
-  const beConv       = (ptptv('beConvRate') || 50) / 100;
-  const ccr          = (ptptv('cashCollectedRate') || 40) / 100;
-  const monthlyGoal  = ptptv('monthlyGoal') || 5000;
-  const closeRate    = (ptptv('closeRate') || 45) / 100;
+  const fePrice      = ptv('pt-fePrice') || 3000;
+  const bePrice      = ptv('pt-bePrice') || 3375;
+  const beConv       = (ptv('pt-beConvRate') || 50) / 100;
+  const ccr          = (ptv('pt-cashCollectedRate') || 40) / 100;
+  const monthlyGoal  = ptv('pt-monthlyGoal') || 5000;
+  const closeRate    = (ptv('pt-closeRate') || 45) / 100;
 
   // ── DERIVED ──
   const grossMonthly    = sessions * rate * 4;
@@ -2221,9 +2035,9 @@ function ptCalc() {
   const hoursFreedPerMonth = hoursFreedPerWeek * 4;
 
   const feMonthlyRate         = fePrice / 6;
-  const eveningReplaceClients = ceil(eveningMonthly / fePrice);
-  const goalActiveClients     = ceil(monthlyGoal / feMonthlyRate);
-  const fullReplaceClients    = ceil(inPersonMonthly / feMonthlyRate);
+  const eveningReplaceClients = ptCeil(eveningMonthly / fePrice);
+  const goalActiveClients     = ptCeil(monthlyGoal / feMonthlyRate);
+  const fullReplaceClients    = ptCeil(inPersonMonthly / feMonthlyRate);
   const coiAnnual             = monthlyGoal * 12;
 
   // ── AFFINITY LAUNCH FUNNEL (IFCA benchmarks from 3 Currencies PDF) ──
@@ -2367,7 +2181,7 @@ function ptBuildChartData({ inPersonMonthly, morningMonthly, eveningMonthly, mon
 
 // ── CHART RENDERER ──
 function ptRenderChart(labels, ipOnlyData, hybridData, onlineOnlyData, evIdx, fullIdx, eveningMonthly, inPersonMonthly) {
-  if (ptChart) { ptChart.destroy(); ptChart = null; }
+  if (chart) { ptChart.destroy(); chart = null; }
 
   // Custom plugin to draw crossover vertical lines
   const crossoverPlugin = {
@@ -2519,17 +2333,17 @@ function ptReset() {
 
 // ── INIT ──
 document.addEventListener('DOMContentLoaded', () => {
-  ptLoadOfferFromStorage();
+  ptLoadOffer();
   ptCalc();
 });
 
 
-// ═══════════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════
 // INIT
-// ═══════════════════════════════════════════════════════════════════
-document.addEventListener('DOMContentLoaded', () => {
-  gCalc();
-  ptLoadOfferFromStorage();
+// ════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', function() {
+  gcCalc();
+  if (typeof ptLoadOffer === 'function') ptLoadOffer();
 });
 </script>
 </body>
