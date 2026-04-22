@@ -6,535 +6,293 @@
 <title>Problem Syntax Script — IFCA</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
 <style>
-:root {
-  --navy:#0f172a; --bg:#f1f5f9; --white:#fff;
-  --text:#1e293b; --muted:#64748b; --border:#e2e8f0;
-  --say-bg:#eff6ff; --say-border:#3b82f6; --say-label:#1d4ed8;
-  --coach-bg:#fefce8; --coach-border:#fbbf24; --coach-label:#92400e; --coach-text:#78350f;
-  --rule-bg:#fff1f2; --rule-border:#f43f5e; --rule-text:#9f1239;
-  --calc-bg:#f0fdfa; --calc-border:#0d9488; --calc-text:#134e4a;
-}
-* { box-sizing:border-box; margin:0; padding:0; }
-html,body { height:100%; overflow:hidden; }
-body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); font-size:14px; }
-
-#app { display:flex; height:100vh; overflow:hidden; }
-
-.sidebar { width:200px; min-width:200px; background:var(--navy); display:flex; flex-direction:column; overflow-y:auto; }
-.sidebar-brand { padding:18px 16px 14px; border-bottom:1px solid rgba(255,255,255,.07); flex-shrink:0; }
-.brand-eyebrow { font-size:9px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#475569; margin-bottom:5px; }
-.brand-title { font-family:'Syne',sans-serif; font-size:16px; font-weight:800; color:#f8fafc; line-height:1.2; letter-spacing:-.3px; }
-.brand-sub { font-size:10px; color:#64748b; margin-top:3px; line-height:1.4; }
-.nav-label { font-size:9px; font-weight:600; letter-spacing:.11em; text-transform:uppercase; color:#374151; padding:14px 16px 6px; }
-.nav-item { display:flex; align-items:center; gap:9px; padding:8px 12px 8px 16px; cursor:pointer; border-left:3px solid transparent; transition:background .12s,border-color .12s; }
-.nav-item:hover { background:rgba(255,255,255,.04); }
-.nav-item.active { background:rgba(255,255,255,.06); border-left-color:var(--nc,#7c3aed); }
-.nav-dot { width:22px; height:22px; border-radius:5px; display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-size:10px; font-weight:800; color:#fff; flex-shrink:0; background:var(--nc,#7c3aed); }
-.nav-text { flex:1; overflow:hidden; }
-.nav-name { font-size:12px; font-weight:500; color:#cbd5e1; white-space:nowrap; }
-.nav-sub { font-size:10px; color:#475569; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-
-.main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
-.topbar { background:var(--white); border-bottom:1px solid var(--border); padding:10px 24px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; gap:12px; }
-.topbar-left { display:flex; align-items:center; gap:14px; }
-.doc-title { font-family:'Syne',sans-serif; font-size:14px; font-weight:700; color:var(--text); letter-spacing:-.2px; }
-.doc-meta { font-size:11px; color:var(--muted); }
-.tabs { display:flex; background:var(--bg); border-radius:7px; padding:3px; gap:2px; }
-.tab-btn { padding:5px 14px; border:none; background:transparent; border-radius:5px; font-size:12px; font-weight:500; color:var(--muted); cursor:pointer; font-family:'DM Sans',sans-serif; transition:all .12s; }
-.tab-btn.active { background:var(--white); color:var(--text); box-shadow:0 1px 3px rgba(0,0,0,.1); }
-.topbar-right { display:flex; align-items:center; gap:8px; }
-.coach-toggle { display:flex; align-items:center; gap:6px; padding:5px 12px; border:1px solid var(--border); background:var(--white); border-radius:6px; font-size:12px; font-weight:500; color:var(--muted); cursor:pointer; font-family:'DM Sans',sans-serif; transition:all .15s; }
-.coach-toggle.on { background:var(--coach-bg); border-color:var(--coach-border); color:var(--coach-label); }
-
-.content { flex:1; overflow-y:auto; padding:20px 24px 60px; }
-
-.phase { margin-bottom:22px; scroll-margin-top:12px; }
-.phase-head { display:flex; align-items:center; gap:12px; padding:11px 18px; border-radius:9px 9px 0 0; color:white; }
-.phase-badge { font-family:'Syne',sans-serif; font-size:17px; font-weight:800; width:36px; height:36px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,.2); border-radius:8px; flex-shrink:0; }
-.phase-info { flex:1; }
-.phase-name { font-family:'Syne',sans-serif; font-size:15px; font-weight:700; letter-spacing:-.3px; }
-.phase-sub { font-size:10.5px; opacity:.75; margin-top:2px; }
-.phase-body { background:var(--white); border:1px solid var(--border); border-top:none; border-radius:0 0 9px 9px; padding:14px 16px; display:flex; flex-direction:column; gap:11px; }
-
-.block-say { background:var(--say-bg); border-left:4px solid var(--say-border); border-radius:0 7px 7px 0; padding:11px 15px; }
-.say-label { font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--say-label); margin-bottom:8px; }
-.say-text { font-size:14.5px; line-height:1.8; color:#1e293b; }
-.say-text p { margin-bottom:9px; }
-.say-text p:last-child { margin-bottom:0; }
-.cue { color:#94a3b8; font-style:italic; font-size:13px; }
-
-.block-coach { background:var(--coach-bg); border-left:4px solid var(--coach-border); border-radius:0 7px 7px 0; padding:10px 15px; display:none; }
-.coach-head { display:flex; align-items:center; justify-content:space-between; }
-.coach-lbl { font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--coach-label); }
-.coach-body { font-size:12.5px; line-height:1.65; color:var(--coach-text); margin-top:8px; }
-
-.block-rule { background:var(--rule-bg); border-left:4px solid var(--rule-border); border-radius:0 7px 7px 0; padding:10px 15px; }
-.rule-lbl { font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#be123c; margin-bottom:6px; }
-.rule-body { font-size:13.5px; line-height:1.6; color:var(--rule-text); font-weight:600; }
-
-.block-calc { background:var(--calc-bg); border-left:4px solid var(--calc-border); border-radius:0 7px 7px 0; padding:11px 14px; }
-.calc-head { display:flex; align-items:flex-start; gap:10px; }
-.calc-icon { font-size:18px; flex-shrink:0; line-height:1; }
-.calc-info { flex:1; }
-.calc-tab { font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--calc-border); margin-bottom:3px; }
-.calc-action { font-size:13.5px; font-weight:500; color:var(--calc-text); line-height:1.55; }
-.calc-note { font-size:12px; color:#115e59; margin-top:8px; padding-top:8px; border-top:1px solid #99f6e4; line-height:1.5; display:none; }
-
-.block-disc { border:1px solid var(--border); border-radius:8px; overflow:hidden; }
-.disc-head { display:flex; align-items:center; gap:9px; padding:8px 13px; background:#f8fafc; border-bottom:1px solid var(--border); }
-.disc-num { width:22px; height:22px; border-radius:5px; display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-size:11px; font-weight:800; color:#fff; flex-shrink:0; }
-.disc-lbl { font-size:12px; font-weight:600; color:var(--text); flex:1; }
-.belief-chip { font-size:9px; font-weight:700; padding:2px 7px; border-radius:10px; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; }
-.disc-body { padding:12px 13px; display:flex; flex-direction:column; gap:10px; }
-
-.block-sec { border:1px solid var(--border); border-radius:8px; overflow:hidden; }
-.sec-head { padding:8px 13px; background:#f8fafc; border-bottom:1px solid var(--border); }
-.sec-lbl { font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
-.sec-body { padding:12px 13px; }
-
-.block-pillar { border:1px solid #ddd6fe; border-radius:8px; overflow:hidden; }
-.pillar-head { display:flex; align-items:center; gap:11px; padding:10px 13px; background:#f5f3ff; border-bottom:1px solid #ddd6fe; }
-.pillar-num { width:30px; height:30px; border-radius:7px; display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-size:15px; font-weight:800; color:#fff; background:#4338ca; flex-shrink:0; }
-.pillar-lbl { font-family:'Syne',sans-serif; font-size:12.5px; font-weight:700; color:#3730a3; letter-spacing:-.1px; }
-.prob-link { background:#fff7ed; border-left:3px solid #f97316; padding:7px 13px; }
-.prob-tag { font-size:9px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#c2410c; margin-bottom:3px; }
-.prob-text { font-size:12px; color:#7c2d12; font-style:italic; }
-.pillar-body { padding:12px 13px; }
-.pl-box { background:#f0fdf4; border-left:3px solid #22c55e; padding:8px 12px; margin:8px 0; border-radius:0 5px 5px 0; }
-.pl-tag { font-size:9px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#15803d; margin-bottom:3px; }
-.pl-text { font-size:13px; color:#166534; line-height:1.6; }
-.pl-text .cue { color:#4ade80; }
-
-.block-obj { border:1px solid #fee2e2; border-radius:8px; overflow:hidden; }
-.obj-head { padding:8px 13px; background:#fff1f2; border-bottom:1px solid #fee2e2; }
-.obj-lbl { font-size:10px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:#be123c; }
-.obj-body { padding:12px 13px; background:white; }
-
-.block-support { border:1px dashed var(--border); border-radius:8px; padding:11px 13px; background:#fafafa; }
-.support-lbl { font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:7px; }
-
-.block-opening { border:1px solid var(--border); border-radius:8px; overflow:hidden; }
-.opening-head { padding:8px 13px; background:#f8fafc; border-bottom:1px solid var(--border); }
-.opening-lbl { font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
-.opening-body { padding:12px 13px; }
-
-.block-beliefs { }
-.beliefs-label { font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
-.beliefs-table { width:100%; border-collapse:collapse; font-size:12.5px; }
-.beliefs-table th { background:#f8fafc; padding:7px 10px; text-align:left; font-size:9px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--muted); border-bottom:1px solid var(--border); }
-.beliefs-table td { padding:8px 10px; border-bottom:1px solid #f1f5f9; vertical-align:top; }
-.beliefs-table tr:last-child td { border-bottom:none; }
-.b-num { font-family:'Syne',sans-serif; font-weight:800; color:#2563eb; width:24px; font-size:13px; }
-.b-name { font-weight:600; width:140px; }
-.b-desc { color:var(--muted); }
-.b-check { width:36px; text-align:center; font-size:15px; cursor:pointer; user-select:none; }
-
-.block-list { }
-.list-title { font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
-.closer-beliefs { padding-left:0; list-style:none; display:flex; flex-direction:column; gap:8px; }
-.closer-beliefs li { font-size:13.5px; line-height:1.6; color:var(--text); padding:9px 13px; background:#f5f3ff; border-radius:6px; border-left:3px solid #7c3aed; display:flex; align-items:flex-start; gap:8px; }
-.closer-beliefs li::before { content:'✓'; color:#7c3aed; font-weight:700; font-size:13px; flex-shrink:0; margin-top:1px; }
-
-.block-constraint { border:1px solid #ddd6fe; border-radius:8px; overflow:hidden; }
-.constraint-header { padding:9px 13px; background:#f5f3ff; border-bottom:1px solid #ddd6fe; }
-.constraint-title { font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#5b21b6; }
-.constraint-table { width:100%; border-collapse:collapse; font-size:12.5px; }
-.constraint-table th { background:#faf5ff; padding:7px 10px; text-align:left; font-size:9px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:#5b21b6; border-bottom:1px solid #ddd6fe; }
-.constraint-table td { padding:8px 10px; border-bottom:1px solid #f5f3ff; vertical-align:top; }
-.constraint-table tr:last-child td { border-bottom:none; }
-.ct-type { font-weight:700; color:#7c3aed; width:100px; }
-.ct-looks { color:var(--muted); }
-.ct-pillar { font-weight:600; color:#4338ca; width:160px; }
-
-.btext { font-size:14.5px; line-height:1.8; color:var(--text); }
-.btext p { margin-bottom:9px; }
-.btext p:last-child { margin-bottom:0; }
-.btext .cue { color:#94a3b8; font-style:italic; font-size:13px; }
-
-.coach-only { display:none !important; }
-.notes-on .coach-only { display:flex !important; }
-.block-coach.coach-only { display:none !important; }
-.notes-on .block-coach.coach-only { display:block !important; }
-.sop-mode .block-coach { display:block !important; }
-.sop-mode .coach-only { display:flex !important; }
-.sop-mode .calc-note { display:block !important; }
-.notes-on .calc-note { display:block !important; }
-
-.calc-footer { font-size:10px; color:#94a3b8; text-align:center; padding:12px 0 4px; }
-::-webkit-scrollbar { width:5px; }
-::-webkit-scrollbar-track { background:transparent; }
-::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:10px; }
+:root{--navy:#0f172a;--bg:#f1f5f9;--white:#fff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;--say-bg:#eff6ff;--say-border:#3b82f6;--say-label:#1d4ed8;--coach-bg:#fefce8;--coach-border:#fbbf24;--coach-label:#92400e;--coach-text:#78350f;--rule-bg:#fff1f2;--rule-border:#f43f5e;--rule-text:#9f1239;--calc-bg:#f0fdfa;--calc-border:#0d9488;--calc-text:#134e4a;}
+*{box-sizing:border-box;margin:0;padding:0;}html,body{height:100%;overflow:hidden;}body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;}
+#app{display:flex;height:100vh;overflow:hidden;}
+.sidebar{width:200px;min-width:200px;background:var(--navy);display:flex;flex-direction:column;overflow-y:auto;}
+.sidebar-brand{padding:18px 16px 14px;border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0;}
+.brand-eyebrow{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#475569;margin-bottom:5px;}
+.brand-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:#f8fafc;line-height:1.2;letter-spacing:-.3px;}
+.brand-sub{font-size:10px;color:#64748b;margin-top:3px;line-height:1.4;}
+.nav-label{font-size:9px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:#374151;padding:14px 16px 6px;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 12px 8px 16px;cursor:pointer;border-left:3px solid transparent;transition:background .12s,border-color .12s;}
+.nav-item:hover{background:rgba(255,255,255,.04);}
+.nav-item.active{background:rgba(255,255,255,.06);border-left-color:var(--nc,#7c3aed);}
+.nav-dot{width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:10px;font-weight:800;color:#fff;flex-shrink:0;background:var(--nc,#7c3aed);}
+.nav-ref-dot{width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;background:rgba(255,255,255,.08);}
+.nav-text{flex:1;overflow:hidden;}.nav-name{font-size:12px;font-weight:500;color:#cbd5e1;white-space:nowrap;}.nav-sub{font-size:10px;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.topbar{background:var(--white);border-bottom:1px solid var(--border);padding:10px 24px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:12px;}
+.topbar-left{display:flex;align-items:center;gap:14px;}.doc-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--text);letter-spacing:-.2px;}.doc-meta{font-size:11px;color:var(--muted);}
+.tabs{display:flex;background:var(--bg);border-radius:7px;padding:3px;gap:2px;}.tab-btn{padding:5px 14px;border:none;background:transparent;border-radius:5px;font-size:12px;font-weight:500;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .12s;}.tab-btn.active{background:var(--white);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.1);}
+.topbar-right{display:flex;align-items:center;gap:8px;}.coach-toggle{display:flex;align-items:center;gap:6px;padding:5px 12px;border:1px solid var(--border);background:var(--white);border-radius:6px;font-size:12px;font-weight:500;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;}.coach-toggle.on{background:var(--coach-bg);border-color:var(--coach-border);color:var(--coach-label);}
+.content{flex:1;overflow-y:auto;padding:20px 24px 60px;}
+.phase{margin-bottom:22px;scroll-margin-top:12px;}.phase-head{display:flex;align-items:center;gap:12px;padding:11px 18px;border-radius:9px 9px 0 0;color:white;}.phase-badge{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.2);border-radius:8px;flex-shrink:0;}.phase-info{flex:1;}.phase-name{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;letter-spacing:-.3px;}.phase-sub{font-size:10.5px;opacity:.75;margin-top:2px;}.phase-body{background:var(--white);border:1px solid var(--border);border-top:none;border-radius:0 0 9px 9px;padding:14px 16px;display:flex;flex-direction:column;gap:11px;}
+.block-say{background:var(--say-bg);border-left:4px solid var(--say-border);border-radius:0 7px 7px 0;padding:11px 15px;}.say-label{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--say-label);margin-bottom:8px;}.say-text{font-size:14.5px;line-height:1.8;color:#1e293b;}.say-text p{margin-bottom:9px;}.say-text p:last-child{margin-bottom:0;}.cue{color:#94a3b8;font-style:italic;font-size:13px;}
+.block-coach{background:var(--coach-bg);border-left:4px solid var(--coach-border);border-radius:0 7px 7px 0;padding:10px 15px;display:none;}.block-coach.always{display:block;}.coach-head{display:flex;align-items:center;justify-content:space-between;}.coach-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--coach-label);}.coach-body{font-size:12.5px;line-height:1.65;color:var(--coach-text);margin-top:8px;}
+.block-rule{background:var(--rule-bg);border-left:4px solid var(--rule-border);border-radius:0 7px 7px 0;padding:10px 15px;}.rule-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#be123c;margin-bottom:6px;}.rule-body{font-size:13.5px;line-height:1.6;color:var(--rule-text);font-weight:600;}
+.block-calc{background:var(--calc-bg);border-left:4px solid var(--calc-border);border-radius:0 7px 7px 0;padding:11px 14px;}.calc-head{display:flex;align-items:flex-start;gap:10px;}.calc-icon{font-size:18px;flex-shrink:0;line-height:1;}.calc-info{flex:1;}.calc-tab{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--calc-border);margin-bottom:3px;}.calc-action{font-size:13.5px;font-weight:500;color:var(--calc-text);line-height:1.55;}.calc-note{font-size:12px;color:#115e59;margin-top:8px;padding-top:8px;border-top:1px solid #99f6e4;line-height:1.5;display:none;}
+.block-disc{border:1px solid var(--border);border-radius:8px;overflow:hidden;}.disc-head{display:flex;align-items:center;gap:9px;padding:8px 13px;background:#f8fafc;border-bottom:1px solid var(--border);}.disc-num{width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;}.disc-lbl{font-size:12px;font-weight:600;color:var(--text);flex:1;}.belief-chip{font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;}.disc-body{padding:12px 13px;display:flex;flex-direction:column;gap:10px;}
+.block-sec{border:1px solid var(--border);border-radius:8px;overflow:hidden;}.sec-head{padding:8px 13px;background:#f8fafc;border-bottom:1px solid var(--border);}.sec-lbl{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}.sec-body{padding:12px 13px;}
+.block-obj{border:1px solid #fee2e2;border-radius:8px;overflow:hidden;}.obj-head{padding:8px 13px;background:#fff1f2;border-bottom:1px solid #fee2e2;}.obj-lbl{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#be123c;}.obj-body{padding:12px 13px;background:white;}
+.block-support{border:1px dashed var(--border);border-radius:8px;padding:11px 13px;background:#fafafa;}.support-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:7px;}
+.block-opening{border:1px solid var(--border);border-radius:8px;overflow:hidden;}.opening-head{padding:8px 13px;background:#f8fafc;border-bottom:1px solid var(--border);}.opening-lbl{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}.opening-body{padding:12px 13px;}
+.block-beliefs{}.beliefs-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}.beliefs-table{width:100%;border-collapse:collapse;font-size:12.5px;}.beliefs-table th{background:#f8fafc;padding:7px 10px;text-align:left;font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);}.beliefs-table td{padding:8px 10px;border-bottom:1px solid #f1f5f9;vertical-align:top;}.beliefs-table tr:last-child td{border-bottom:none;}.b-num{font-family:'Syne',sans-serif;font-weight:800;color:#2563eb;width:24px;font-size:13px;}.b-name{font-weight:600;width:140px;}.b-desc{color:var(--muted);}.b-check{width:36px;text-align:center;font-size:15px;cursor:pointer;user-select:none;}
+.block-list{}.list-title{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}.closer-beliefs{padding-left:0;list-style:none;display:flex;flex-direction:column;gap:8px;}.closer-beliefs li{font-size:13.5px;line-height:1.6;color:var(--text);padding:9px 13px;background:#f8fafc;border-radius:6px;border-left:3px solid #7c3aed;display:flex;align-items:flex-start;gap:8px;}.closer-beliefs li::before{content:'✓';color:#7c3aed;font-weight:700;font-size:13px;flex-shrink:0;margin-top:1px;}
+.btext{font-size:14.5px;line-height:1.8;color:var(--text);}.btext p{margin-bottom:9px;}.btext p:last-child{margin-bottom:0;}.btext .cue{color:#94a3b8;font-style:italic;font-size:13px;}
+.block-constraint{border:1px solid #fde68a;border-radius:8px;overflow:hidden;}.constraint-header{padding:8px 13px;background:#fef9c3;border-bottom:1px solid #fde68a;}.constraint-title{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#92400e;}.constraint-table{width:100%;border-collapse:collapse;font-size:12.5px;}.constraint-table th{background:#fef9c3;padding:7px 10px;text-align:left;font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#92400e;border-bottom:1px solid #fde68a;}.constraint-table td{padding:8px 10px;border-bottom:1px solid #fef9c3;vertical-align:top;}.constraint-table tr:last-child td{border-bottom:none;}.ct-type{font-weight:700;color:var(--text);}.ct-looks{color:var(--muted);font-size:12px;}.ct-pillar{font-weight:600;color:#7c3aed;font-size:12px;}
+.coach-only{display:none!important;}.notes-on .coach-only{display:flex!important;}.block-coach.coach-only{display:none!important;}.notes-on .block-coach.coach-only{display:block!important;}.sop-mode .block-coach{display:block!important;}.sop-mode .coach-only{display:flex!important;}.sop-mode .calc-note{display:block!important;}.notes-on .calc-note{display:block!important;}
+.calc-footer{font-size:10px;color:#94a3b8;text-align:center;padding:12px 0 4px;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:10px;}
+/* PITCH MODE SYSTEM */
+.pitch-toggle-bar{display:flex;gap:4px;margin-left:auto;flex-shrink:0;}
+.ptgl-btn{padding:4px 9px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.1);color:rgba(255,255,255,.65);border-radius:5px;font-size:11px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .12s;white-space:nowrap;}
+.ptgl-btn:hover{background:rgba(255,255,255,.18);color:rgba(255,255,255,.9);}.ptgl-btn.active{background:rgba(255,255,255,.25);color:#fff;border-color:rgba(255,255,255,.5);}
+.block-pillar{border:1px solid #ddd6fe;border-radius:8px;overflow:hidden;}
+.pillar-head{display:flex;align-items:center;gap:11px;padding:10px 13px;background:#f5f3ff;border-bottom:1px solid #ddd6fe;}
+.pillar-num{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:#fff;background:#4338ca;flex-shrink:0;}
+.pillar-lbl{font-family:'Syne',sans-serif;font-size:12.5px;font-weight:700;color:#3730a3;letter-spacing:-.1px;flex:1;}
+.pillar-mode-btns{display:flex;gap:3px;flex-shrink:0;}.pmo-btn{width:24px;height:24px;border:1px solid #c4b5fd;background:rgba(255,255,255,.7);border-radius:4px;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s;line-height:1;}.pmo-btn:hover{background:white;border-color:#7c3aed;}.pmo-btn.active{background:#4338ca;border-color:#3730a3;}.pmo-reset{opacity:.5;font-size:12px;}.pmo-reset:hover{opacity:1;}
+.pillar-sop-hint{background:var(--coach-bg);border-left:4px solid var(--coach-border);padding:9px 15px;display:none;}.sop-mode .pillar-sop-hint{display:block;}.pillar-sop-hint .coach-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--coach-label);}.pillar-sop-hint .coach-body{font-size:12px;line-height:1.6;color:var(--coach-text);margin-top:6px;}
+.pm-block{padding:12px 15px;display:none;}.pm-block.pm-visible{display:block;}
+.pm-quick-block{background:#f0fdf4;border-left:4px solid #22c55e;}
+.pm-full-block{background:#eff6ff;border-left:4px solid #3b82f6;}
+.pm-disc-block{background:#fffbeb;border-left:4px solid #f59e0b;}
+.pm-tag{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:5px;}.pm-quick-tag{color:#15803d;}.pm-full-tag{color:#1d4ed8;}.pm-disc-tag{color:#92400e;}
+.pm-text{font-size:14.5px;line-height:1.8;color:#1e293b;}.pm-text p{margin-bottom:9px;}.pm-text p:last-child{margin-bottom:0;}
+.disc-bracket{background:#fde68a;color:#78350f;padding:1px 5px;border-radius:3px;font-weight:600;font-style:normal;}
+/* Guide */
+.guide-section{margin-bottom:16px;}.guide-section-title{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--text);letter-spacing:-.1px;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}.guide-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:2px;}.guide-table th{background:#f8fafc;padding:7px 10px;text-align:left;font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);}.guide-table td{padding:8px 10px;border-bottom:1px solid #f1f5f9;vertical-align:top;line-height:1.5;}.guide-table tr:last-child td{border-bottom:none;}.guide-mode-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;margin:1px 2px;}.chip-q{background:#dcfce7;color:#15803d;}.chip-f{background:#dbeafe;color:#1d4ed8;}.chip-d{background:#fef3c7;color:#92400e;}.guide-formula{background:#f8fafc;border:1px solid var(--border);border-radius:7px;padding:13px 15px;font-size:13.5px;line-height:1.7;color:var(--text);}.guide-formula strong{color:#4338ca;}.guide-rule{background:#fff1f2;border-left:4px solid #f43f5e;border-radius:0 7px 7px 0;padding:10px 15px;font-size:13px;font-weight:600;color:var(--rule-text);}
 </style>
 </head>
 <body>
 <div id="app">
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-brand">
-      <div class="brand-eyebrow">IFCA · March 2026</div>
-      <div class="brand-title">Problem Syntax Script</div>
-      <div class="brand-sub">Established Coaches · $2K–$40K/Month</div>
-    </div>
-    <div class="nav-label">Phases</div>
-    <nav id="phase-nav"></nav>
+  <aside class="sidebar">
+    <div class="sidebar-brand"><div class="brand-eyebrow">IFCA · March 2026</div><div class="brand-title">Problem Syntax Script</div><div class="brand-sub">Existing Business · $2K–$40K+/Month</div></div>
+    <div class="nav-label">Phases</div><nav id="phase-nav"></nav>
+    <div class="nav-label">Reference</div>
+    <nav><div class="nav-item" id="nav-guide" style="--nc:#7c3aed" onclick="jumpToGuide()"><div class="nav-ref-dot">📋</div><div class="nav-text"><div class="nav-name">Pitch Guide</div><div class="nav-sub">Modes · Matrix · Formula</div></div></div></nav>
   </aside>
-
   <div class="main">
     <div class="topbar">
-      <div class="topbar-left">
-        <div>
-          <div class="doc-title">Problem Syntax Script</div>
-          <div class="doc-meta">Closer Training Guide · 6-Month Program · Cole Gordon 6-Phase Framework</div>
-        </div>
-        <div class="tabs">
-          <button class="tab-btn active" onclick="setMode('quick')">Quick Script</button>
-          <button class="tab-btn" onclick="setMode('sop')">Full SOP</button>
-        </div>
-      </div>
-      <div class="topbar-right">
-        <button class="coach-toggle" id="coach-btn" onclick="toggleCoaching()">📝 Coaching Notes</button>
-      </div>
+      <div class="topbar-left"><div><div class="doc-title">Problem Syntax Script</div><div class="doc-meta">Closer Training Guide · 6-Month Program · Cole Gordon 6-Phase Framework</div></div><div class="tabs"><button class="tab-btn active" onclick="setMode('quick')">Quick Script</button><button class="tab-btn" onclick="setMode('sop')">Full SOP</button></div></div>
+      <div class="topbar-right"><button class="coach-toggle" id="coach-btn" onclick="toggleCoaching()">📝 Coaching Notes</button></div>
     </div>
     <div class="content" id="content"></div>
   </div>
 </div>
 
 <script>
-const PHASES = [
-  {
-    id:0, name:"Before You Dial", sub:"Mindset & Foundations", color:"#374151",
-    blocks:[
-      { t:"coach", c:"Internalize these before every single call. Your certainty in the offer transfers directly to the prospect. If you're not 100% bought in, they won't be either. Review these out loud before you dial." },
-      { t:"list", label:"THE 4 CLOSER BELIEFS", items:[
-        "We are the best in the world at what we do for online fitness coaches.",
-        "People truly want and need what we offer — this is a proven system, not a gamble.",
-        "I am doing them a favor by providing the solution to their problem.",
-        "If they say \"No\" — it is their loss. I am not attached to the outcome."
-      ]},
-      { t:"coach", c:"You are a doctor, not a salesperson. A doctor diagnoses before prescribing. Never answer 'how much?' or 'what's included?' before you've completed discovery. If they ask early: \"Everything we do is customized to your situation — so honestly, I'm not even sure we can help until I understand where you're at. Let me ask you a few more questions.\"" },
-      { t:"beliefs", label:"THE 7 BELIEFS — PRE-CALL CHECKLIST", coach:"Every objection you receive traces back to one of these 7 beliefs not being fully built in discovery. Your job during discovery is to build all 7 BEFORE the pitch. Problem Syntax closers especially need to nail Beliefs #1 (Pain), #2 (Doubt), and #3 (Cost) — these are the beliefs most likely to be weak with established coaches who think they can fix it themselves.", rows:[
-        { n:1, name:"Pain (The Gap)", desc:"They believe there is a severe gap between where they are and where they want to be" },
-        { n:2, name:"Doubt", desc:"They believe they cannot fix this alone — DIY wastes time, money, and energy" },
-        { n:3, name:"Cost", desc:"They believe inaction is MORE expensive than the investment" },
-        { n:4, name:"Desire", desc:"They are emotionally connected to the payoff of making this work" },
-        { n:5, name:"Money", desc:"They have resources and are willing to invest" },
-        { n:6, name:"Support", desc:"Spouse or stakeholders will support the decision" },
-        { n:7, name:"Trust (Methodology)", desc:"They believe IFCA's specific method is the only logical path forward" },
-      ]}
-    ]
-  },
-  {
-    id:1, name:"Open", sub:"≤ 2 MIN", color:"#0d9488",
-    blocks:[
-      { t:"coach", c:"Keep this tight. Your only goal here is to establish you're a professional who's done their homework, then transition immediately to frame setting. Read the application before the call. Know their revenue range, what they're selling, and what problem they listed. They should feel like you're already prepared. Never go past 2 minutes." },
-      { t:"say", c:`"Hey [Name] — [Your Name] here. Nice to finally connect. Whereabouts are you located?"\n[prospect responds]\n\n"Have you ever come across Jordan or Erin before, or did someone refer you over?"\n[prospect responds]` }
-    ]
-  },
-  {
-    id:2, name:"Frame Setting", sub:"", color:"#7c3aed",
-    blocks:[
-      { t:"coach", c:"This is the most important 30 seconds of the call. The 'I'll tell you if we CAN'T help you' line drops the guard. It repositions you from salesperson to trusted advisor. Do NOT rush. Wait for a genuine yes before continuing." },
-      { t:"say", c:`"Awesome. So before we dive in — I did pull up your application and got a quick overview of where you're at and what you're working on."\n\n"Just so you know how these calls typically go — I'm going to ask you some questions about what's working, what's not, what your numbers look like, and what your goals are."\n\n"And if I feel like we're a fit and I can actually help you move the needle, I'll let you know. But if at any point I don't think we're the right solution, I'll tell you that too and point you in the right direction."\n\n"Does that sound fair?"\n[Wait for yes — then move forward]` }
-    ]
-  },
-  {
-    id:3, name:"Discovery", sub:"Problem Syntax — 5 Blocks", color:"#1d4ed8",
-    blocks:[
-      { t:"coach", c:"In Problem Syntax, the prospect already HAS a business. The problem is a broken piece of an existing one — not the absence of a business. Discovery job: (1) understand their current offer + numbers, (2) find the specific constraint causing the revenue problem, (3) expose the gap, (4) build the cost of inaction so staying stuck feels worse than investing. Build all 7 Beliefs here. Don't rush." },
-      { t:"opening", c:`"Okay — so a good place to start: what's the main challenge you've been running into with the business right now, or what's the main thing that motivated you to book this call today?"\n[prospect responds — let them talk fully before you say anything]\n\n[If vague:] "What do you mean by that — tell me more." / "How long has that been going on?" / "Give me a specific example — like what happened last week?"` },
-      { t:"block", num:1, label:"OFFER & BACKGROUND", belief:"BELIEF #1: PAIN", bc:"#dc2626",
-        coach:"Understand what they're selling, who they're selling it to, and how they've priced it. This diagnoses whether the constraint is an offer/positioning problem or a distribution problem. Key signals: Low price point = Pillar 1 problem. Wrong leads = offer/messaging problem. No back-end = LTV problem. Weak sales process = Pillar 4 problem. Ask these conversationally — not like a checklist.",
-        c:`"Got it. So let's back up a second — what exactly are you selling right now, and who specifically are you selling it to?"\n[prospect responds]\n\n"And what's the price point on that?"\n[prospect responds]\n\n"How did you land on that number — who taught you that pricing?"\n[prospect responds]\n\n"And who's your ideal client — if you paint a picture of the perfect person you want to work with, what does that look like?"\n[prospect responds]\n\n"Are the people you're actually attracting right now matching that picture, or are you getting a different type of person showing up?"\n[prospect responds]\n\n"Walk me through your sales process — how does someone go from finding you to becoming a paying client?"\n[prospect responds]\n\n"And do you have a back-end offer — once someone finishes with you, is there a next step you're offering them?"\n[prospect responds]` },
-      { t:"block", num:2, label:"CHUNK DOWN TO NUMBERS", belief:"BELIEFS #1 & #3: PAIN, COST", bc:"#dc2626",
-        coach:"This is where you identify the constraint with precision. Vague problems don't create urgency — specific numbers do. As they give you numbers, enter them in the Business Diagnostic silently. CPL, show rate, and close rate tell you exactly which pillar to lead with. Benchmarks: CPL < $10 | Show Rate ≥ 70% | Close Rate ≥ 30%",
-        c:`"How are you generating most of your leads right now — primarily paid ads, organic content, referrals, or a mix?"\n[prospect responds]\n\n[IF RUNNING PAID ADS:]\n"What platform are you running on?"\n"What's your monthly ad spend right now?"\n"And roughly what are you paying per lead — do you know your CPL?"\n"What's your ROAS looking like — for every dollar you put in, how much are you getting back?"\n"Are you running those yourself or through an agency?"\n[If agency:] "And what's your experience been — are you happy with what they're delivering?"\n\n[IF ORGANIC ONLY:]\n"How often are you posting right now?"\n"Are you seeing actual results from it — DMs coming in, calls booked? Or more just likes and followers?"\n"What's your follower count on your main platform?"\n\n"Okay — and in terms of actual sales calls, how many are you getting per week right now?"\n[prospect responds]\n\n"And out of those calls, what percentage are actually your ideal client?"\n[prospect responds]\n\n"And what's your rough close rate — out of every 10 calls you take, how many are you closing?"\n[prospect responds]\n\n"When calls don't close — what's the most common reason you're hearing?"\n[prospect responds]` },
-      { t:"calc", tab:"Business Diagnostic", action:"Open the Business Diagnostic tab. Enter ad spend, leads, calls booked, live calls, and close rate silently as they talk. Don't share screen yet — you're building the diagnostic picture privately first.",
-        note:"You don't need all their numbers. Even 2-3 data points are enough to identify the primary constraint. CPL + show rate + close rate will tell you 80% of what you need." },
-      { t:"block", num:3, label:"COST OF INACTION", belief:"BELIEFS #2 & #3: DOUBT, COST", bc:"#9f1239",
-        coach:"This is where you make the cost of staying stuck feel more real than the cost of investing. Don't rush. The Knife Turn is the most powerful moment of the call — ask it once, cleanly, then sit in silence. Let them feel the weight of their own answer. After the Knife Turn, the energy should shift. If they're still light and dismissive, you may not have found the real constraint yet.",
-        c:`"How long have you been dealing with this?"\n[prospect responds]\n\n"And in that time — what have you tried to fix it? Like what have you already done to try to solve this?"\n[prospect responds]\n\n"And none of it got you where you wanted to go?"\n[prospect responds]\n\n"Can I ask you something a little more personal? You've been at this [X months/years], you've tried [recap what they mentioned]... what's kept you going instead of just throwing in the towel?"\n[prospect responds — let them articulate why it matters. This builds Belief #4: Desire.]` },
-      { t:"rule", c:"THE KNIFE TURN — Do NOT rush this. Ask it. Then sit in complete silence. Let them feel the weight of their own answer. This creates urgency without you manufacturing it." },
-      { t:"say", c:`"I hate to ask this, but I have to — what's your plan if nothing changes?"\n\n"If the next 12 months look exactly like the last 12... what does that actually cost you? Like financially, but also personally."\n[Long pause. Let them answer. Let them feel it.]\n\n"Yeah. That's exactly why you booked this call."` },
-      { t:"calc", tab:"Business Diagnostic", action:"Share your screen NOW. Scroll to the first ❌ in the KPI Health dashboard. Say: 'I noticed something while we were talking...' Don't immediately explain. Let them react to the red flags first.",
-        note:"The ❌ flags hit harder than anything you can say verbally. Let the prospect process what they're seeing for a few seconds before you speak." },
-      { t:"block", num:4, label:"SUPPORT CHECK", belief:"BELIEF #6: SUPPORT", bc:"#d97706",
-        coach:"Surface the spouse/partner situation NOW — before the pitch, before the price. If you don't, you'll hit the 'I need to talk to my partner' objection at price drop with zero ammunition. Keep this casual — 15 to 20 seconds.",
-        c:`"Quick question before we talk about what's possible — is this a decision you'd be able to make on your own, or would your partner be involved in something like this?"\n[prospect responds]\n\n[If partner involved:] "And if this made complete sense for you and you felt like it was the right move — would they generally trust your judgment on a business investment like this?"\n[prospect responds]` },
-      { t:"block", num:5, label:"GOALS & DESIRE", belief:"BELIEFS #4 & #5: DESIRE, MONEY", bc:"#16a34a",
-        coach:"Get them to build the vision in their OWN words. 'Why that number?' is the question most closers skip — it's where the real emotional driver lives. You'll use their exact language in the Hamburger Transition. 'Have predictability,' 'stop stressing every month,' 'finally feel like a real business,' 'be present for my kids' — those words are gold. Write them down verbatim.",
-        c:`"Okay — so let's flip to the other side. If we could fix [their stated constraint] and build out the full system... what does your business look like in the next 90 days?"\n[prospect responds]\n\n"And if we zoom out to 12 months from now — what's the revenue number you're going after?"\n[prospect responds]\n\n"Why that number specifically — what does hitting that actually change for you?"\n[Let them go deeper. Don't rush this. Their answer becomes your desire anchor and your Hamburger Transition language.]\n\n"Beyond the revenue — like personally, what's different when the business is where you want it?"\n[prospect responds]` }
-    ]
-  },
-  {
-    id:4, name:"Constraint ID", sub:"Find the Leak", color:"#b45309",
-    blocks:[
-      { t:"coach", c:"This phase is internal — you don't announce it to the prospect. Before entering the pitch, silently confirm the primary constraint you identified in discovery. This determines which pillar you lead with, how you frame the Problem Linking, and where you put the most emotional emphasis. Problem Syntax rule: every single pillar gets problem-linked back to their specific constraint. You are not delivering a generic pitch — you are showing them how each piece solves their exact problem." },
-      { t:"constraint", rows:[
-        { type:"Traffic", looks:"CPL too high, not enough leads coming in", pillar:"Lead with Pillar 2 — Lead Engine" },
-        { type:"Pipeline", looks:"Leads not booking calls or low show rate", pillar:"Lead with Pillar 3 — Impact AI Business Manager" },
-        { type:"Sales", looks:"Calls happening but not closing (close rate < 30%)", pillar:"Lead with Pillar 4 — Conversion System" },
-        { type:"Offer/Positioning", looks:"Wrong leads, price shoppers, ghosting after calls", pillar:"Lead with Pillar 1 — AI Offer Optimization" },
-        { type:"Back-End", looks:"No retention system, clients leave after first offer", pillar:"Lead with Pillar 4 — LTV Retention" },
-      ]},
-      { t:"calc", tab:"Business Diagnostic", action:"Your Business Diagnostic now shows exactly where the ❌ is. That ❌ tells you which pillar to lead with in the pitch.",
-        note:"Problem Linking Formula: 'You know how earlier you told me [their exact pain]? Well what we do here is [feature]... so that [benefit]... which means [emotional outcome for them specifically].'" }
-    ]
-  },
-  {
-    id:5, name:"Hamburger Transition", sub:"", color:"#15803d",
-    blocks:[
-      { t:"coach", c:"The bridge from diagnostic mode to pitch mode — without it feeling like a sales pitch. Three parts: (1) recap their pain in their exact words, (2) position IFCA's process as the precise answer, (3) invite them to walk through it. They will always say yes. If they said 'I feel like I've been doing everything right but nothing is working' — say that back. Not a cleaned-up version. Their words are more powerful than yours." },
-      { t:"say", c:`"Look — I feel like we've covered a lot of ground here. Is there anything else you feel like we haven't touched on that I need to know about your situation?"\n[prospect responds — usually 'No, I think that covers it']\n\n"Well, [Name], based on everything you've told me, I think what I have going on over here might actually be a really good fit for you."\n\n"...because you know how earlier you mentioned [RECAP THEIR #1 PAIN IN THEIR EXACT WORDS]..."\n[prospect: yeah, exactly]\n\n"Our entire system at IFCA is built specifically for the problem you just described — it's a proven, four-step process that helps online fitness coaches [reach their stated goal] without [their stated frustration]."\n\n"This way, instead of spending months — or years — trying to piece this together through trial and error, we help you build it right from the beginning. Make sense?"\n[prospect: yes]\n\n"Cool — where do you want to go from here? I can walk you through exactly how we make that happen from A to Z. But you tell me."\n[They will say: walk me through it]\n\n"Perfect. Do you have a pen and paper? Great — write down 1 through 4 with some space between each."` }
-    ]
-  },
-  {
-    id:6, name:"The Pitch", sub:"4 Client Engine Pillars", color:"#4338ca",
-    blocks:[
-      { t:"coach", c:"For Problem Syntax, use Problem Linking on every pillar — connect each feature directly back to their specific constraint from discovery. The pitch is the simultaneous explanation of why their current approach has failed and why THIS is going to be different. You are not selling a course — you are prescribing a solution to a diagnosed problem. After EVERY pillar: 'Does that make sense? What are your thoughts on that specifically?' — wait for their response before moving on." },
-      { t:"sec", label:"HIGH LEVEL PROMISE",
-        c:`"Before I walk you through the four things — let me just preface this."\n\n"The moment you enroll, the first thing we do is pair you with a 1-on-1 Success Coach who has already built a six or seven-figure fitness coaching business themselves. They are your guide through everything. Every piece of what I'm about to walk you through gets shaped and personalized by them, starting from day one."\n\n"So this might look slightly different once we map out your specific situation — but based on everything you've shared, here's what I think it looks like for you..."` },
-      { t:"pillar", num:1, label:"AI OFFER OPTIMIZATION",
-        link:"Always start here — the offer underpins everything else. Bad offer = bad leads regardless of how much you spend.",
-        c:`"Number one — and this is where we start on day one — is AI Offer Optimization."\n\n"In the first 48 hours after you enroll, your Success Coach sits down with you 1-on-1 and we run your offer through our AI Offer Optimizer. We figure out exactly who your ideal client actually wants to buy, dial in your premium positioning, and craft your offer in language so compelling that when your ideal client finds you, they think: 'That's exactly what I need — and I need it from them specifically.'"\n\n"For most coaches, this takes months of trial and error. You get it done in 48 hours."`,
-        pl:[{ tag:"Problem Link — Use if wrong leads / price shoppers / ICA mismatch", text:"\"You know how you mentioned [their exact ICA or messaging problem]? That's almost always an offer positioning problem — your message is attracting the wrong buyer. It doesn't matter how much you put into marketing if the offer isn't pulling the right person. We fix that on day one so every dollar you put into marketing after this is actually working.\"" }],
-        close:`"Does that make sense? What are your thoughts on that specifically?"\n[Wait for response before moving to Pillar 2]` },
-      { t:"pillar", num:2, label:"LEAD ENGINE",
-        link:"Most important pillar for a Traffic constraint — the distinction is we work alongside you to build and launch, not just hand you a playbook.",
-        c:`"Number two is your Lead Engine. And what makes this different from buying a course or getting coaching — we're not just teaching you how to run ads and handing you a playbook. We work alongside you to build and launch your first campaigns in your voice, around your offer, for your specific audience."\n\n"We help you get the creative right, dial in the targeting, and set up the copy — step by step, until it's working. And we cover your first month of ad spend. Your pipeline starts filling before you've put in a single extra dollar of your own."\n\n"The goal is 150 to 500 qualified leads per month once this is running."`,
-        pl:[
-          { tag:"Problem Link — Use if CPL is high or traffic is the constraint", text:"\"You know how you mentioned your CPL is [their number] and the leads you're getting aren't converting? Here's what's happening — when you build ads that aren't specific to your voice, your niche, and your exact offer, you get generic leads. Generic leads don't buy at premium price points. We fix the creative from the ground up so the people booking calls are already pre-qualified.\"" },
-          { tag:"Problem Link — Use if organic only / inconsistent lead flow", text:"\"You know how you mentioned you're relying on organic and it's inconsistent? The issue is organic is unpredictable — it's a great supplement, but it can't be your primary acquisition channel if you want to scale. We help you build a predictable paid system running alongside your organic so you're never dependent on the algorithm again.\"" }
-        ],
-        close:`"Does that make sense? What are your thoughts on that?"\n[Wait for response]` },
-      { t:"calc", tab:"Business Diagnostic", action:"Show the 'If We Fix This' scenario. Pull up the KPI dashboard — highlight their specific ❌ metric — then show what happens to contracted revenue and ROAS if that one metric hits benchmark. Say: 'Look at what fixing just this one thing does to your numbers.' Then go quiet. One constraint, one fix, one clear revenue impact.",
-        note:"Don't show the whole dashboard. Just point to their primary red flag and the revenue line that changes when it's fixed. If it's CPL: show cost-per-call dropping and close count going up. If it's close rate: show new clients per month and 12-month contracted value. The simpler, the harder it lands." },
-      { t:"pillar", num:3, label:"IMPACT AI BUSINESS MANAGER",
-        link:"The infrastructure fix — most Problem Syntax prospects are losing deals because leads go cold in the gaps between siloed tools.",
-        c:`"Number three is your Impact AI Business Manager. Right now you're probably running your business across 5 to 7 different apps — CRM, payment processor, scheduler, follow-up sequences, funnel builder — all duct-taped together and leaking leads in between."\n\n"We replace all of that with one AI-powered platform: CRM, payments, scheduling, DM automations, email follow-up, landing pages — all in one place, all talking to each other."\n\n"Most coaches lose deals not because the prospect wasn't interested — but because follow-up slipped. A lead comes in on Monday and by Wednesday they've gone cold. That's an infrastructure problem. This fixes it."\n\n"It's $1 a month while you're in the program. From day one, you're saving $300 to $1,000 a month on tools you're currently paying for separately. And we set the whole thing up for you — 1-on-1 tech onboarding call within your first 7 days."`,
-        pl:[{ tag:"Problem Link — Use if pipeline / show rate / leads going cold", text:"\"You know how you mentioned [leads going cold / low show rate / follow-up slipping]? That's a systems problem — when everything is siloed across different tools, leads fall through the cracks. This platform closes every single gap. A lead comes in, they're automatically nurtured, reminded, and followed up with before they ever go cold.\"" }],
-        close:`"Does that make sense? What are your thoughts on that?"\n[Wait for response]` },
-      { t:"pillar", num:4, label:"CONVERSION + RETENTION",
-        link:"Two parts: close more calls at 30–50%, and keep clients 17+ months. Lead with whichever part matches their primary constraint.",
-        c:`"And number four — the Conversion and Retention System. Two parts."\n\n"Part one: closing more calls. Most coaches are closing 10 to 20% of their discovery calls. Our coaches close 30 to 50%. The difference is a proven sales process and the reps to make it feel completely natural. You get our proven DM and sales call scripts built specifically for fitness coaches. And then we do unlimited 1-on-1 call reviews — our coaches listen to your actual recorded calls and tell you exactly what to say, where you're losing people, and how to handle objections without ever feeling pushy."`,
-        pl:[
-          { tag:"Problem Link — Use if low close rate is the primary constraint", text:"\"You know how you mentioned you're only closing [their %] of your calls? That's not a lead problem — your leads are there. It's a process problem. You're losing people somewhere in the conversation and right now you can't see exactly where. The call reviews fix that — we watch the tape, we find the leak, and we patch it.\"" }
-        ],
-        c2:`"Part two: keeping clients longer. Most coaches only think about getting new clients. But the real money is in keeping the ones you have."\n\n"Our LTV Retention System helps you design a back-end offer so clients don't just finish your program and leave — they resign into the next phase of their journey with you. Our students keep clients for an average of 17 months."\n\n"Think about what that means: 10 clients at $2,000 a month. With 17-month average retention, each client generates over $34K in lifetime value — not $6K from a short program. That's building a real business."`,
-        pl2:[{ tag:"Problem Link — Use if no back-end offer", text:"\"You know how you mentioned you don't have a back-end yet — clients finish with you and there's no obvious next step? You've already done the hardest part — you acquired them, you got them a result, they trust you. And then they leave because there's no clear path forward. We build that next offer with you so clients have somewhere to go. That's the difference between a business with a revenue ceiling and one that compounds.\"" }],
-        close:`"Does that make sense? What are your thoughts on that?"\n[Wait for response]` },
-      { t:"sec", label:"DELIVERY + RECAP",
-        c:`"One quick thing — do you currently have an app where you can deliver your coaching programs, track your clients' progress, and communicate with them all in one place?"\n[If no:] "Perfect — we actually build that out for you too. We set you up with Trainerized — already pre-built for fitness coaches. Fully done for you."\n[If yes:] "Great — we can work with what you've got."\n\n"So to recap: offer dialed in so every piece of marketing lands. Your first campaigns built and launched with our coaching — first month of ad spend covered. One AI platform replacing all your tools and catching every lead automatically. And a sales and retention system that gets you closing 30 to 50% of calls and keeping clients 17-plus months."\n\n"Everything is completely customized to your situation. Once you enroll, we'll book your onboarding call with your Success Coach. We map out your entire 90-day game plan — what we do for you, what we need from you, how often we meet, and what happens first. Zero guesswork."\n\n"Does that sound good?"\n[Wait for yes — if they hesitate, surface the concern NOW before moving to price]` }
-    ]
-  },
-  {
-    id:7, name:"Committing Phase", sub:"Price Drop", color:"#b91c1c",
-    blocks:[
-      { t:"coach", c:"Gauge where they are before you drop price. You want a 9 or 10. If they're below a 7, an uncovered belief is still hiding — go find it before you say a number. The temp check is not a formality. It is your last chance to surface hidden resistance before the price creates an anchor." },
-      { t:"sec", label:"TEMP CHECK",
-        c:`"How do you feel about the process specifically? Do you feel like this is what you need to solve [their constraint] and hit [their stated goal]?"\n[If yes → move to next steps]\n[If hesitant:] "On a scale of 1 to 10 — where do you fall in terms of alignment with what we do?"\n[If less than 8:] "What would make it a 10 for you?"\n[Surface the hidden objection NOW — before the price]` },
-      { t:"sec", label:"STALL CLOSE",
-        c:`"Before we talk numbers — is there any reason, if the investment made complete sense, that you wouldn't want to move forward today?"\n[If they raise something — address it NOW before price]\n[If they say 'No, I think I'm good' — you're clear to drop price]` },
-      { t:"calc", tab:"Business Diagnostic", action:"Two-step. Step 1: Reopen the KPI Health dashboard — scroll to their primary ❌. Say: 'I want to show you something before we talk numbers.' Let the flag sit. Step 2: Scroll to the 12-Month Revenue Projection. Show what their business looks like in 12 months if the constraint is fixed — front-end + back-end stacking. Then drop price. These two screens stay up together: the cost of the problem, and the value of the solution.",
-        note:"Don't explain it. Show it and go quiet. The contrast does the work — here's where you are, here's where you'll be. If they push back on price, scroll back to the ❌ and ask: 'How much is this costing you every month it stays unfixed?' Let the data do the arguing — not you." },
-      { t:"rule", c:"After you drop the price — STOP. Complete silence. The first person to speak loses the momentum. Every single time, no exceptions." },
-      { t:"sec", label:"PRICE DROP",
-        c:`"So basically next steps — you'll process the investment with me today, we'll get your onboarding call scheduled, and you'll have complete clarity on everything that happens over the next six months. Does that sound good?"\n[wait for yes]\n\n"And the investment is just [PRICE]."\n[STOP. SILENCE. Let them speak first.]\n\n[When they agree but go quiet:] "Can I just welcome you to the family?"\n[If yes:] "Perfect. What's a good email to send the receipt to? And what card do you want to put down?"` }
-    ]
-  },
-  {
-    id:8, name:"Objection Handling", sub:"", color:"#374151",
-    blocks:[
-      { t:"coach", c:"Before running any specific objection playbook, ALWAYS run the Master Sequence first. It confirms they want the result and positions the objection as a problem to solve together — not a wall between you. Every real objection is one of four types: Fear, Money, Spouse/Partner, or Ego. Identify which one you're dealing with, then run the right playbook." },
-      { t:"rule", c:"NEVER book a follow-up for a fear-based objection. A follow-up doesn't fix fear — it gives fear more time to solidify. Handle it on the call or lose the deal." },
-      { t:"sec", label:"MASTER SEQUENCE — RUN FIRST ON EVERY OBJECTION",
-        c:`"[Objection] aside — do you feel this is exactly what you need to solve [their constraint] and hit [their goal]?"\n"So you're 100% in on the process... it's just a matter of solving [objection], and then you're ready to move forward. Is that right?"\n[Now you're problem-solving together — not fighting]` },
-      { t:"obj", label:"'I NEED TO THINK ABOUT IT' — Fear Objection",
-        c:`Phase 1 — Clarify:\n"I completely understand. Out of curiosity — what specifically is it that you'd like to think about?"\n[Let them answer]\n\nPhase 2 — Isolate:\n"Got it. So outside of [what they said] — is there anything else holding you back?"\n\nPhase 3 — Reframe:\n"Here's what I've noticed — people who say they need to think about it are usually asking one of two questions: 'Will this actually work for me?' Or: 'Can I actually afford this right now?' Which one is it for you?"\n\nPhase 4 — The Cost Flip:\n"Here's what I've found: the coaches who keep saying 'let me think about it' are usually the same ones still figuring this out 12 months from now. What's another year of staying where you are actually cost you?"` },
-      { t:"obj", label:"MONEY — TRIPLE TIE-DOWN",
-        c:`Step 1 — Isolate: "Investment aside — is there anything else that would keep you less than 100% certain that you'd want to work with us to help you get to [their goal]? Or is it just a cash flow thing?"\n\nStep 2 — Tie Down: "I'm curious — if you had $[PRICE] completely liquid to you right now... would you do it? Would you say you're 10/10 on the process specifically?"\n\nPermission Bridge: "Got it. The last thing we want is for finances to be the thing that holds you back from getting the help you need. I do have some flexibility here to create something custom for you to make it more digestible. I don't have an option A or option B or anything set in stone... so do you mind if I ask you a personal question?"\n\nOpen Wallet: "Just so I can see if I can help — what would you have available to you today in terms of cash on hand? Checking, savings, or even credit via credit cards?"\n[Probe 3 buckets: checking / savings / credit]\n\nStep 3 — Close: "I appreciate you being open and honest. If I was able to break this up and allow you in today — we'll still treat you like you paid in full. If I can make this more digestible based on what you have, would you be ready to get started today?"` },
-      { t:"obj", label:"SPOUSE OBJECTION",
-        c:`[Path A — Haven't talked yet:]\n"Totally get it. Can I ask — is it more that you need to loop them in out of respect, or is it that they would actually have concerns you'd need to address?"\n[If it's respect:] "Understood. So it's more of a formality — you just want them in the loop. Is that fair? Let's make sure this makes complete sense for YOU first. What's holding you back personally?"\n\n[Path B — They have concerns:]\n"What do you think their biggest concern would be? Let's talk through that now so you're completely prepared."` },
-      { t:"obj", label:"EGO OBJECTION — 'I Can Figure This Out Myself'",
-        c:`"I love that confidence — honestly. And you probably could figure parts of it out. Can I ask you something honestly?"\n\n"How long have you been working on this specific problem? And how far along are you?"\n[Let them answer]\n\n"So what makes you think the next 6 months are going to be different from the last [X months]?"\n[Pause]\n\n"The issue isn't your ability. It's that you're solving a systems problem with hustle. The system is what's missing — not your work ethic."` }
-    ]
-  }
+const PHASES=[
+  {id:0,name:"Before You Dial",sub:"Mindset & Foundations",color:"#374151",blocks:[
+    {t:"coach",c:"Internalize these before every single call. Your certainty in the offer transfers directly to the prospect. If you're not 100% bought in, they won't be either. Review these out loud before you dial."},
+    {t:"list",label:"THE 4 CLOSER BELIEFS",items:[
+      "We are the best in the world at what we do for online fitness coaches.",
+      "People truly want and need what we offer \u2014 this is a proven system, not a gamble.",
+      "I am doing them a favor by providing the solution to their problem.",
+      "If they say \"No\" \u2014 it is their loss. I am not attached to the outcome."
+    ]},
+    {t:"coach",c:"You are a doctor, not a salesperson. A doctor diagnoses before prescribing. Never answer 'how much?' or 'what's included?' before you've completed discovery. If they ask early: \"Everything we do is customized to your situation \u2014 so honestly, I'm not even sure we can help until I understand where you're at. Let me ask you a few more questions.\""},
+    {t:"beliefs",label:"THE 7 BELIEFS \u2014 PRE-CALL CHECKLIST",coach:"Every objection you receive traces back to one of these 7 beliefs not being fully built in discovery. Your job during discovery is to build all 7 BEFORE the pitch. Problem Syntax closers especially need to nail Beliefs #1 (Pain), #2 (Doubt), and #3 (Cost) \u2014 these are the beliefs most likely to be weak with established coaches who think they can fix it themselves.",rows:[
+      {n:1,name:"Pain (The Gap)",desc:"They believe there is a severe gap between where they are and where they want to be"},
+      {n:2,name:"Doubt",desc:"They believe they cannot fix this alone \u2014 DIY wastes time, money, and energy"},
+      {n:3,name:"Cost",desc:"They believe inaction is MORE expensive than the investment"},
+      {n:4,name:"Desire",desc:"They are emotionally connected to the payoff of making this work"},
+      {n:5,name:"Money",desc:"They have resources and are willing to invest"},
+      {n:6,name:"Support",desc:"Spouse or stakeholders will support the decision"},
+      {n:7,name:"Trust (Methodology)",desc:"They believe IFCA's specific method is the only logical path forward"}
+    ]}
+  ]},
+  {id:1,name:"Open",sub:"\u2264 2 MIN",color:"#0d9488",blocks:[
+    {t:"coach",c:"Keep this tight. Your only goal here is to establish you're a professional who's done their homework, then transition immediately to frame setting. Read the application before the call. Know their revenue range, what they're selling, and what problem they listed. They should feel like you're already prepared. Never go past 2 minutes."},
+    {t:"say",c:`"Hey [Name] \u2014 [Your Name] here. Nice to finally connect. Whereabouts are you located?"\n[prospect responds]\n\n"Have you ever come across Jordan or Erin before, or did someone refer you over?"\n[prospect responds]`}
+  ]},
+  {id:2,name:"Frame Setting",sub:"",color:"#7c3aed",blocks:[
+    {t:"coach",c:"This is the most important 30 seconds of the call. The 'I'll tell you if we CAN'T help you' line drops the guard. It repositions you from salesperson to trusted advisor. Do NOT rush. Wait for a genuine yes before continuing."},
+    {t:"say",c:`"Awesome. So before we dive in \u2014 I did pull up your application and got a quick overview of where you're at and what you're working on."\n\n"Just so you know how these calls typically go \u2014 I'm going to ask you some questions about what's working, what's not, what your numbers look like, and what your goals are."\n\n"And if I feel like we're a fit and I can actually help you move the needle, I'll let you know. But if at any point I don't think we're the right solution, I'll tell you that too and point you in the right direction."\n\n"Does that sound fair?"\n[Wait for yes \u2014 then move forward]`}
+  ]},
+  {id:3,name:"Discovery",sub:"Problem Syntax \u2014 5 Blocks",color:"#1d4ed8",blocks:[
+    {t:"coach",c:"In Problem Syntax, the prospect already HAS a business. The problem is a broken piece of an existing one \u2014 not the absence of a business. Discovery job: (1) understand their current offer + numbers, (2) find the specific constraint causing the revenue problem, (3) expose the gap, (4) build the cost of inaction so staying stuck feels worse than investing. Build all 7 Beliefs here. Don't rush."},
+    {t:"opening",c:`"Okay \u2014 so a good place to start: what's the main challenge you've been running into with the business right now, or what's the main thing that motivated you to book this call today?"\n[prospect responds \u2014 let them talk fully before you say anything]\n\n[If vague:] "What do you mean by that \u2014 tell me more." / "How long has that been going on?" / "Give me a specific example \u2014 like what happened last week?"`},
+    {t:"block",num:1,label:"OFFER & BACKGROUND",belief:"BELIEF #1: PAIN",bc:"#dc2626",
+      coach:"Understand what they're selling, who they're selling it to, and how they've priced it. This diagnoses whether the constraint is an offer/positioning problem or a distribution problem. Key signals: Low price point = Pillar 1 problem. Wrong leads = offer/messaging problem. No back-end = LTV problem. Weak sales process = Pillar 4 problem. Ask these conversationally \u2014 not like a checklist.",
+      c:`"Got it. So let's back up a second \u2014 what exactly are you selling right now, and who specifically are you selling it to?"\n[prospect responds]\n\n"And what's the price point on that?"\n[prospect responds]\n\n"How did you land on that number \u2014 who taught you that pricing?"\n[prospect responds]\n\n"And who's your ideal client \u2014 if you paint a picture of the perfect person you want to work with, what does that look like?"\n[prospect responds]\n\n"Are the people you're actually attracting right now matching that picture, or are you getting a different type of person showing up?"\n[prospect responds]\n\n"Walk me through your sales process \u2014 how does someone go from finding you to becoming a paying client?"\n[prospect responds]\n\n"And do you have a back-end offer \u2014 once someone finishes with you, is there a next step you're offering them?"\n[prospect responds]`},
+    {t:"block",num:2,label:"CHUNK DOWN TO NUMBERS",belief:"BELIEFS #1 & #3: PAIN, COST",bc:"#dc2626",
+      coach:"This is where you identify the constraint with precision. Vague problems don't create urgency \u2014 specific numbers do. As they give you numbers, enter them in the Business Diagnostic silently. CPL, show rate, and close rate tell you exactly which pillar to lead with. Benchmarks: CPL < $10 | Show Rate \u2265 70% | Close Rate \u2265 30%",
+      c:`"How are you generating most of your leads right now \u2014 primarily paid ads, organic content, referrals, or a mix?"\n[prospect responds]\n\n[IF RUNNING PAID ADS:]\n"What platform are you running on?"\n"What's your monthly ad spend right now?"\n"And roughly what are you paying per lead \u2014 do you know your CPL?"\n"What's your ROAS looking like \u2014 for every dollar you put in, how much are you getting back?"\n"Are you running those yourself or through an agency?"\n[If agency:] "And what's your experience been \u2014 are you happy with what they're delivering?"\n\n[IF ORGANIC ONLY:]\n"How often are you posting right now?"\n"Are you seeing actual results from it \u2014 DMs coming in, calls booked? Or more just likes and followers?"\n"What's your follower count on your main platform?"\n\n"Okay \u2014 and in terms of actual sales calls, how many are you getting per week right now?"\n[prospect responds]\n\n"And out of those calls, what percentage are actually your ideal client?"\n[prospect responds]\n\n"And what's your rough close rate \u2014 out of every 10 calls you take, how many are you closing?"\n[prospect responds]\n\n"When calls don't close \u2014 what's the most common reason you're hearing?"\n[prospect responds]`},
+    {t:"calc",tab:"Business Diagnostic",action:"Open the Business Diagnostic tab. Enter ad spend, leads, calls booked, live calls, and close rate silently as they talk. Don't share screen yet \u2014 you're building the diagnostic picture privately first.",
+      note:"You don't need all their numbers. Even 2-3 data points are enough to identify the primary constraint. CPL + show rate + close rate will tell you 80% of what you need."},
+    {t:"block",num:3,label:"COST OF INACTION",belief:"BELIEFS #2 & #3: DOUBT, COST",bc:"#9f1239",
+      coach:"This is where you make the cost of staying stuck feel more real than the cost of investing. Don't rush. The Knife Turn is the most powerful moment of the call \u2014 ask it once, cleanly, then sit in silence. Let them feel the weight of their own answer.",
+      c:`"How long have you been dealing with this?"\n[prospect responds]\n\n"And in that time \u2014 what have you tried to fix it? Like what have you already done to try to solve this?"\n[prospect responds]\n\n"And none of it got you where you wanted to go?"\n[prospect responds]\n\n"Can I ask you something a little more personal? You've been at this [X months/years], you've tried [recap what they mentioned]... what's kept you going instead of just throwing in the towel?"\n[prospect responds \u2014 let them articulate why it matters. This builds Belief #4: Desire.]`},
+    {t:"rule",c:"THE KNIFE TURN \u2014 Do NOT rush this. Ask it. Then sit in complete silence. Let them feel the weight of their own answer. This creates urgency without you manufacturing it."},
+    {t:"say",c:`"I hate to ask this, but I have to \u2014 what's your plan if nothing changes?"\n\n"If the next 12 months look exactly like the last 12... what does that actually cost you? Like financially, but also personally."\n[Long pause. Let them answer. Let them feel it.]\n\n"Yeah. That's exactly why you booked this call."`},
+    {t:"calc",tab:"Business Diagnostic",action:"Share your screen NOW. Scroll to the first \u274c in the KPI Health dashboard. Say: 'I noticed something while we were talking...' Don't immediately explain. Let them react to the red flags first.",
+      note:"The \u274c flags hit harder than anything you can say verbally. Let the prospect process what they're seeing for a few seconds before you speak."},
+    {t:"block",num:4,label:"SUPPORT CHECK",belief:"BELIEF #6: SUPPORT",bc:"#d97706",
+      coach:"Surface the spouse/partner situation NOW \u2014 before the pitch, before the price. If you don't, you'll hit the 'I need to talk to my partner' objection at price drop with zero ammunition. Keep this casual \u2014 15 to 20 seconds.",
+      c:`"Quick question before we talk about what's possible \u2014 is this a decision you'd be able to make on your own, or would your partner be involved in something like this?"\n[prospect responds]\n\n[If partner involved:] "And if this made complete sense for you and you felt like it was the right move \u2014 would they generally trust your judgment on a business investment like this?"\n[prospect responds]`},
+    {t:"block",num:5,label:"GOALS & DESIRE",belief:"BELIEFS #4 & #5: DESIRE, MONEY",bc:"#16a34a",
+      coach:"Get them to build the vision in their OWN words. 'Why that number?' is the question most closers skip \u2014 it's where the real emotional driver lives. You'll use their exact language in the Hamburger Transition.",
+      c:`"Okay \u2014 so let's flip to the other side. If we could fix [their stated constraint] and build out the full system... what does your business look like in the next 90 days?"\n[prospect responds]\n\n"And if we zoom out to 12 months from now \u2014 what's the revenue number you're going after?"\n[prospect responds]\n\n"Why that number specifically \u2014 what does hitting that actually change for you?"\n[Let them go deeper. Don't rush this. Their answer becomes your desire anchor and your Hamburger Transition language.]\n\n"Beyond the revenue \u2014 like personally, what's different when the business is where you want it?"\n[prospect responds]`}
+  ]},
+  {id:4,name:"Constraint ID",sub:"Find the Leak",color:"#b45309",blocks:[
+    {t:"coach",c:"This phase is internal \u2014 you don't announce it to the prospect. Before entering the pitch, silently confirm the primary constraint you identified in discovery. This determines which pillar you lead with, how you frame the Problem Linking, and where you put the most emotional emphasis. Problem Syntax rule: every single pillar gets problem-linked back to their specific constraint. You are not delivering a generic pitch \u2014 you are showing them how each piece solves their exact problem."},
+    {t:"constraint",rows:[
+      {type:"Traffic",looks:"CPL too high, not enough leads coming in",pillar:"Lead with Pillar 2 \u2014 Lead Engine"},
+      {type:"Pipeline",looks:"Leads not booking calls or low show rate",pillar:"Lead with Pillar 3 \u2014 Impact AI Business Manager"},
+      {type:"Sales",looks:"Calls happening but not closing (close rate < 30%)",pillar:"Lead with Pillar 4 \u2014 Conversion System"},
+      {type:"Offer/Positioning",looks:"Wrong leads, price shoppers, ghosting after calls",pillar:"Lead with Pillar 1 \u2014 AI Offer Optimization"},
+      {type:"Back-End",looks:"No retention system, clients leave after first offer",pillar:"Lead with Pillar 4 \u2014 LTV Retention"}
+    ]},
+    {t:"calc",tab:"Business Diagnostic",action:"Your Business Diagnostic now shows exactly where the \u274c is. That \u274c tells you which pillar to lead with in the pitch.",
+      note:"Problem Linking Formula: 'You know how earlier you told me [their exact pain]? Well what we do here is [feature]... so that [benefit]... which means [emotional outcome for them specifically].'"}
+  ]},
+  {id:5,name:"Hamburger Transition",sub:"",color:"#15803d",blocks:[
+    {t:"coach",c:"The bridge from diagnostic mode to pitch mode \u2014 without it feeling like a sales pitch. Three parts: (1) recap their pain in their exact words, (2) position IFCA's process as the precise answer, (3) invite them to walk through it. They will always say yes. If they said 'I feel like I've been doing everything right but nothing is working' \u2014 say that back. Not a cleaned-up version. Their words are more powerful than yours."},
+    {t:"say",c:`"Look \u2014 I feel like we've covered a lot of ground here. Is there anything else you feel like we haven't touched on that I need to know about your situation?"\n[prospect responds \u2014 usually 'No, I think that covers it']\n\n"Well, [Name], based on everything you've told me, I think what I have going on over here might actually be a really good fit for you."\n\n"...because you know how earlier you mentioned [RECAP THEIR #1 PAIN IN THEIR EXACT WORDS]..."\n[prospect: yeah, exactly]\n\n"Our entire system at IFCA is built specifically for the problem you just described \u2014 it's a proven, four-step process that helps online fitness coaches [reach their stated goal] without [their stated frustration]."\n\n"This way, instead of spending months \u2014 or years \u2014 trying to piece this together through trial and error, we help you build it right from the beginning. Make sense?"\n[prospect: yes]\n\n"Cool \u2014 where do you want to go from here? I can walk you through exactly how we make that happen from A to Z. But you tell me."\n[They will say: walk me through it]\n\n"Perfect. Do you have a pen and paper? Great \u2014 write down 1 through 4 with some space between each."`}
+  ]},
+  {id:6,name:"The Pitch",sub:"4 Client Engine Pillars",color:"#4338ca",blocks:[
+    {t:"pitch-sop",c:"In Problem Syntax, your Business Diagnostic already told you which pillar is the \u274c. That pillar gets Full \u2014 go deep, link directly to their number. All other pillars run Quick unless they surfaced a secondary concern in discovery. Discovery mode is most powerful here when the prospect used specific emotional language about why their current approach isn't working \u2014 mirror that language back in the pillar that matches."},
+    {t:"sec",label:"HIGH LEVEL PROMISE",
+      c:`"Before I walk you through the four things \u2014 let me just preface this."\n\n"The moment you enroll, the first thing we do is pair you with a 1-on-1 Success Coach who has already built a six or seven-figure fitness coaching business themselves. They are your guide through everything. Every piece of what I'm about to walk you through gets shaped and personalized by them, starting from day one."\n\n"So this might look slightly different once we map out your specific situation \u2014 but based on everything you've shared, here's what I think it looks like for you..."`},
+    {t:"pillar",num:1,label:"AI OFFER OPTIMIZATION",
+      sop_hint:"Lead here if wrong leads, price shoppers, or ICA mismatch is the \u274c. Your Business Diagnostic told you this is the root problem \u2014 use Full and link directly to their specific messaging issue. Quick if offer/ICA is solid and the constraint is downstream (traffic, pipeline, sales). Discovery if they said 'I keep attracting the wrong person' or used specific emotional language about their ideal client.",
+      quick:`"Number one \u2014 AI Offer Optimization. In the first 48 hours, your Success Coach runs your offer through our AI Offer Optimizer 1-on-1. Premium positioning dialed in, ICA sharpened, messaging built so when your ideal client finds you, they think: 'That's exactly what I need.' If wrong leads are showing up, this is the root fix. Make sense?"`,
+      full:`"Number one \u2014 and this is where we start on day one \u2014 is AI Offer Optimization."\n\n"In the first 48 hours after you enroll, your Success Coach sits down with you 1-on-1 and we run your offer through our AI Offer Optimizer. We figure out exactly who your ideal client actually wants to buy, dial in your premium positioning, and craft your offer in language so compelling that when your ideal client finds you, they think: 'That's exactly what I need \u2014 and I need it from them specifically.'"\n\n"For most coaches, this takes months of trial and error. You get it done in 48 hours."\n\n"Here's what's actually happening when you're getting wrong leads or price shoppers: it's almost always an offer positioning problem \u2014 your message is attracting the wrong buyer. It doesn't matter how much you put into marketing if the offer isn't pulling the right person. We fix that on day one so every dollar you put into marketing after this is actually working."\n\n"Does that make sense? What are your thoughts on that specifically?"\n[Wait for response before moving to Pillar 2]`,
+      disc:`"You know how you mentioned [their exact ICA or messaging problem]? That's almost always an offer positioning problem \u2014 your message is attracting the wrong buyer."\n\n"In 48 hours, your Success Coach works through this with you 1-on-1 \u2014 we figure out exactly what [their specific ideal client] actually wants to buy, and we craft the offer so when they find you, they think: 'That's exactly what I need.'"\n\n"So instead of [their fear \u2014 wrong people showing up / competing on price / ghosting after calls], every dollar you spend on marketing is pulling the right person."\n\n"Make sense?"`},
+    {t:"pillar",num:2,label:"LEAD ENGINE",
+      sop_hint:"Lead here if CPL is too high or traffic/leads is the \u274c. Go Full and make clear the difference is we BUILD with them \u2014 not a playbook handoff. Quick if traffic is solid and constraint is pipeline or close rate. Discovery if they said something specific about their frustration with agencies, high CPL, or 'I've tried ads and they don't work for me.'",
+      quick:`"Number two \u2014 your Lead Engine. What makes this different: we don't hand you a playbook. We work alongside you to build and launch your first campaigns in your voice, around your offer, for your specific audience \u2014 step by step until it's working. We cover your first month of ad spend. Goal: 150 to 500 qualified leads per month. Make sense?"`,
+      full:`"Number two is your Lead Engine. And what makes this different from buying a course or getting coaching \u2014 we're not just teaching you how to run ads and handing you a playbook. We work alongside you to build and launch your first campaigns in your voice, around your offer, for your specific audience."\n\n"We help you get the creative right, dial in the targeting, and set up the copy \u2014 step by step, until it's working. And we cover your first month of ad spend. Your pipeline starts filling before you've put in a single extra dollar of your own."\n\n"The goal is 150 to 500 qualified leads per month once this is running."\n\n"You know how you mentioned your CPL is [their number] and the leads you're getting aren't converting? Here's what's happening \u2014 when you build ads that aren't specific to your voice, your niche, and your exact offer, you get generic leads. Generic leads don't buy at premium price points. We fix the creative from the ground up so the people booking calls are already pre-qualified."\n\n"Does that make sense? What are your thoughts on that?"\n[Wait for response]`,
+      disc:`"You know how you mentioned [their exact traffic pain \u2014 CPL too high / agency not delivering / organic is inconsistent]?"\n\n"Here's the difference with how we work: we don't hand you a playbook. We build your campaigns with you \u2014 your voice, your offer, your exact audience \u2014 step by step until the creative is converting."\n\n"[Their specific fear resolved \u2014 'you're not dependent on the algorithm anymore' / 'the generic leads stop when the offer is dialed in']."\n\n"First month of ad spend covered. Goal: 150 to 500 qualified leads per month."\n\n"Make sense?"`},
+    {t:"calc",tab:"Business Diagnostic",action:"Show the 'If We Fix This' scenario. Pull up the KPI dashboard \u2014 highlight their specific \u274c metric \u2014 then show what happens to contracted revenue and ROAS if that one metric hits benchmark. Say: 'Look at what fixing just this one thing does to your numbers.' Then go quiet.",
+      note:"Don't show the whole dashboard. Just point to their primary red flag and the revenue line that changes when it's fixed. If it's CPL: show cost-per-call dropping and close count going up. If it's close rate: show new clients per month and 12-month contracted value. The simpler, the harder it lands."},
+    {t:"pillar",num:3,label:"IMPACT AI BUSINESS MANAGER",
+      sop_hint:"Lead here if pipeline/show rate is the \u274c \u2014 leads are coming in but not converting to booked calls. The infrastructure fix. Quick if pipeline is healthy. Discovery if they said 'I'm losing leads in the follow-up' or 'my show rate is terrible' or described a specific hole in their ops.",
+      quick:`"Number three \u2014 Impact AI Business Manager. Right now you're probably running 5 to 7 different apps \u2014 CRM, scheduler, payment processor, follow-up \u2014 all duct-taped together and leaking leads in between. We replace all of that with one AI-powered platform. A lead comes in and they're automatically nurtured before they go cold. $1 a month while you're enrolled. Set up in your first 7 days. Make sense?"`,
+      full:`"Number three is your Impact AI Business Manager. Right now you're probably running your business across 5 to 7 different apps \u2014 CRM, payment processor, scheduler, follow-up sequences, funnel builder \u2014 all duct-taped together and leaking leads in between."\n\n"We replace all of that with one AI-powered platform: CRM, payments, scheduling, DM automations, email follow-up, landing pages \u2014 all in one place, all talking to each other."\n\n"Most coaches lose deals not because the prospect wasn't interested \u2014 but because follow-up slipped. A lead comes in on Monday and by Wednesday they've gone cold. That's an infrastructure problem. This fixes it."\n\n"It's $1 a month while you're in the program. From day one, you're saving $300 to $1,000 a month on tools you're currently paying for separately. And we set the whole thing up for you \u2014 1-on-1 tech onboarding call within your first 7 days."\n\n"Does that make sense? What are your thoughts on that?"\n[Wait for response]`,
+      disc:`"You know how you mentioned [leads going cold / low show rate / follow-up slipping]? That's a systems problem \u2014 when everything is siloed across different tools, leads fall through the cracks."\n\n"One AI platform \u2014 CRM, scheduling, payments, DM automations, follow-up sequences \u2014 all in one place, all talking to each other. [Their specific fear resolved \u2014 'a lead comes in and they're automatically nurtured before they ever go cold']."\n\n"$1 a month while you're enrolled. Fully set up in your first week \u2014 dedicated 1-on-1 tech onboarding call."\n\n"Make sense?"`},
+    {t:"pillar",num:4,label:"CONVERSION + RETENTION",
+      sop_hint:"Lead here if close rate is the \u274c \u2014 lead Part 1 (closing) first and go Full. Lead here if no back-end is the constraint \u2014 lead Part 2 (LTV) first and go Full. Quick if both conversion and retention are solid. Discovery if they said specific things like 'I know I'm losing people somewhere on the call' or 'clients just leave and there's no next step.'",
+      quick:`"Number four \u2014 Conversion and Retention. Two parts: proven scripts plus unlimited 1-on-1 call reviews to take you from where you are to 30 to 50% close rate instead of the 10 to 20% industry average. And our LTV system keeps clients an average of 17 months \u2014 10 clients at $2K/month over 17 months = $34K per client in lifetime value. That changes the entire business math. Make sense?"`,
+      full:`"And number four \u2014 the Conversion and Retention System. Two parts."\n\n"Part one: closing more calls. Most coaches are closing 10 to 20% of their discovery calls. Our coaches close 30 to 50%. The difference is a proven sales process and the reps to make it feel completely natural. You get our proven DM and sales call scripts built specifically for fitness coaches. And then we do unlimited 1-on-1 call reviews \u2014 our coaches listen to your actual recorded calls and tell you exactly what to say, where you're losing people, and how to handle objections without ever feeling pushy."\n\n"You know how you mentioned you're only closing [their %] of your calls? That's not a lead problem \u2014 your leads are there. It's a process problem. You're losing people somewhere in the conversation and right now you can't see exactly where. The call reviews fix that \u2014 we watch the tape, we find the leak, and we patch it."\n\n"Part two: keeping clients longer. Most coaches only think about getting new clients. But the real money is in keeping the ones you have."\n\n"Our LTV Retention System helps you design a back-end offer so clients don't just finish your program and leave \u2014 they resign into the next phase of their journey with you. Our students keep clients for an average of 17 months."\n\n"Think about what that means: 10 clients at $2,000 a month. With 17-month average retention, each client generates over $34K in lifetime value \u2014 not $6K from a short program. That's building a real business."\n\n"Does that make sense? What are your thoughts on that?"\n[Wait for response]`,
+      disc:`"Two parts."\n\n"On closing: you know how you mentioned [their specific close rate issue \u2014 'I know I'm losing people somewhere' / 'I'm only closing X%']? Proven scripts plus unlimited 1-on-1 call reviews \u2014 we watch your actual calls, find exactly where you're losing people, and patch it. [Their fear resolved \u2014 'you stop guessing what went wrong']."\n\n"On retention: you know how you mentioned [no back-end / clients finishing and leaving / no obvious next step]? Our LTV system keeps clients an average of 17 months. You've already done the hardest part \u2014 you acquired them, you got them a result, they trust you. We build the next step so they stay."\n\n"Make sense?"`},
+    {t:"sec",label:"DELIVERY + RECAP",
+      c:`"One quick thing \u2014 do you currently have an app where you can deliver your coaching programs, track your clients' progress, and communicate with them all in one place?"\n[If no:] "Perfect \u2014 we actually build that out for you too. We set you up with Trainerized \u2014 already pre-built for fitness coaches. Fully done for you."\n[If yes:] "Great \u2014 we can work with what you've got."\n\n"So to recap: offer dialed in so every piece of marketing lands. Your first campaigns built and launched with our coaching \u2014 first month of ad spend covered. One AI platform replacing all your tools and catching every lead automatically. And a sales and retention system that gets you closing 30 to 50% of calls and keeping clients 17-plus months."\n\n"Everything is completely customized to your situation. Once you enroll, we'll book your onboarding call with your Success Coach. We map out your entire 90-day game plan \u2014 what we do for you, what we need from you, how often we meet, and what happens first. Zero guesswork."\n\n"Does that sound good?"\n[Wait for yes \u2014 if they hesitate, surface the concern NOW before moving to price]`}
+  ]},
+  {id:7,name:"Committing Phase",sub:"Price Drop",color:"#b91c1c",blocks:[
+    {t:"sec",label:"TEMP CHECK",
+      c:`"How do you feel about the process specifically? Do you feel like this is exactly what you need to fix [their constraint] and get to [their goal]?"\n[If yes \u2192 move to next steps]\n[If hesitant:] "On a scale of 1 to 10 \u2014 where do you fall in terms of alignment with what we do?"\n[If less than 8:] "What would make it a 10 for you?"\n[Surface the hidden objection NOW \u2014 before the price]`},
+    {t:"calc",tab:"Business Diagnostic",action:"Two-step. Step 1: Reopen the KPI Health dashboard \u2014 scroll to their primary \u274c. Say: 'I want to show you something before we talk numbers.' Let the flag sit. Step 2: Scroll to the 12-Month Revenue Projection. Show what their business looks like in 12 months if the constraint is fixed \u2014 front-end + back-end stacking. Then drop price.",
+      note:"Don't explain it. Show it and go quiet. The contrast does the work \u2014 here's where you are, here's where you'll be. If they push back on price, scroll back to the \u274c and ask: 'How much is this costing you every month it stays unfixed?' Let the data do the arguing \u2014 not you."},
+    {t:"rule",c:"After you drop the price \u2014 STOP. Complete silence. The first person to speak loses the momentum. Every single time, no exceptions."},
+    {t:"sec",label:"PRICE DROP",
+      c:`"So basically next steps \u2014 you'll process the investment with me today, we'll get your onboarding call scheduled, and you'll have complete clarity on everything that happens over the next six months. Does that sound good?"\n[wait for yes]\n\n"And the investment is just [PRICE]."\n[STOP. SILENCE. Let them speak first.]\n\n[When they agree but go quiet:] "Can I just welcome you to the family?"\n[If yes:] "Perfect. What's a good email to send the receipt to? And what card do you want to put down?"`}
+  ]},
+  {id:8,name:"Objection Handling",sub:"",color:"#374151",blocks:[
+    {t:"coach",c:"Before running any specific objection playbook, ALWAYS run the Master Sequence first. It confirms they want the result and positions the objection as a problem to solve together \u2014 not a wall between you. Every real objection is one of four types: Fear, Money, Spouse/Partner, or Ego. Identify which one you're dealing with, then run the right playbook."},
+    {t:"rule",c:"NEVER book a follow-up for a fear-based objection. A follow-up doesn't fix fear \u2014 it gives fear more time to solidify. Handle it on the call or lose the deal."},
+    {t:"sec",label:"MASTER SEQUENCE \u2014 RUN FIRST ON EVERY OBJECTION",
+      c:`"[Objection] aside \u2014 do you feel this is exactly what you need to solve [their constraint] and hit [their goal]?"\n"So you're 100% in on the process... it's just a matter of solving [objection], and then you're ready to move forward. Is that right?"\n[Now you're problem-solving together \u2014 not fighting]`},
+    {t:"obj",label:"'I NEED TO THINK ABOUT IT' \u2014 Fear Objection",
+      c:`Phase 1 \u2014 Clarify:\n"I completely understand. Out of curiosity \u2014 what specifically is it that you'd like to think about?"\n[Let them answer]\n\nPhase 2 \u2014 Isolate:\n"Got it. So outside of [what they said] \u2014 is there anything else holding you back?"\n\nPhase 3 \u2014 Reframe:\n"Here's what I've noticed \u2014 people who say they need to think about it are usually asking one of two questions: 'Will this actually work for me?' Or: 'Can I actually afford this right now?' Which one is it for you?"\n\nPhase 4 \u2014 The Cost Flip:\n"Here's what I've found: the coaches who keep saying 'let me think about it' are usually the same ones still figuring this out 12 months from now. What's another year of staying where you are actually cost you?"`},
+    {t:"obj",label:"MONEY \u2014 TRIPLE TIE-DOWN",
+      c:`Step 1 \u2014 Isolate: "Investment aside \u2014 is there anything else that would keep you less than 100% certain that you'd want to work with us to help you get to [their goal]? Or is it just a cash flow thing?"\n\nStep 2 \u2014 Tie Down: "I'm curious \u2014 if you had $[PRICE] completely liquid to you right now... would you do it? Would you say you're 10/10 on the process specifically?"\n\nPermission Bridge: "Got it. The last thing we want is for finances to be the thing that holds you back from getting the help you need. I do have some flexibility here to create something custom for you to make it more digestible. I don't have an option A or option B or anything set in stone... so do you mind if I ask you a personal question?"\n\nOpen Wallet: "Just so I can see if I can help \u2014 what would you have available to you today in terms of cash on hand? Checking, savings, or even credit via credit cards?"\n[Probe 3 buckets: checking / savings / credit]\n\nStep 3 \u2014 Close: "I appreciate you being open and honest. If I was able to break this up and allow you in today \u2014 we'll still treat you like you paid in full. If I can make this more digestible based on what you have, would you be ready to get started today?"`},
+    {t:"obj",label:"SPOUSE OBJECTION",
+      c:`[Path A \u2014 Haven't talked yet:]\n"Totally get it. Can I ask \u2014 is it more that you need to loop them in out of respect, or is it that they would actually have concerns you'd need to address?"\n[If it's respect:] "Understood. So it's more of a formality \u2014 you just want them in the loop. Is that fair? Let's make sure this makes complete sense for YOU first. What's holding you back personally?"\n\n[Path B \u2014 They have concerns:]\n"What do you think their biggest concern would be? Let's talk through that now so you're completely prepared."`},
+    {t:"obj",label:"EGO OBJECTION \u2014 'I Can Figure This Out Myself'",
+      c:`"I love that confidence \u2014 honestly. And you probably could figure parts of it out. Can I ask you something honestly?"\n\n"How long have you been working on this specific problem? And how far along are you?"\n[Let them answer]\n\n"So what makes you think the next 6 months are going to be different from the last [X months]?"\n[Pause]\n\n"The issue isn't your ability. It's that you're solving a systems problem with hustle. The system is what's missing \u2014 not your work ethic."`}
+  ]}
 ];
 
-// ─── HELPERS ───────────────────────────────────────────
-function fmt(text) {
-  if (!text) return '';
-  return text.split('\n\n').map(p => {
-    const html = p.split('\n').map(line =>
-      line.replace(/\[([^\]]+)\]/g, '<span class="cue">[$1]</span>')
-    ).join('<br>');
-    return `<p>${html}</p>`;
-  }).join('');
+function fmt(t){if(!t)return '';return t.split('\n\n').map(p=>{const h=p.split('\n').map(l=>l.replace(/\[([^\]]+)\]/g,'<span class="cue">[$1]</span>')).join('<br>');return`<p>${h}</p>`;}).join('');}
+function fmtDisc(t){if(!t)return '';return t.split('\n\n').map(p=>{const h=p.split('\n').map(l=>l.replace(/\[([^\]]+)\]/g,'<span class="disc-bracket">[$1]</span>')).join('<br>');return`<p>${h}</p>`;}).join('');}
+
+let globalPM='quick';const pillarModes={};
+function getPM(n){return pillarModes[n]||globalPM;}
+function setGlobalPM(m){
+  globalPM=m;
+  ['quick','full','disc'].forEach(x=>{const b=document.getElementById('ptgl-'+x);if(b)b.classList.toggle('active',x===m);});
+  for(let i=1;i<=4;i++){if(!pillarModes[i])updatePD(i);}
 }
+function setPM(n,m){if(m===null){delete pillarModes[n];}else{pillarModes[n]=m;}updatePD(n);updatePOB(n);}
+function updatePD(n){const m=getPM(n);const el=document.getElementById('pillar-p'+n);if(!el)return;el.querySelectorAll('.pm-block').forEach(b=>b.classList.remove('pm-visible'));const a=el.querySelector('.pm-'+m+'-block');if(a)a.classList.add('pm-visible');}
+function updatePOB(n){const ov=pillarModes[n]||null;const el=document.getElementById('pillar-p'+n);if(!el)return;el.querySelectorAll('.pmo-btn[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===ov));}
+function initPMs(){for(let i=1;i<=4;i++){updatePD(i);updatePOB(i);}}
 
-// ─── RENDER ────────────────────────────────────────────
-function renderBlock(b, pc) {
-  switch(b.t) {
-    case 'say':
-      return `<div class="block-say"><div class="say-label">SAY THIS</div><div class="say-text">${fmt(b.c)}</div></div>`;
-
-    case 'coach':
-      return `<div class="block-coach coach-only"><div class="coach-head"><span class="coach-lbl">📝 Coaching Note</span></div><div class="coach-body">${b.c}</div></div>`;
-
-    case 'rule':
-      return `<div class="block-rule"><div class="rule-lbl">⚠ RULE</div><div class="rule-body">${b.c}</div></div>`;
-
-    case 'calc':
-      return `<div class="block-calc">
-        <div class="calc-head">
-          <span class="calc-icon">📊</span>
-          <div class="calc-info">
-            <div class="calc-tab">Open: ${b.tab}</div>
-            <div class="calc-action">${b.action}</div>
-          </div>
-        </div>
-        ${b.note ? `<div class="calc-note">${b.note}</div>` : ''}
-      </div>`;
-
-    case 'opening':
-      return `<div class="block-opening"><div class="opening-head"><div class="opening-lbl">Opening Question</div></div><div class="opening-body"><div class="block-say" style="background:transparent;border:none;padding:0"><div class="say-text">${fmt(b.c)}</div></div></div></div>`;
-
-    case 'block':
-      const chipStyle = `background:${b.bc}18;color:${b.bc}`;
-      return `<div class="block-disc">
-        <div class="disc-head">
-          <div class="disc-num" style="background:${pc}">${b.num}</div>
-          <div class="disc-lbl">${b.label}</div>
-          <span class="belief-chip" style="${chipStyle}">${b.belief}</span>
-        </div>
-        <div class="disc-body">
-          ${b.coach ? `<div class="block-coach coach-only"><div class="coach-head"><span class="coach-lbl">📝 Coaching Note</span></div><div class="coach-body">${b.coach}</div></div>` : ''}
-          <div class="block-say" style="background:transparent;border:none;padding:0"><div class="say-text">${fmt(b.c)}</div></div>
-        </div>
-      </div>`;
-
-    case 'support':
-      return `<div class="block-support"><div class="support-lbl">Support Check</div><div class="btext">${fmt(b.c)}</div></div>`;
-
-    case 'sec':
-      return `<div class="block-sec"><div class="sec-head"><div class="sec-lbl">${b.label}</div></div><div class="sec-body"><div class="block-say" style="background:transparent;border:none;padding:0"><div class="say-text">${fmt(b.c)}</div></div></div></div>`;
-
-    case 'pillar': {
-      const plHtml = (arr) => arr ? arr.map(pl=>`<div class="pl-box"><div class="pl-tag">${pl.tag}</div><div class="pl-text">${fmt(pl.text)}</div></div>`).join('') : '';
-      return `<div class="block-pillar">
-        <div class="pillar-head"><div class="pillar-num">${b.num}</div><div class="pillar-lbl">${b.label}</div></div>
-        <div class="prob-link"><div class="prob-tag">Lead Constraint</div><div class="prob-text">${b.link}</div></div>
-        <div class="pillar-body">
-          <div class="block-say" style="background:transparent;border:none;padding:0"><div class="say-text">${fmt(b.c)}</div></div>
-          ${plHtml(b.pl)}
-          ${b.c2 ? `<div class="block-say" style="background:transparent;border:none;padding:0;margin-top:8px"><div class="say-text">${fmt(b.c2)}</div></div>` : ''}
-          ${plHtml(b.pl2)}
-          ${b.close ? `<div class="block-say" style="background:transparent;border:none;padding:0;margin-top:8px"><div class="say-text">${fmt(b.close)}</div></div>` : ''}
-        </div>
-      </div>`;
-    }
-
-    case 'obj':
-      return `<div class="block-obj"><div class="obj-head"><div class="obj-lbl">${b.label}</div></div><div class="obj-body"><div class="block-say" style="background:transparent;border:none;padding:0"><div class="say-text">${fmt(b.c)}</div></div></div></div>`;
-
-    case 'list':
-      return `<div class="block-list"><div class="list-title">${b.label}</div>
-        <ul class="closer-beliefs">${b.items.map(i=>`<li>${i}</li>`).join('')}</ul></div>`;
-
-    case 'beliefs':
-      return `<div class="block-beliefs">
-        <div class="beliefs-label">${b.label}</div>
-        ${b.coach ? `<div class="block-coach coach-only"><div class="coach-head"><span class="coach-lbl">📝 Coaching Note</span></div><div class="coach-body">${b.coach}</div></div>` : ''}
-        <table class="beliefs-table">
-          <thead><tr><th>#</th><th>Belief</th><th>What It Means</th><th>✓</th></tr></thead>
-          <tbody>${b.rows.map(r=>`<tr>
-            <td class="b-num">${r.n}</td>
-            <td class="b-name">${r.name}</td>
-            <td class="b-desc">${r.desc}</td>
-            <td class="b-check" onclick="this.textContent=this.textContent==='☐'?'✅':'☐'" title="Click to check off">☐</td>
-          </tr>`).join('')}</tbody>
-        </table>
-      </div>`;
-
-    case 'constraint':
-      return `<div class="block-constraint">
-        <div class="constraint-header"><div class="constraint-title">Constraint → Lead Pillar Matrix</div></div>
-        <table class="constraint-table">
-          <thead><tr><th>Constraint</th><th>What It Looks Like</th><th>Lead With</th></tr></thead>
-          <tbody>${b.rows.map(r=>`<tr>
-            <td class="ct-type">${r.type}</td>
-            <td class="ct-looks">${r.looks}</td>
-            <td class="ct-pillar">${r.pillar}</td>
-          </tr>`).join('')}</tbody>
-        </table>
-      </div>`;
-
+function renderBlock(b,pc){
+  switch(b.t){
+    case 'say': return`<div class="block-say"><div class="say-label">SAY THIS</div><div class="say-text">${fmt(b.c)}</div></div>`;
+    case 'coach': return`<div class="block-coach coach-only"><div class="coach-head"><span class="coach-lbl">📝 Coaching Note</span></div><div class="coach-body">${b.c}</div></div>`;
+    case 'pitch-sop': return`<div class="block-coach coach-only"><div class="coach-head"><span class="coach-lbl">📝 Pitch Mode Guide — Problem Syntax</span></div><div class="coach-body">${b.c}</div></div>`;
+    case 'rule': return`<div class="block-rule"><div class="rule-lbl">⚠ RULE</div><div class="rule-body">${b.c}</div></div>`;
+    case 'calc': return`<div class="block-calc"><div class="calc-head"><span class="calc-icon">📊</span><div class="calc-info"><div class="calc-tab">Open: ${b.tab}</div><div class="calc-action">${b.action}</div></div></div>${b.note?`<div class="calc-note">${b.note}</div>`:''}</div>`;
+    case 'opening': return`<div class="block-opening"><div class="opening-head"><div class="opening-lbl">Opening Question</div></div><div class="opening-body"><div class="block-say" style="background:transparent;border:none;padding:0"><div class="say-text">${fmt(b.c)}</div></div></div></div>`;
+    case 'block':{const cs=`background:${b.bc}18;color:${b.bc}`;return`<div class="block-disc"><div class="disc-head"><div class="disc-num" style="background:${pc}">${b.num}</div><div class="disc-lbl">${b.label}</div><span class="belief-chip" style="${cs}">${b.belief}</span></div><div class="disc-body">${b.coach?`<div class="block-coach coach-only"><div class="coach-head"><span class="coach-lbl">📝 Coaching Note</span></div><div class="coach-body">${b.coach}</div></div>`:''}<div class="block-say" style="background:transparent;border:none;padding:0"><div class="say-text">${fmt(b.c)}</div></div></div></div>`;}
+    case 'support': return`<div class="block-support"><div class="support-lbl">Support Check</div><div class="btext">${fmt(b.c)}</div></div>`;
+    case 'sec': return`<div class="block-sec"><div class="sec-head"><div class="sec-lbl">${b.label}</div></div><div class="sec-body"><div class="block-say" style="background:transparent;border:none;padding:0"><div class="say-text">${fmt(b.c)}</div></div></div></div>`;
+    case 'pillar': return`<div class="block-pillar" id="pillar-p${b.num}"><div class="pillar-head"><div class="pillar-num">${b.num}</div><div class="pillar-lbl">${b.label}</div><div class="pillar-mode-btns"><button class="pmo-btn" data-mode="quick" title="Quick" onclick="setPM(${b.num},'quick')">⚡</button><button class="pmo-btn" data-mode="full" title="Full" onclick="setPM(${b.num},'full')">📋</button><button class="pmo-btn" data-mode="disc" title="Discovery" onclick="setPM(${b.num},'disc')">🔗</button><button class="pmo-btn pmo-reset" title="Reset to global" onclick="setPM(${b.num},null)">↺</button></div></div>${b.sop_hint?`<div class="pillar-sop-hint"><div class="coach-lbl">📝 When to Use Each Mode</div><div class="coach-body">${b.sop_hint}</div></div>`:''}<div class="pm-block pm-quick-block"><div class="pm-tag pm-quick-tag">⚡ Quick</div><div class="pm-text">${fmt(b.quick)}</div></div><div class="pm-block pm-full-block"><div class="pm-tag pm-full-tag">📋 Full</div><div class="pm-text">${fmt(b.full)}</div></div><div class="pm-block pm-disc-block"><div class="pm-tag pm-disc-tag">🔗 Discovery</div><div class="pm-text">${fmtDisc(b.disc)}</div></div></div>`;
+    case 'obj': return`<div class="block-obj"><div class="obj-head"><div class="obj-lbl">${b.label}</div></div><div class="obj-body"><div class="block-say" style="background:transparent;border:none;padding:0"><div class="say-text">${fmt(b.c)}</div></div></div></div>`;
+    case 'list': return`<div class="block-list"><div class="list-title">${b.label}</div><ul class="closer-beliefs">${b.items.map(i=>`<li>${i}</li>`).join('')}</ul></div>`;
+    case 'beliefs': return`<div class="block-beliefs"><div class="beliefs-label">${b.label}</div>${b.coach?`<div class="block-coach coach-only"><div class="coach-head"><span class="coach-lbl">📝 Coaching Note</span></div><div class="coach-body">${b.coach}</div></div>`:''}<table class="beliefs-table"><thead><tr><th>#</th><th>Belief</th><th>What It Means</th><th>✓</th></tr></thead><tbody>${b.rows.map(r=>`<tr><td class="b-num">${r.n}</td><td class="b-name">${r.name}</td><td class="b-desc">${r.desc}</td><td class="b-check" onclick="this.textContent=this.textContent==='☐'?'✅':'☐'">☐</td></tr>`).join('')}</tbody></table></div>`;
+    case 'constraint': return`<div class="block-constraint"><div class="constraint-header"><div class="constraint-title">Constraint → Lead Pillar Matrix</div></div><table class="constraint-table"><thead><tr><th>Constraint Type</th><th>What It Looks Like</th><th>Lead With</th></tr></thead><tbody>${b.rows.map(r=>`<tr><td class="ct-type">${r.type}</td><td class="ct-looks">${r.looks}</td><td class="ct-pillar">${r.pillar}</td></tr>`).join('')}</tbody></table></div>`;
     default: return '';
   }
 }
 
-function renderNav() {
-  document.getElementById('phase-nav').innerHTML = PHASES.map(p =>
-    `<div class="nav-item" id="nav-${p.id}" style="--nc:${p.color}" onclick="jumpTo(${p.id})">
-      <div class="nav-dot" style="background:${p.color}">${p.id}</div>
-      <div class="nav-text">
-        <div class="nav-name">${p.name}</div>
-        ${p.sub ? `<div class="nav-sub">${p.sub}</div>` : ''}
-      </div>
-    </div>`
-  ).join('');
+function pitchGuideHtml(){
+  return`<div class="phase" id="phase-guide"><div class="phase-head" style="background:#7c3aed"><div class="phase-badge">📋</div><div class="phase-info"><div class="phase-name">Pitch Guide</div><div class="phase-sub">Mode Reference · Cole Gordon Framework</div></div></div><div class="phase-body">
+  <div class="guide-section"><div class="guide-section-title">When to Use Each Mode</div><table class="guide-table"><thead><tr><th>Situation</th><th>Use</th></tr></thead><tbody>
+  <tr><td>Pillar IS their primary diagnosed constraint</td><td><span class="guide-mode-chip chip-f">📋 Full</span></td></tr>
+  <tr><td>Pillar is relevant but not the core constraint</td><td><span class="guide-mode-chip chip-q">⚡ Quick</span></td></tr>
+  <tr><td>They gave strong emotional language in discovery</td><td><span class="guide-mode-chip chip-d">🔗 Discovery</span></td></tr>
+  <tr><td>Discovery was thin — not enough words to mirror</td><td><span class="guide-mode-chip chip-f">📋 Full</span></td></tr>
+  <tr><td>Prospect is analytical / wants data</td><td><span class="guide-mode-chip chip-f">📋 Full</span></td></tr>
+  <tr><td>Prospect used specific emotional language</td><td><span class="guide-mode-chip chip-d">🔗 Discovery</span></td></tr>
+  <tr><td>Running long on time</td><td><span class="guide-mode-chip chip-q">⚡ Quick</span> on 2–3 pillars + <span class="guide-mode-chip chip-f">📋 Full</span> on primary ❌</td></tr>
+  </tbody></table></div>
+  <div class="guide-section"><div class="guide-section-title">Problem Syntax — Constraint → Pillar Matrix</div><table class="guide-table"><thead><tr><th>Constraint</th><th>Lead With</th><th>Default Mode</th></tr></thead><tbody>
+  <tr><td>Wrong leads / price shoppers / ICA mismatch</td><td>P1 — Offer Optimization</td><td><span class="guide-mode-chip chip-f">📋 Full</span></td></tr>
+  <tr><td>CPL too high / not enough leads</td><td>P2 — Lead Engine</td><td><span class="guide-mode-chip chip-f">📋 Full</span></td></tr>
+  <tr><td>Low show rate / leads going cold</td><td>P3 — Business Manager</td><td><span class="guide-mode-chip chip-f">📋 Full</span></td></tr>
+  <tr><td>Close rate below 30%</td><td>P4 — Conversion</td><td><span class="guide-mode-chip chip-f">📋 Full</span></td></tr>
+  <tr><td>No back-end / clients not staying</td><td>P4 — Retention</td><td><span class="guide-mode-chip chip-f">📋 Full</span></td></tr>
+  </tbody></table></div>
+  <div class="guide-section"><div class="guide-section-title">High Level Promise Formula</div><div class="guide-formula">"This is going to be <strong>[# pillars] steps</strong> to get you from <strong>[current situation]</strong> to <strong>[desired situation]</strong> in <strong>[approximate timeframe]</strong>."</div></div>
+  <div class="guide-section"><div class="guide-section-title">Tie-Down Rule</div><div class="guide-rule">Every single pillar ends with "Make sense?" + wait for response. No exceptions. Do not move to the next pillar until they confirm.</div></div>
+  <div class="guide-section"><div class="guide-section-title">Discovery Mode — How to Use Brackets</div><div class="guide-formula">Amber brackets <span class="disc-bracket">[like this]</span> are fill-in placeholders. Before the pitch, mentally assign the prospect's exact words from discovery to each bracket. Read around them naturally — no typing required mid-call.</div></div>
+  </div></div>`;
 }
 
-function renderContent() {
-  document.getElementById('content').innerHTML = PHASES.map(p =>
-    `<div class="phase" id="phase-${p.id}">
-      <div class="phase-head" style="background:${p.color}">
-        <div class="phase-badge">${p.id}</div>
-        <div class="phase-info">
-          <div class="phase-name">${p.name}</div>
-          ${p.sub ? `<div class="phase-sub">${p.sub}</div>` : ''}
-        </div>
-      </div>
-      <div class="phase-body">${p.blocks.map(b=>renderBlock(b,p.color)).join('')}</div>
-    </div>`
-  ).join('') + '<div class="calc-footer">IFCA · Impact Fitness Coaching Academy · impactcoachacademy.com</div>';
+function renderNav(){document.getElementById('phase-nav').innerHTML=PHASES.map(p=>`<div class="nav-item" id="nav-${p.id}" style="--nc:${p.color}" onclick="jumpTo(${p.id})"><div class="nav-dot" style="background:${p.color}">${p.id}</div><div class="nav-text"><div class="nav-name">${p.name}</div>${p.sub?`<div class="nav-sub">${p.sub}</div>`:''}</div></div>`).join('');}
+
+function renderContent(){
+  document.getElementById('content').innerHTML=PHASES.map(p=>{
+    const isPitch=p.id===6;
+    return`<div class="phase" id="phase-${p.id}"><div class="phase-head" style="background:${p.color}"><div class="phase-badge">${p.id}</div><div class="phase-info"><div class="phase-name">${p.name}</div>${p.sub?`<div class="phase-sub">${p.sub}</div>`:''}</div>${isPitch?`<div class="pitch-toggle-bar"><button class="ptgl-btn active" id="ptgl-quick" onclick="setGlobalPM('quick')">⚡ Quick</button><button class="ptgl-btn" id="ptgl-full" onclick="setGlobalPM('full')">📋 Full</button><button class="ptgl-btn" id="ptgl-disc" onclick="setGlobalPM('disc')">🔗 Discovery</button></div>`:''}</div><div class="phase-body">${p.blocks.map(b=>renderBlock(b,p.color)).join('')}</div></div>`;
+  }).join('')+pitchGuideHtml()+'<div class="calc-footer">IFCA · Impact Fitness Coaching Academy · impactcoachacademy.com</div>';
 }
 
-let mode='quick', coaching=false;
-function applyClasses(){
-  document.body.classList.toggle('sop-mode', mode==='sop');
-  document.body.classList.toggle('notes-on', coaching);
-}
-function setMode(m){
-  mode=m;
-  document.querySelectorAll('.tab-btn').forEach((btn,i)=>btn.classList.toggle('active',(i===0&&m==='quick')||(i===1&&m==='sop')));
-  if(m==='quick'){coaching=false;document.getElementById('coach-btn').classList.remove('on');}
-  applyClasses();
-}
-function toggleCoaching(){
-  if(mode==='quick'){setMode('sop');return;}
-  coaching=!coaching;
-  document.getElementById('coach-btn').classList.toggle('on',coaching);
-  applyClasses();
-}
-function jumpTo(id){
-  const el=document.getElementById(`phase-${id}`);
-  if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  const an=document.getElementById(`nav-${id}`);
-  if(an) an.classList.add('active');
-}
+let mode='quick',coaching=false;
+function applyClasses(){document.body.classList.toggle('sop-mode',mode==='sop');document.body.classList.toggle('notes-on',coaching);}
+function setMode(m){mode=m;document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',(i===0&&m==='quick')||(i===1&&m==='sop')));if(m==='quick'){coaching=false;document.getElementById('coach-btn').classList.remove('on');}applyClasses();}
+function toggleCoaching(){if(mode==='quick'){setMode('sop');return;}coaching=!coaching;document.getElementById('coach-btn').classList.toggle('on',coaching);applyClasses();}
+function jumpTo(id){const el=document.getElementById(`phase-${id}`);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));const an=document.getElementById(`nav-${id}`);if(an)an.classList.add('active');}
+function jumpToGuide(){const el=document.getElementById('phase-guide');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.getElementById('nav-guide').classList.add('active');}
 document.addEventListener('DOMContentLoaded',()=>{
   const content=document.getElementById('content');
   content.addEventListener('scroll',()=>{
     let active=0;
     PHASES.forEach(p=>{const el=document.getElementById(`phase-${p.id}`);if(el&&el.offsetTop-40<=content.scrollTop)active=p.id;});
+    const ge=document.getElementById('phase-guide');
+    if(ge&&ge.offsetTop-40<=content.scrollTop){document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.getElementById('nav-guide').classList.add('active');return;}
     document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
     const an=document.getElementById(`nav-${active}`);
     if(an){an.classList.add('active');an.scrollIntoView({block:'nearest'});}
   });
 });
-renderNav();
-renderContent();
-document.getElementById('nav-0').classList.add('active');
+renderNav();renderContent();initPMs();document.getElementById('nav-0').classList.add('active');
 </script>
 </body>
 </html>
