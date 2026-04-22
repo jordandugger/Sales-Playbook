@@ -3,493 +3,301 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Goal Syntax Script — IFCA</title>
+<title>PT Pivot Script — IFCA</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
 <style>
-:root {
-  --navy:#0f172a; --bg:#f1f5f9; --white:#fff;
-  --text:#1e293b; --muted:#64748b; --border:#e2e8f0;
-  --say-bg:#eff6ff; --say-border:#3b82f6; --say-label:#1d4ed8;
-  --coach-bg:#fefce8; --coach-border:#fbbf24; --coach-label:#92400e; --coach-text:#78350f;
-  --rule-bg:#fff1f2; --rule-border:#f43f5e; --rule-text:#9f1239;
-  --calc-bg:#f0fdfa; --calc-border:#0d9488; --calc-text:#134e4a;
-}
-* { box-sizing:border-box; margin:0; padding:0; }
-html,body { height:100%; overflow:hidden; }
-body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); font-size:14px; }
-
-#app { display:flex; height:100vh; overflow:hidden; }
-
-.sidebar { width:200px; min-width:200px; background:var(--navy); display:flex; flex-direction:column; overflow-y:auto; }
-.sidebar-brand { padding:18px 16px 14px; border-bottom:1px solid rgba(255,255,255,.07); flex-shrink:0; }
-.brand-eyebrow { font-size:9px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#475569; margin-bottom:5px; }
-.brand-title { font-family:'Syne',sans-serif; font-size:16px; font-weight:800; color:#f8fafc; line-height:1.2; letter-spacing:-.3px; }
-.brand-sub { font-size:10px; color:#64748b; margin-top:3px; line-height:1.4; }
-.nav-label { font-size:9px; font-weight:600; letter-spacing:.11em; text-transform:uppercase; color:#374151; padding:14px 16px 6px; }
-.nav-item { display:flex; align-items:center; gap:9px; padding:8px 12px 8px 16px; cursor:pointer; border-left:3px solid transparent; transition:background .12s,border-color .12s; }
-.nav-item:hover { background:rgba(255,255,255,.04); }
-.nav-item.active { background:rgba(255,255,255,.06); border-left-color:var(--nc,#16a34a); }
-.nav-dot { width:22px; height:22px; border-radius:5px; display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-size:10px; font-weight:800; color:#fff; flex-shrink:0; background:var(--nc,#16a34a); }
-.nav-text { flex:1; overflow:hidden; }
-.nav-name { font-size:12px; font-weight:500; color:#cbd5e1; white-space:nowrap; }
-.nav-sub { font-size:10px; color:#475569; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-
-.main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
-.topbar { background:var(--white); border-bottom:1px solid var(--border); padding:10px 24px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; gap:12px; }
-.topbar-left { display:flex; align-items:center; gap:14px; }
-.doc-title { font-family:'Syne',sans-serif; font-size:14px; font-weight:700; color:var(--text); letter-spacing:-.2px; }
-.doc-meta { font-size:11px; color:var(--muted); }
-.tabs { display:flex; background:var(--bg); border-radius:7px; padding:3px; gap:2px; }
-.tab-btn { padding:5px 14px; border:none; background:transparent; border-radius:5px; font-size:12px; font-weight:500; color:var(--muted); cursor:pointer; font-family:'DM Sans',sans-serif; transition:all .12s; }
-.tab-btn.active { background:var(--white); color:var(--text); box-shadow:0 1px 3px rgba(0,0,0,.1); }
-.topbar-right { display:flex; align-items:center; gap:8px; }
-.coach-toggle { display:flex; align-items:center; gap:6px; padding:5px 12px; border:1px solid var(--border); background:var(--white); border-radius:6px; font-size:12px; font-weight:500; color:var(--muted); cursor:pointer; font-family:'DM Sans',sans-serif; transition:all .15s; }
-.coach-toggle.on { background:var(--coach-bg); border-color:var(--coach-border); color:var(--coach-label); }
-
-.content { flex:1; overflow-y:auto; padding:20px 24px 60px; }
-
-.phase { margin-bottom:22px; scroll-margin-top:12px; }
-.phase-head { display:flex; align-items:center; gap:12px; padding:11px 18px; border-radius:9px 9px 0 0; color:white; }
-.phase-badge { font-family:'Syne',sans-serif; font-size:17px; font-weight:800; width:36px; height:36px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,.2); border-radius:8px; flex-shrink:0; }
-.phase-info { flex:1; }
-.phase-name { font-family:'Syne',sans-serif; font-size:15px; font-weight:700; letter-spacing:-.3px; }
-.phase-sub { font-size:10.5px; opacity:.75; margin-top:2px; }
-.phase-body { background:var(--white); border:1px solid var(--border); border-top:none; border-radius:0 0 9px 9px; padding:14px 16px; display:flex; flex-direction:column; gap:11px; }
-
-.block-say { background:var(--say-bg); border-left:4px solid var(--say-border); border-radius:0 7px 7px 0; padding:11px 15px; }
-.say-label { font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--say-label); margin-bottom:8px; }
-.say-text { font-size:14.5px; line-height:1.8; color:#1e293b; }
-.say-text p { margin-bottom:9px; }
-.say-text p:last-child { margin-bottom:0; }
-.cue { color:#94a3b8; font-style:italic; font-size:13px; }
-
-.block-coach { background:var(--coach-bg); border-left:4px solid var(--coach-border); border-radius:0 7px 7px 0; padding:10px 15px; display:none; }
-.block-coach.always { display:block; }
-.coach-head { display:flex; align-items:center; justify-content:space-between; }
-.coach-lbl { font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--coach-label); }
-.coach-body { font-size:12.5px; line-height:1.65; color:var(--coach-text); margin-top:8px; }
-
-.block-rule { background:var(--rule-bg); border-left:4px solid var(--rule-border); border-radius:0 7px 7px 0; padding:10px 15px; }
-.rule-lbl { font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#be123c; margin-bottom:6px; }
-.rule-body { font-size:13.5px; line-height:1.6; color:var(--rule-text); font-weight:600; }
-
-.block-calc { background:var(--calc-bg); border-left:4px solid var(--calc-border); border-radius:0 7px 7px 0; padding:11px 14px; }
-.calc-head { display:flex; align-items:flex-start; gap:10px; }
-.calc-icon { font-size:18px; flex-shrink:0; line-height:1; }
-.calc-info { flex:1; }
-.calc-tab { font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--calc-border); margin-bottom:3px; }
-.calc-action { font-size:13.5px; font-weight:500; color:var(--calc-text); line-height:1.55; }
-.calc-note { font-size:12px; color:#115e59; margin-top:8px; padding-top:8px; border-top:1px solid #99f6e4; line-height:1.5; display:none; }
-
-.block-disc { border:1px solid var(--border); border-radius:8px; overflow:hidden; }
-.disc-head { display:flex; align-items:center; gap:9px; padding:8px 13px; background:#f8fafc; border-bottom:1px solid var(--border); }
-.disc-num { width:22px; height:22px; border-radius:5px; display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-size:11px; font-weight:800; color:#fff; flex-shrink:0; }
-.disc-lbl { font-size:12px; font-weight:600; color:var(--text); flex:1; }
-.belief-chip { font-size:9px; font-weight:700; padding:2px 7px; border-radius:10px; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; }
-.disc-body { padding:12px 13px; display:flex; flex-direction:column; gap:10px; }
-
-.block-sec { border:1px solid var(--border); border-radius:8px; overflow:hidden; }
-.sec-head { padding:8px 13px; background:#f8fafc; border-bottom:1px solid var(--border); }
-.sec-lbl { font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
-.sec-body { padding:12px 13px; }
-
-.block-pillar { border:1px solid #ddd6fe; border-radius:8px; overflow:hidden; }
-.pillar-head { display:flex; align-items:center; gap:11px; padding:10px 13px; background:#f5f3ff; border-bottom:1px solid #ddd6fe; }
-.pillar-num { width:30px; height:30px; border-radius:7px; display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-size:15px; font-weight:800; color:#fff; background:#4338ca; flex-shrink:0; }
-.pillar-lbl { font-family:'Syne',sans-serif; font-size:12.5px; font-weight:700; color:#3730a3; letter-spacing:-.1px; }
-.prob-link { background:#f0fdf4; border-left:3px solid #22c55e; padding:7px 13px; }
-.prob-tag { font-size:9px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#15803d; margin-bottom:3px; }
-.prob-text { font-size:12px; color:#166534; font-style:italic; }
-.pillar-body { padding:12px 13px; }
-
-.block-obj { border:1px solid #fee2e2; border-radius:8px; overflow:hidden; }
-.obj-head { padding:8px 13px; background:#fff1f2; border-bottom:1px solid #fee2e2; }
-.obj-lbl { font-size:10px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:#be123c; }
-.obj-body { padding:12px 13px; background:white; }
-
-.block-support { border:1px dashed var(--border); border-radius:8px; padding:11px 13px; background:#fafafa; }
-.support-lbl { font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:7px; }
-
-.block-opening { border:1px solid var(--border); border-radius:8px; overflow:hidden; }
-.opening-head { padding:8px 13px; background:#f8fafc; border-bottom:1px solid var(--border); }
-.opening-lbl { font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
-.opening-body { padding:12px 13px; }
-
-.block-beliefs { }
-.beliefs-label { font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
-.beliefs-table { width:100%; border-collapse:collapse; font-size:12.5px; }
-.beliefs-table th { background:#f8fafc; padding:7px 10px; text-align:left; font-size:9px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--muted); border-bottom:1px solid var(--border); }
-.beliefs-table td { padding:8px 10px; border-bottom:1px solid #f1f5f9; vertical-align:top; }
-.beliefs-table tr:last-child td { border-bottom:none; }
-.b-num { font-family:'Syne',sans-serif; font-weight:800; color:#2563eb; width:24px; font-size:13px; }
-.b-name { font-weight:600; width:140px; }
-.b-desc { color:var(--muted); }
-.b-check { width:36px; text-align:center; font-size:15px; cursor:pointer; user-select:none; }
-
-.block-list { }
-.list-title { font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
-.closer-beliefs { padding-left:0; list-style:none; display:flex; flex-direction:column; gap:8px; }
-.closer-beliefs li { font-size:13.5px; line-height:1.6; color:var(--text); padding:9px 13px; background:#f8fafc; border-radius:6px; border-left:3px solid #16a34a; display:flex; align-items:flex-start; gap:8px; }
-.closer-beliefs li::before { content:'✓'; color:#16a34a; font-weight:700; font-size:13px; flex-shrink:0; margin-top:1px; }
-
-.btext { font-size:14.5px; line-height:1.8; color:var(--text); }
-.btext p { margin-bottom:9px; }
-.btext p:last-child { margin-bottom:0; }
-.btext .cue { color:#94a3b8; font-style:italic; font-size:13px; }
-
-.coach-only { display:none !important; }
-.notes-on .coach-only { display:flex !important; }
-.block-coach.coach-only { display:none !important; }
-.notes-on .block-coach.coach-only { display:block !important; }
-.sop-mode .block-coach { display:block !important; }
-.sop-mode .coach-only { display:flex !important; }
-.sop-mode .calc-note { display:block !important; }
-.notes-on .calc-note { display:block !important; }
-
-.calc-footer { font-size:10px; color:#94a3b8; text-align:center; padding:12px 0 4px; }
-::-webkit-scrollbar { width:5px; }
-::-webkit-scrollbar-track { background:transparent; }
-::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:10px; }
+:root{--navy:#0f172a;--bg:#f1f5f9;--white:#fff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;--say-bg:#eff6ff;--say-border:#3b82f6;--say-label:#1d4ed8;--coach-bg:#fefce8;--coach-border:#fbbf24;--coach-label:#92400e;--coach-text:#78350f;--rule-bg:#fff1f2;--rule-border:#f43f5e;--rule-text:#9f1239;--calc-bg:#f0fdfa;--calc-border:#0d9488;--calc-text:#134e4a;}
+*{box-sizing:border-box;margin:0;padding:0;}html,body{height:100%;overflow:hidden;}body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;}
+#app{display:flex;height:100vh;overflow:hidden;}
+.sidebar{width:200px;min-width:200px;background:var(--navy);display:flex;flex-direction:column;overflow-y:auto;}
+.sidebar-brand{padding:18px 16px 14px;border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0;}
+.brand-eyebrow{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#475569;margin-bottom:5px;}
+.brand-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:#f8fafc;line-height:1.2;letter-spacing:-.3px;}
+.brand-sub{font-size:10px;color:#64748b;margin-top:3px;line-height:1.4;}
+.nav-label{font-size:9px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:#374151;padding:14px 16px 6px;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 12px 8px 16px;cursor:pointer;border-left:3px solid transparent;transition:background .12s,border-color .12s;}
+.nav-item:hover{background:rgba(255,255,255,.04);}
+.nav-item.active{background:rgba(255,255,255,.06);border-left-color:var(--nc,#3b82f6);}
+.nav-dot{width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:10px;font-weight:800;color:#fff;flex-shrink:0;background:var(--nc,#3b82f6);}
+.nav-ref-dot{width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;background:rgba(255,255,255,.08);}
+.nav-text{flex:1;overflow:hidden;}.nav-name{font-size:12px;font-weight:500;color:#cbd5e1;white-space:nowrap;}.nav-sub{font-size:10px;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.topbar{background:var(--white);border-bottom:1px solid var(--border);padding:10px 24px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:12px;}
+.topbar-left{display:flex;align-items:center;gap:14px;}.doc-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--text);letter-spacing:-.2px;}.doc-meta{font-size:11px;color:var(--muted);}
+.tabs{display:flex;background:var(--bg);border-radius:7px;padding:3px;gap:2px;}.tab-btn{padding:5px 14px;border:none;background:transparent;border-radius:5px;font-size:12px;font-weight:500;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .12s;}.tab-btn.active{background:var(--white);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.1);}
+.topbar-right{display:flex;align-items:center;gap:8px;}.coach-toggle{display:flex;align-items:center;gap:6px;padding:5px 12px;border:1px solid var(--border);background:var(--white);border-radius:6px;font-size:12px;font-weight:500;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;}.coach-toggle.on{background:var(--coach-bg);border-color:var(--coach-border);color:var(--coach-label);}
+.content{flex:1;overflow-y:auto;padding:20px 24px 60px;}
+.phase{margin-bottom:22px;scroll-margin-top:12px;}.phase-head{display:flex;align-items:center;gap:12px;padding:11px 18px;border-radius:9px 9px 0 0;color:white;}.phase-badge{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.2);border-radius:8px;flex-shrink:0;}.phase-info{flex:1;}.phase-name{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;letter-spacing:-.3px;}.phase-sub{font-size:10.5px;opacity:.75;margin-top:2px;}.phase-body{background:var(--white);border:1px solid var(--border);border-top:none;border-radius:0 0 9px 9px;padding:14px 16px;display:flex;flex-direction:column;gap:11px;}
+.block-say{background:var(--say-bg);border-left:4px solid var(--say-border);border-radius:0 7px 7px 0;padding:11px 15px;}.say-label{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--say-label);margin-bottom:8px;}.say-text{font-size:14.5px;line-height:1.8;color:#1e293b;}.say-text p{margin-bottom:9px;}.say-text p:last-child{margin-bottom:0;}.cue{color:#94a3b8;font-style:italic;font-size:13px;}
+.block-coach{background:var(--coach-bg);border-left:4px solid var(--coach-border);border-radius:0 7px 7px 0;padding:10px 15px;display:none;}.block-coach.always{display:block;}.coach-head{display:flex;align-items:center;justify-content:space-between;}.coach-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--coach-label);}.coach-body{font-size:12.5px;line-height:1.65;color:var(--coach-text);margin-top:8px;}
+.block-rule{background:var(--rule-bg);border-left:4px solid var(--rule-border);border-radius:0 7px 7px 0;padding:10px 15px;}.rule-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#be123c;margin-bottom:6px;}.rule-body{font-size:13.5px;line-height:1.6;color:var(--rule-text);font-weight:600;}
+.block-calc{background:var(--calc-bg);border-left:4px solid var(--calc-border);border-radius:0 7px 7px 0;padding:11px 14px;}.calc-head{display:flex;align-items:flex-start;gap:10px;}.calc-icon{font-size:18px;flex-shrink:0;line-height:1;}.calc-info{flex:1;}.calc-tab{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--calc-border);margin-bottom:3px;}.calc-action{font-size:13.5px;font-weight:500;color:var(--calc-text);line-height:1.55;}.calc-note{font-size:12px;color:#115e59;margin-top:8px;padding-top:8px;border-top:1px solid #99f6e4;line-height:1.5;display:none;}
+.block-disc{border:1px solid var(--border);border-radius:8px;overflow:hidden;}.disc-head{display:flex;align-items:center;gap:9px;padding:8px 13px;background:#f8fafc;border-bottom:1px solid var(--border);}.disc-num{width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;}.disc-lbl{font-size:12px;font-weight:600;color:var(--text);flex:1;}.belief-chip{font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;}.disc-body{padding:12px 13px;display:flex;flex-direction:column;gap:10px;}
+.block-sec{border:1px solid var(--border);border-radius:8px;overflow:hidden;}.sec-head{padding:8px 13px;background:#f8fafc;border-bottom:1px solid var(--border);}.sec-lbl{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}.sec-body{padding:12px 13px;}
+.block-obj{border:1px solid #fee2e2;border-radius:8px;overflow:hidden;}.obj-head{padding:8px 13px;background:#fff1f2;border-bottom:1px solid #fee2e2;}.obj-lbl{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#be123c;}.obj-body{padding:12px 13px;background:white;}
+.block-support{border:1px dashed var(--border);border-radius:8px;padding:11px 13px;background:#fafafa;}.support-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:7px;}
+.block-opening{border:1px solid var(--border);border-radius:8px;overflow:hidden;}.opening-head{padding:8px 13px;background:#f8fafc;border-bottom:1px solid var(--border);}.opening-lbl{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}.opening-body{padding:12px 13px;}
+.block-beliefs{}.beliefs-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}.beliefs-table{width:100%;border-collapse:collapse;font-size:12.5px;}.beliefs-table th{background:#f8fafc;padding:7px 10px;text-align:left;font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);}.beliefs-table td{padding:8px 10px;border-bottom:1px solid #f1f5f9;vertical-align:top;}.beliefs-table tr:last-child td{border-bottom:none;}.b-num{font-family:'Syne',sans-serif;font-weight:800;color:#2563eb;width:24px;font-size:13px;}.b-name{font-weight:600;width:140px;}.b-desc{color:var(--muted);}.b-check{width:36px;text-align:center;font-size:15px;cursor:pointer;user-select:none;}
+.block-list{}.list-title{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}.closer-beliefs{padding-left:0;list-style:none;display:flex;flex-direction:column;gap:8px;}.closer-beliefs li{font-size:13.5px;line-height:1.6;color:var(--text);padding:9px 13px;background:#f8fafc;border-radius:6px;border-left:3px solid #3b82f6;display:flex;align-items:flex-start;gap:8px;}.closer-beliefs li::before{content:'\u2713';color:#3b82f6;font-weight:700;font-size:13px;flex-shrink:0;margin-top:1px;}
+.btext{font-size:14.5px;line-height:1.8;color:var(--text);}.btext p{margin-bottom:9px;}.btext p:last-child{margin-bottom:0;}.btext .cue{color:#94a3b8;font-style:italic;font-size:13px;}
+.coach-only{display:none!important;}.notes-on .coach-only{display:flex!important;}.block-coach.coach-only{display:none!important;}.notes-on .block-coach.coach-only{display:block!important;}.sop-mode .block-coach{display:block!important;}.sop-mode .coach-only{display:flex!important;}.sop-mode .calc-note{display:block!important;}.notes-on .calc-note{display:block!important;}
+.calc-footer{font-size:10px;color:#94a3b8;text-align:center;padding:12px 0 4px;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:10px;}
+/* PITCH MODE SYSTEM */
+.pitch-toggle-bar{display:flex;gap:4px;margin-left:auto;flex-shrink:0;}
+.ptgl-btn{padding:4px 9px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.1);color:rgba(255,255,255,.65);border-radius:5px;font-size:11px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .12s;white-space:nowrap;}
+.ptgl-btn:hover{background:rgba(255,255,255,.18);color:rgba(255,255,255,.9);}.ptgl-btn.active{background:rgba(255,255,255,.25);color:#fff;border-color:rgba(255,255,255,.5);}
+.block-pillar{border:1px solid #ddd6fe;border-radius:8px;overflow:hidden;}
+.pillar-head{display:flex;align-items:center;gap:11px;padding:10px 13px;background:#f5f3ff;border-bottom:1px solid #ddd6fe;}
+.pillar-num{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:#fff;background:#4338ca;flex-shrink:0;}
+.pillar-lbl{font-family:'Syne',sans-serif;font-size:12.5px;font-weight:700;color:#3730a3;letter-spacing:-.1px;flex:1;}
+.pillar-mode-btns{display:flex;gap:3px;flex-shrink:0;}.pmo-btn{width:24px;height:24px;border:1px solid #c4b5fd;background:rgba(255,255,255,.7);border-radius:4px;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s;line-height:1;}.pmo-btn:hover{background:white;border-color:#7c3aed;}.pmo-btn.active{background:#4338ca;border-color:#3730a3;}.pmo-reset{opacity:.5;font-size:12px;}.pmo-reset:hover{opacity:1;}
+.pillar-sop-hint{background:var(--coach-bg);border-left:4px solid var(--coach-border);padding:9px 15px;display:none;}.sop-mode .pillar-sop-hint{display:block;}.pillar-sop-hint .coach-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--coach-label);}.pillar-sop-hint .coach-body{font-size:12px;line-height:1.6;color:var(--coach-text);margin-top:6px;}
+.pm-block{padding:12px 15px;display:none;}.pm-block.pm-visible{display:block;}
+.pm-quick-block{background:#f0fdf4;border-left:4px solid #22c55e;}
+.pm-full-block{background:#eff6ff;border-left:4px solid #3b82f6;}
+.pm-disc-block{background:#fffbeb;border-left:4px solid #f59e0b;}
+.pm-tag{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:5px;}.pm-quick-tag{color:#15803d;}.pm-full-tag{color:#1d4ed8;}.pm-disc-tag{color:#92400e;}
+.pm-text{font-size:14.5px;line-height:1.8;color:#1e293b;}.pm-text p{margin-bottom:9px;}.pm-text p:last-child{margin-bottom:0;}
+.disc-bracket{background:#fde68a;color:#78350f;padding:1px 5px;border-radius:3px;font-weight:600;font-style:normal;}
+/* Guide */
+.guide-section{margin-bottom:16px;}.guide-section-title{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--text);letter-spacing:-.1px;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}.guide-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:2px;}.guide-table th{background:#f8fafc;padding:7px 10px;text-align:left;font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);}.guide-table td{padding:8px 10px;border-bottom:1px solid #f1f5f9;vertical-align:top;line-height:1.5;}.guide-table tr:last-child td{border-bottom:none;}.guide-mode-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;margin:1px 2px;}.chip-q{background:#dcfce7;color:#15803d;}.chip-f{background:#dbeafe;color:#1d4ed8;}.chip-d{background:#fef3c7;color:#92400e;}.guide-formula{background:#f8fafc;border:1px solid var(--border);border-radius:7px;padding:13px 15px;font-size:13.5px;line-height:1.7;color:var(--text);}.guide-formula strong{color:#4338ca;}.guide-rule{background:#fff1f2;border-left:4px solid #f43f5e;border-radius:0 7px 7px 0;padding:10px 15px;font-size:13px;font-weight:600;color:var(--rule-text);}
 </style>
 </head>
 <body>
 <div id="app">
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-brand">
-      <div class="brand-eyebrow">IFCA · March 2026</div>
-      <div class="brand-title">Goal Syntax Script</div>
-      <div class="brand-sub">Starting From Scratch · &lt; $2K/Month</div>
-    </div>
-    <div class="nav-label">Phases</div>
-    <nav id="phase-nav"></nav>
+  <aside class="sidebar">
+    <div class="sidebar-brand"><div class="brand-eyebrow">IFCA \u00b7 March 2026</div><div class="brand-title">PT Pivot Script</div><div class="brand-sub">Personal Trainer \u2192 Hybrid / Online</div></div>
+    <div class="nav-label">Phases</div><nav id="phase-nav"></nav>
+    <div class="nav-label">Reference</div>
+    <nav><div class="nav-item" id="nav-guide" style="--nc:#7c3aed" onclick="jumpToGuide()"><div class="nav-ref-dot">\ud83d\udccb</div><div class="nav-text"><div class="nav-name">Pitch Guide</div><div class="nav-sub">Modes \u00b7 Matrix \u00b7 Formula</div></div></div></nav>
   </aside>
-
   <div class="main">
     <div class="topbar">
-      <div class="topbar-left">
-        <div>
-          <div class="doc-title">Goal Syntax Script</div>
-          <div class="doc-meta">Closer Training Guide · 6-Month Program · Cole Gordon 6-Phase Framework</div>
-        </div>
-        <div class="tabs">
-          <button class="tab-btn active" onclick="setMode('quick')">Quick Script</button>
-          <button class="tab-btn" onclick="setMode('sop')">Full SOP</button>
-        </div>
-      </div>
-      <div class="topbar-right">
-        <button class="coach-toggle" id="coach-btn" onclick="toggleCoaching()">📝 Coaching Notes</button>
-      </div>
+      <div class="topbar-left"><div><div class="doc-title">PT Pivot Script</div><div class="doc-meta">Closer Training Guide \u00b7 6-Month Program \u00b7 Cole Gordon 6-Phase Framework</div></div><div class="tabs"><button class="tab-btn active" onclick="setMode('quick')">Quick Script</button><button class="tab-btn" onclick="setMode('sop')">Full SOP</button></div></div>
+      <div class="topbar-right"><button class="coach-toggle" id="coach-btn" onclick="toggleCoaching()">\ud83d\udcdd Coaching Notes</button></div>
     </div>
     <div class="content" id="content"></div>
   </div>
 </div>
-
 <script>
-const PHASES = [
-  {
-    id:0, name:"Before You Dial", sub:"Mindset & Foundations", color:"#374151",
-    blocks:[
-      { t:"coach", c:"Internalize these before every single call. Your certainty and belief in the offer transfers directly to the prospect. If you're not 100% bought in, they won't be either. Review these out loud before you dial." },
-      { t:"list", label:"THE 4 CLOSER BELIEFS", items:[
-        "We are the best in the world at what we do.",
-        "People truly want and need what we offer.",
-        "I am doing them a favor by providing a solution to their problem.",
-        "If they say \"No\" — it's their loss."
-      ]},
-      { t:"coach", c:"You are a doctor, not a salesperson. A doctor diagnoses before prescribing. Never answer 'how much?' or 'what's included?' before you've completed discovery. If they ask early: \"Everything we do is customized to your situation — so honestly, I'm not even sure we can help until I understand where you're at. Let me ask you a few more questions.\"" },
-      { t:"beliefs", label:"THE 7 BELIEFS — PRE-CALL CHECKLIST", coach:"Every objection you receive traces back to one of these 7 beliefs not being fully built in discovery. Your job during discovery is to build all 7 BEFORE the pitch — so the prospect essentially closes themselves. Use this as a mental checklist. If you hit an objection, look here first.", rows:[
-        { n:1, name:"Pain (The Gap)", desc:"They believe there is a severe gap between where they are and where they want to be" },
-        { n:2, name:"Doubt", desc:"They believe they cannot fix this alone — DIY wastes time, money, and energy" },
-        { n:3, name:"Cost", desc:"They believe inaction is MORE expensive than the investment" },
-        { n:4, name:"Desire", desc:"They are emotionally connected to the payoff of making this work" },
-        { n:5, name:"Money", desc:"They have resources and are willing to invest" },
-        { n:6, name:"Support", desc:"Spouse or stakeholders will support the decision" },
-        { n:7, name:"Trust (Methodology)", desc:"They believe IFCA's specific method is the only logical path forward" },
-      ]}
-    ]
-  },
-  {
-    id:1, name:"Open", sub:"≤ 2 MIN", color:"#0d9488",
-    blocks:[
-      { t:"coach", c:"Keep this tight. Your only goal is to establish you're a normal human, then transition immediately to frame setting. Never go past 2 minutes. Lingering here feels comfortable but kills your authority." },
-      { t:"say", c:`"Hey [Name] — nice to meet you! Whereabouts are you located?"\n[prospect responds]\n\n"Have you ever met Jordan and Erin before, or did someone refer you over?"\n[prospect responds]` }
-    ]
-  },
-  {
-    id:2, name:"Frame Setting", sub:"", color:"#7c3aed",
-    blocks:[
-      { t:"coach", c:"This is the most important 30 seconds of the call. The line 'I'll tell you if we CAN'T help you' drops the guard and repositions you from salesperson to trusted advisor. Do NOT rush. Wait for a genuine yes before continuing." },
-      { t:"say", c:`"Awesome. Well, I read your application and got a 30,000-foot view of where you're at and where you're looking to go."\n\n"Just so you know how these calls typically work — I'm going to ask you some questions about what's working, what's not, and what your goals are. And if I feel like we can be the best ones to help you, I'll definitely let you know."\n\n"But if I feel like at any point we can't help you, I'll do my best to point you in a different direction or connect you with someone who might be a better fit."\n\n"Does that sound fair?"\n[Wait for yes — then move forward]` }
-    ]
-  },
-  {
-    id:3, name:"Discovery", sub:"Goal Syntax — 7 Blocks", color:"#1d4ed8",
-    blocks:[
-      { t:"coach", c:"In Goal Syntax, the 'problem' is the ABSENCE of a business — not a broken piece of an existing one. Discovery job: (1) understand their current reality, (2) surface their dream, (3) expose the gap, (4) build fear/doubt about going it alone, (5) land the Knife Turn so the cost of NOT starting feels very real. Build all 7 Beliefs here. Don't rush. Depth of discovery = ease of close." },
-      { t:"opening", c:`"Awesome — so a good place for us to start: what's the main thing that motivated you to book this call today?"\n[If vague:] "What do you mean by that?" / "Tell me more..." / "How long have you been thinking about this?"` },
-      { t:"block", num:1, label:"SITUATION QUESTIONS", belief:"BELIEF #1: PAIN", bc:"#dc2626",
-        coach:"Ground them in their current reality. 'Do you like it or love it?' is a trap question — most will hesitate or say 'like it,' which opens the emotional gap. Let them describe their day. The friction of their current situation should come out in their own words.",
-        c:`"What are you currently doing for work right now?"\n[prospect responds]\n\n"How did you get into that?"\n[prospect responds]\n\n"How long have you been doing that?"\n[prospect responds]\n\n"Do you like it or love it?"\n[Listen carefully — the texture of their answer tells you how much pain they're in right now]` },
-      { t:"block", num:2, label:"URGENCY / WHY NOW", belief:"BELIEF #4: DESIRE", bc:"#16a34a",
-        coach:"Something triggered this call. Find it. This becomes your desire anchor — you'll reference it throughout. Go deeper than the surface answer. If they say 'burnt out' → 'What does that actually feel like day to day?' If they say 'money' → 'What would more money actually allow you to do?'",
-        c:`"Has anything recently happened that's prompting you to start this online coaching business? Like, what's the trigger right now?"\n[prospect responds]\n\n"Tell me more about that..."\n[Dig deeper. Let them feel it.]` },
-      { t:"block", num:3, label:"WHY NOT STAY?", belief:"BELIEF #2: DOUBT IN DIY", bc:"#7c3aed",
-        coach:"Forces them to articulate why staying put isn't an option. Surfaces the future pain of inaction before you ever name it.",
-        c:`"Can I ask — why not just stay where you are? Like, what's the thing that makes that not an option for you?"\n[Let them answer fully. Don't interrupt.]` },
-      { t:"block", num:4, label:"PAINT THE PICTURE", belief:"BELIEF #4: DESIRE", bc:"#16a34a",
-        coach:"Get them to build the vision in their OWN words. You'll use this exact language in the Hamburger Transition. Take mental notes — or literal ones. Their words are your script.",
-        c:`"So if you could paint the picture — what does your life actually look like in 12 to 18 months when this business is running? What specifically are you going after?"\n[prospect responds]\n\n"And beyond the income — what does that actually change for you personally? Like, what does your day look like?"\n[Get the emotional picture: family time, freedom, no alarm clock, leave the job]` },
-      { t:"block", num:5, label:"FINANCIAL QUALIFIER", belief:"BELIEF #5: MONEY", bc:"#d97706",
-        coach:"Anchor their goal to a real number AND go deeper on why that number matters. 'Why that number?' is the most underused question in this block — it's where you find the real emotional driver. The goal number becomes the math you use in the pitch ('you'd only need X clients'). Enter these numbers silently into the Goal Calculator as they answer — don't announce it.",
-        c:`"Got it. And just so I understand the full picture — what would you need to make from the online business to feel like this was actually worth it? What's the monthly number that would make you go 'okay, this is real'?"\n[prospect responds]\n\n"Why that number — like what specifically does hitting that change for you?"\n[Let them go deeper. This is your desire anchor — you'll use their exact words in the Hamburger Transition.]\n\n"And right now, what's your monthly take-home today, roughly?"\n[prospect responds]` },
-      { t:"calc", tab:"Goal Calculator", action:"Silently enter Current Income, Monthly Goal, and Months Stuck as they answer Block 5. The COI numbers and pipeline math auto-calculate — ready to share after the Knife Turn. After they give you the goal number, follow up: 'Why that number? What would that change for you?' — this deepens the emotional anchor before you ever show them the math.",
-        note:"Don't announce the calculator. Fill it in quietly while they talk. The numbers will be waiting. The 'why that number' follow-up is verbal — you're not on screen yet. It amplifies Belief #4 (Desire) and Belief #3 (Cost) before the Knife Turn lands." },
-      { t:"block", num:6, label:"SURFACE FEAR & DOUBT", belief:"BELIEF #2: DOUBT", bc:"#7c3aed",
-        coach:"Two jobs here: (1) surface their fear about doing this alone, and (2) probe why they haven't sought help before. The second question is the one most closers skip — but it's what cements Belief #2. If they say they've been trying on their own for 6 months, that's 6 months of proof that DIY isn't working. Let them say that out loud.",
-        c:`"Have you made any attempts to get this started on your own before? What happened?"\n[prospect responds]\n\n"What's your biggest concern about actually making this work?"\n[Let them voice the fear — failure, not knowing how, wasting money, what people will think]\n\n"And have you looked into getting any help with this — a coach, a program, anything like that?"\n[prospect responds]\n\n[If no:] "What's held you back from that?"\n[Let them answer. Most will say cost, not knowing what to trust, or thinking they could figure it out. All three of those answers build Belief #2 for you.]` },
-      { t:"block", num:7, label:"THE KNIFE TURN", belief:"BELIEF #3: COST OF INACTION", bc:"#9f1239",
-        coach:"Most powerful question in Goal Syntax discovery. Do NOT rush it. Ask it. Then sit in complete silence. Let them feel the weight of their own answer. This creates urgency without you manufacturing it.",
-        c:`"I hate to even ask this... but if you're still doing [their job] in 2 years, and this business still hasn't gotten off the ground — what does that actually cost you? Like financially, but also personally."\n[Long pause. Let them answer. Let them feel it.]\n\n"Yeah... so that's exactly why we're talking."` },
-      { t:"calc", tab:"Goal Calculator", action:"Share your screen NOW. Show the Cost of Inaction section — the monthly gap, yearly gap, and 'Already Gone' number. Put it on screen. Don't talk over it.",
-        note:"Say: 'I was filling this in while we were talking — let me show you what the math actually looks like.' Then go silent. Let them look at it. Then: 'That's exactly why you booked this call.'" },
-      { t:"support", c:`"Quick question before we talk about what's possible — is this a decision you'd be able to make on your own, or would your partner be involved in something like this?"\n[prospect responds]` }
-    ]
-  },
-  {
-    id:4, name:"Pre-Pitch Coaching", sub:"The 2 Keys", color:"#b45309",
-    blocks:[
-      { t:"coach", c:"This goes BETWEEN discovery and the pitch. It's a coaching moment that seeds doubt about their offer and acquisition system BEFORE you present the solution. Two jobs: (1) makes the prospect feel genuinely helped before you sell anything, and (2) plants the exact problem your pitch is about to solve. Frame this conversationally — like you're giving them real insight, not a pre-pitch setup. Because you actually are." },
-      { t:"sec", label:"SETUP — THE 2 KEYS",
-        c:`"Alright — before I walk you through what we do, let me give you a bit of coaching on what it actually takes to hit [their goal] in an online coaching business. Is that okay?"\n[prospect: yes/sure]\n\n"It's actually simpler than most people make it. You really only need two things: a desirable, scalable offer — and a way to consistently get clients for that offer. That's it. Those two things are why coaches either make it or don't."\n\n"Make sense?"\n[prospect responds]` },
-      { t:"sec", label:"PROBE THE OFFER — [SEEDS BELIEF #7: TRUST]",
-        c:`"In terms of your offer... do you have an idea of what that looks like yet?"\n"What I mean is — WHO is it for? WHAT specific problem does it solve? And HOW do you deliver it — in a way that's scalable and doesn't just mean more hours for you?"\n[prospect responds]\n\n[Probe pricing:] "How is the offer priced right now?"\n\n[If low or no offer:] "Are you open to restructuring — or building — your offer in a way that could get you to [their goal] faster?"\n\n"Most of our clients charge $500 to $800 a month per client on a 6-month contract. So to hit [their monthly goal], you'd only need [X] active clients — not [X] new closes per month, just [X] clients in your program at any given time. Does that feel more achievable when you think about it that way?"` },
-      { t:"calc", tab:"Goal Calculator — Active MRR Clients", action:"Set the Monthly Rate to match their situation. Show the 'Active MRR Clients' number: 'At [their rate]/month per client, this is how many active clients you need to hit [their goal]. That's your roster size — not how many closes you need every month. Does that number feel more manageable?'",
-        note:"The framing shift from 'closes per month' to 'active clients' is the entire point of this moment. Let that land before you move on. Don't rush past it." },
-      { t:"sec", label:"PROBE CLIENT ACQUISITION — [SEEDS BELIEFS #1 & #2]",
-        c:`"Okay — so here's the second key. If we worked together to get your offer positioned the right way... do you have a system in place to bring in new clients consistently?"\n"Or is building a reliable client acquisition system something you'd need help with?"\n[prospect responds — they will almost always say they need help]\n\n"Yeah — that's honestly where most coaches get stuck. And here's the thing: you don't actually need an audience or a pile of cash to start. You already have something more powerful than both of those — a network of people who know you, trust you, and have been waiting for you to offer them something. That's where we start. Does that make sense?"\n[prospect responds]` },
-      { t:"sec", label:"TRANSITION TO PITCH",
-        c:`"Alright — I feel like we've covered quite a bit here. Is there anything else you'd like me to know before I walk you through what we actually do?"\n[prospect responds]` }
-    ]
-  },
-  {
-    id:5, name:"Hamburger Transition", sub:"", color:"#15803d",
-    blocks:[
-      { t:"coach", c:"The bridge from coaching moment to pitch. Use their EXACT words from discovery — not paraphrases. If they said 'I feel trapped,' say 'trapped.' If they said 'I just want to be there when my kids get home,' say that back verbatim. Three parts: (1) recap their pain in their words, (2) position IFCA's process as the precise answer, (3) invite them to walk through it. They will always say yes." },
-      { t:"say", c:`"Well, [Name], based on everything you've shared with me — I think what I have going on here could be a really good fit for you..."\n\n"...because you know how earlier you mentioned [recap their #1 pain/desire in their EXACT words]..."\n[prospect: yeah, exactly]\n\n"Our area of expertise at IFCA is a proven, four-step process to help you build your online fitness coaching business from the ground up — to $5K, $10K, even $15K months — in about six months."\n\n"This way, instead of spending months — or years — trying to piece this together through trial and error, we just help you build it right from day one. Make sense?"\n[prospect: yes]\n\n"Cool — so where do you want to go from here? I can walk you through exactly how we make that happen from A to Z if you'd like. But you tell me."\n[They will say: walk me through it]\n\n"Perfect. Do you have a pen and paper? Great — write down 1 through 4 with some space between each. I'm going to walk you through the four things we build for you."` }
-    ]
-  },
-  {
-    id:6, name:"The Pitch", sub:"4 Client Engine Pillars", color:"#4338ca",
-    blocks:[
-      { t:"coach", c:"For Goal Syntax, use Benefit Linking on each pillar: 'instead of spending months figuring this out alone...' or 'so you don't have to make the mistakes most coaches make when they start.' The pitch is the simultaneous explanation of why everything they've tried (or avoided) has failed and why THIS is going to be different. After EVERY pillar: 'Does that make sense? What are your thoughts on that?' — wait for their response before moving to the next pillar." },
-      { t:"sec", label:"HIGH LEVEL PROMISE",
-        c:`"Before I walk you through the four things — let me just preface this."\n\n"The moment you enroll, the first thing we do is pair you with a 1-on-1 Success Coach who has already built a six or seven-figure fitness coaching business themselves. They are your guide through everything. Every piece of what I'm about to walk you through gets shaped and personalized by them, starting from day one."\n\n"So this might look slightly different once we map out your specific situation — but based on everything you've shared, here's what I think it looks like for you..."` },
-      { t:"pillar", num:1, label:"AI OFFER OPTIMIZATION",
-        link:"They admitted they don't have a clear offer yet, or they're underpriced / unsure what to charge.",
-        c:`"Number one — and this is where we start on day one — is AI Offer Optimization."\n\n"Here's what most coaches do when they decide to go online: they start posting content, sending DMs, maybe try to run some ads — before they've even confirmed that their offer actually lands with the market they're going after. And the problem with that is: it doesn't matter how hard you market if the offer doesn't convert. You're just burning energy and wondering why nothing's working."\n\n"What we do instead is sit down with you 1-on-1 using our AI Offer Optimizer. Your Success Coach works through this with you to figure out exactly what your ideal client actually wants to buy — we dial in your positioning at a premium price point, and we craft your offer in language so compelling that when your ideal client finds you, they think: 'That's exactly what I need — and I need it from them specifically.'"\n\n"For most coaches, this takes months of trial and error. You get it done in 48 hours."\n\n"So instead of launching with the wrong message, attracting the wrong people, and starting over — you go to market right the first time."\n\n"Does that make sense? What are your thoughts on that specifically?"\n[Wait for response before moving to Pillar 2]` },
-      { t:"pillar", num:2, label:"LEAD GENERATION ENGINE",
-        link:"They said they have no system for getting clients. No audience, no cash for ads — but they have a network, and that's all they need to start.",
-        c:`"Number two — the Lead Generation Engine. And I want to walk you through this carefully, because this is the one where most coaches either go broke trying to figure it out alone, or give up right before it would have worked."\n\n"There are three stages — and the order is everything."\n\n"Stage one: The Affinity Launch. Before we run a single ad, before you post a single piece of content, we run a structured warm outreach campaign to the people who already know and trust you. Not cold messaging — this is a specific conversation framework that feels completely natural. You're reconnecting with people, asking good questions, and when the moment is right, mentioning what you've built. Out of every 100 people you reach out to, typically 3 to 7 become paying clients. At $500 a month on a 6-month contract — that's $9,000 to $21,000 contracted from people already sitting in your phone. And it shows up immediately as $1,500 to $3,500 in monthly recurring revenue — before a single dollar goes to ads. Does that make sense?"\n\n"Stage two: AI Content System. While the Affinity Launch is running, we install Lexi — your AI content assistant. She plugs in your exact offer, analyzes what's already working in your market, and gives you ready-to-execute content creatives. You're not staring at a blank screen. You're not guessing what to post. Now one of two things happens — and both are wins. Either your content starts converting on its own and inbound leads start coming in without any ad spend. Or it's warming your audience while the Affinity Launch is still closing clients. You can't lose."\n\n"Stage three: Paid Amplification. Once your offer is proven — you have clients, you have results, you have content that converts — that's when we layer in ads. Not before. Because the number one mistake new coaches make is spending money on ads before they know what works. By the time we turn ads on, we know exactly what message lands with your exact client. And we even cover your first month of ad spend."\n\n"Network first. Content to test what converts. Ads to scale what's proven. That's the sequence — and that's exactly why this works when going at it alone doesn't."\n\n"Does that make sense? What are your thoughts on that?"\n[Wait for response]` },
-      { t:"calc", tab:"Goal Calculator — Active MRR Clients + Pipeline Math", action:"Show the 'Active MRR Clients' number and the 'New Clients / Mo' number side by side. 'This is how many clients you need total, and this is how many new ones you need each month to stay there — not to grow, just to stay at your goal.' Then scroll to the Pipeline section: leads → booked calls → live calls → new clients. 'And when we eventually get to ads, look at what it costs to generate those leads.'",
-        note:"Two data points: the roster size, and the monthly pipeline math. Keep it brief — you're illustrating the pitch, not teaching a course. Let the numbers sit for a beat, then keep moving." },
-      { t:"pillar", num:3, label:"IMPACT AI BUSINESS MANAGER",
-        link:"They said they're juggling multiple apps or leads have fallen through the cracks before.",
-        c:`"Number three — Impact AI Business Manager."\n\n"Best way I can describe it: think of it like MyFitnessPal — but for your business. MyFitnessPal puts everything about your health in one place. Impact AI Business Manager does the same for your coaching business."\n\n"Lead tracking, payments, scheduling, client management, DM automations, email follow-up — all in one place, all talking to each other."\n\n"Because here's what kills most new coaches at this stage: they're juggling 5 to 7 different apps. Calendly, Stripe, Google Docs, email, spreadsheets — and none of it talks to each other. So a lead comes in on Monday — and by Wednesday they've gone cold because the follow-up slipped. That's not a you problem. That's an infrastructure problem."\n\n"Impact AI Business Manager fixes all of that. It's your all-in-one command center — and while you're in the program, it's $1 a month."\n\n"From day one, before you've signed a single client, you're already saving $300 to $1,000 a month on tools you'd otherwise pay for separately."\n\n"A lead comes in from your content — they're automatically logged, they get a text, an email, a DM. All without you lifting a finger. We set the whole thing up for you — 1-on-1 tech onboarding call within your first 7 days."\n\n"Does that make sense? What are your thoughts on that?"\n[Wait for response]` },
-      { t:"pillar", num:4, label:"CONVERSION + RETENTION",
-        link:"They have no confidence in their ability to sell, or they haven't thought about what happens after the first client.",
-        c:`"And number four — the Conversion and Retention System. Two parts."\n\n"Part one: closing your calls. The average coach starting out closes 10 to 20% of their discovery calls. Our coaches close 30 to 50%. The difference is a proven sales process — and the reps to make it feel completely natural. You get our proven DM and sales call scripts built specifically for fitness coaches. And then we do unlimited 1-on-1 call reviews — our coaches listen to your actual recorded calls and tell you exactly what to say, where you're losing people, and how to handle objections without ever feeling pushy."\n\n"Part two: keeping your clients long-term. Most new coaches are so focused on getting clients that they never think about what happens after they sign. That's actually the biggest mistake — because the real income stability comes from retention."\n\n"Our LTV Retention System helps you design a back-end offer so clients don't just finish their 6-month program and leave — they resign into the next phase. Our students keep clients for an average of 17 months."\n\n"Think about what that means practically. Ten clients at $500 a month — that's $5,000 a month just from those ten people. Keep them for 17 months and each one is worth $8,500 in lifetime value. You don't need a massive audience. You need a small roster of great clients who stay. That's what a real business looks like."\n\n"Does that make sense? What are your thoughts on that?"\n[Wait for response]` },
-      { t:"sec", label:"DELIVERY + RECAP",
-        c:`"One quick thing — do you currently have an app where you can deliver your coaching programs, track your clients' progress, and communicate with them all in one place?"\n[If no:] "Perfect — we actually build that out for you too. We'll set you up with Trainerized — already pre-built for fitness coaches, and we have a partnership so you get it at a significant discount. Fully done for you."\n[If yes:] "Great — we can work with what you've got."\n\n"So to recap: your offer built and positioned so every piece of marketing actually lands. A content system that finds organic winners fast — then campaigns that amplify what's already working. One platform that replaces all your tools and catches every lead automatically. Plus Trainerized so you can deliver programs professionally. And a sales and retention system that closes 30 to 50% and keeps clients 17-plus months."\n\n"Everything is completely customized to your situation. Once you enroll, we'll schedule your onboarding call with your Success Coach. We map out your entire 6-month game plan — what we do for you, what we need from you, how often we meet, and what happens in what order. Zero guesswork."\n\n"Does that sound good?"\n[Wait for yes — if they hesitate, surface the concern NOW before price]` }
-    ]
-  },
-  {
-    id:7, name:"Committing Phase", sub:"Price Drop", color:"#b91c1c",
-    blocks:[
-      { t:"sec", label:"TEMP CHECK",
-        c:`"How do you feel about the process specifically? Do you feel like this is what you need to get your coaching business off the ground and hit [their stated goal]?"\n[If yes → move to next steps]\n[If hesitant:] "On a scale of 1 to 10 — where do you fall in terms of alignment with what we do?"\n[If less than 8:] "What would make it a 10 for you?"\n[Surface the hidden objection NOW — before the price]` },
-      { t:"calc", tab:"Goal Calculator — 12-Month MRR Projection", action:"Show the 12-Month MRR Projection chart — MRR accumulating month by month as the client roster grows, then back-end stacking from month 7 onward. On the same screen: show the Cost of Inaction section (monthly gap, yearly gap, Already Gone). Say: 'Let me show you what the next 12 months looks like.' Then go completely silent. Let both sit on screen. Then drop price.",
-        note:"Don't narrate the chart. Don't explain every line. One sentence, then silence. The two numbers that matter: what their MRR looks like by month 12 if they move, and what's already gone by waiting. If they've been thinking about this for 6 months, say it out loud: 'You've already left $X behind.' Then price." },
-      { t:"rule", c:"After you drop the price — STOP. Complete silence. The first person to speak loses the momentum. Every single time, no exceptions. Do not fill the silence." },
-      { t:"sec", label:"PRICE DROP",
-        c:`"So basically next steps — you'll process the investment with me today, we'll get your onboarding call scheduled, and you'll have complete clarity on everything that happens over the next six months. Does that sound good?"\n[wait for yes]\n\n"And the investment is just [PRICE]."\n[STOP. Silence. Let them speak first.]` },
-      { t:"sec", label:"STALL CLOSE",
-        c:`[When they agree it makes sense but go quiet:]\n"Can I just welcome you to the family?"\n\n[If yes:] "Perfect. What's a good email to send the receipt to? And what card do you want to put down?"` }
-    ]
-  },
-  {
-    id:8, name:"Objection Handling", sub:"", color:"#374151",
-    blocks:[
-      { t:"rule", c:"Run the Master Sequence FIRST on every objection. Never book a follow-up for a fear-based objection — close it on the call. Complaints ≠ Objections. Don't handle complaints." },
-      { t:"sec", label:"MASTER SEQUENCE — RUN FIRST ON EVERY OBJECTION",
-        c:`"[Objection] aside — do you feel this is exactly what you need to achieve [their goal]?"\n"So you're 100% in on the process... it's just a matter of solving [objection], and then you're ready to move forward. Is that right?"\n[Now you're problem-solving together — not fighting]` },
-      { t:"obj", label:"'I NEED TO THINK ABOUT IT' — Fear Objection",
-        c:`1. Clarify: "What specifically is it that you'd like to think about?"\n2. Isolate: "Outside of [what they said] — is there anything else holding you back?"\n3. Reframe: "People who say 'think about it' are usually asking one of two things: 'Will this work for me?' or 'Can I afford this right now?' Which one is it for you?"\n4. Cost Flip: "The coaches who keep saying 'let me think about it' are the same ones still figuring this out 12 months from now. What does another year cost you?"` },
-      { t:"obj", label:"MONEY — TRIPLE TIE-DOWN",
-        c:`Step 1 — Isolate: "Investment aside — is there anything else that would keep you less than 100% certain that you'd want to work with us to help you get to [their goal]? Or is it just a cash flow thing?"\n\nStep 2 — Tie Down: "If you had $[PRICE] completely liquid to you right now... would you do it? Would you say you're 10/10 on the process specifically?"\n\nPermission Bridge: "Got it. The last thing we want is for finances to be the thing that holds you back from getting the help you need. I do have some flexibility here to create something custom for you to make it more digestible. I don't have an option A or option B or anything set in stone... so do you mind if I ask you a personal question?"\n\nOpen Wallet: "Just so I can see if I can help — what would you have available to you today in terms of cash on hand? Checking, savings, or even credit via credit cards?"\n[Probe 3 buckets: checking / savings / credit]\n\nStep 3 — Close: "I appreciate you being open and honest. If I was able to break this up and allow you in today — we'll still treat you like you paid in full. If I can make this more digestible based on what you have, would you be ready to get started today?"` },
-      { t:"obj", label:"SPOUSE OBJECTION",
-        c:`[Path A — Haven't talked yet:]\n"Are they generally supportive of you building something for yourself, or is that a conversation you need to have?"\n[If supportive:] "So it's more of a formality — you just want them in the loop. Is that fair? Let's make sure this makes sense for YOU first. What's holding you back personally?"\n\n[Path B — Spouse on call or already discussed:]\n"Where does [spouse's name] land? What's their main concern?"\n"And you — where do YOU land? If you could make this decision just for yourself, what would you do?"` },
-      { t:"obj", label:"EGO OBJECTION — 'I Can Figure This Out Myself'",
-        c:`"I love that mindset — seriously. And I'm sure you could figure parts of it out. How long have you been thinking about building this online? And how far along are you?"\n[Let them answer]\n\n"So what makes you think the next 6 months are going to be different from the last [X months]?"\n[Pause]\n\n"The issue isn't your ability. It's that you're solving a systems problem with hustle. The system is what's missing — not your work ethic."` }
-    ]
-  }
+const PHASES=[
+  {id:0,name:"Before You Dial",sub:"Mindset & Foundations",color:"#374151",blocks:[
+    {t:"coach",c:"Internalize these before every PT call. PTs are skeptical buyers \u2014 they've heard pitches on the gym floor their entire career and can smell a closer from a mile away. Your certainty in the outcome has to be unshakeable before you dial. If you're not 100% bought in, they won't be either. Review these out loud."},
+    {t:"list",label:"THE 4 CLOSER BELIEFS",items:[
+      "We've helped over 1,300 in-person trainers make this exact transition. It works.",
+      "Every trainer we work with genuinely wants and needs what we offer \u2014 the model they're in is already breaking.",
+      "I am doing them a favor. The cost of NOT having this conversation is their health, their family time, and their ceiling.",
+      "If they say no \u2014 it's their loss. My job is to diagnose honestly, not to sell at any cost."
+    ]},
+    {t:"coach",c:"You are a doctor, not a salesperson. A doctor diagnoses before prescribing. For PTs specifically: don't assume they want to go fully online. They might want hybrid. Don't assume they hate in-person. They might love their morning clients. Your job is to find out what their life is costing them and show them a better path \u2014 not to push them toward something that doesn't fit. If they ask about price early: 'Everything we do is customized to your situation \u2014 I honestly don't even know yet what the right path looks like for you. Let me ask you a few questions first.'"},
+    {t:"beliefs",label:"THE 7 BELIEFS \u2014 PT-SPECIFIC CHECKLIST",coach:"For PT Syntax, Beliefs #1 (Pain), #4 (Desire), and #2 (Doubt) are the most critical. PTs have vivid, concrete pain \u2014 use it. Discovery blocks 1\u20133 build Pain. Block 4 builds Desire. Block 6 builds Doubt. The Knife Turn lands all three dimensions simultaneously. Every PT-specific objection (no audience, can't charge online, don't know how to deliver) traces back to Belief #7 \u2014 trust the methodology. Your pitch kills all three proactively.",rows:[
+      {n:1,name:"Pain (The Ceiling)",desc:"They believe the in-person model has a hard ceiling \u2014 financial, physical, and time-based"},
+      {n:2,name:"Doubt",desc:"They believe they cannot build the online side alone \u2014 they've tried or know they'd make expensive mistakes"},
+      {n:3,name:"Cost",desc:"They believe staying put costs more than investing \u2014 financially, physically, and for their family"},
+      {n:4,name:"Desire",desc:"They are emotionally connected to what freedom looks like \u2014 mornings free, done by 9:30, present for family"},
+      {n:5,name:"Money",desc:"They have resources and are willing to invest in the right system"},
+      {n:6,name:"Support",desc:"Their partner will support the decision \u2014 or is already frustrated with the current model"},
+      {n:7,name:"Trust (Methodology)",desc:"IFCA's specific 3-stage path \u2014 Affinity Launch \u2192 Content \u2192 Ads \u2014 is the only logical sequence for a trainer starting from a network"}
+    ]}
+  ]},
+  {id:1,name:"Open",sub:"\u2264 2 MIN",color:"#0d9488",blocks:[
+    {t:"coach",c:"Keep this tight. Your only goal is to establish you're a normal human, then transition immediately to frame setting. PTs are skeptical buyers \u2014 establish warmth fast, then shift to authority. Never go past 2 minutes."},
+    {t:"say",c:`"Hey [Name] \u2014 nice to meet you! Whereabouts are you located?"\n[prospect responds]\n\n"Awesome \u2014 and have you come across Jordan or Erin before, or did someone refer you over?"\n[prospect responds]`}
+  ]},
+  {id:2,name:"Frame Setting",sub:"",color:"#7c3aed",blocks:[
+    {t:"coach",c:"This is the most important 30 seconds of the call. The 'I'll tell you if we CAN'T help you' line drops the guard and repositions you from salesperson to trusted advisor. Wait for a genuine yes before continuing. PTs are skeptical buyers. This frame earns you the call."},
+    {t:"say",c:`"Awesome. Well, I pulled up your application and got a 30,000-foot view of where you're at and where you want to go."\n\n"Just so you know how these calls typically work \u2014 I'm going to ask you some questions about what's working, what's not, what your current setup looks like, and what your goals are. And if I feel like we can genuinely help you, I'll definitely let you know."\n\n"But if at any point I don't think we're the right fit, I'll tell you that too and point you in the right direction."\n\n"Does that sound fair?"\n[Wait for yes \u2014 then move forward]`}
+  ]},
+  {id:3,name:"Discovery",sub:"Transition Syntax \u2014 7 Blocks",color:"#1d4ed8",blocks:[
+    {t:"coach",c:"This is Transition Syntax \u2014 not pure Goal or Problem. The PT has an existing in-person business but is trying to BUILD a new online or hybrid model. Pain = the ceiling of the current model, not the absence of a business. Your job: (1) surface the cost of staying trapped, (2) build desire for time and income freedom, and (3) pre-empt all three PT belief breaks \u2014 'no audience,' 'can't charge online,' 'don't know how to deliver' \u2014 BEFORE they ever become objections."},
+    {t:"opening",c:`"What's the main thing that motivated you to book this call today?"\n[If vague:] "What do you mean by that?" / "Tell me more..."`},
+    {t:"block",num:1,label:"SITUATION \u2014 In-Person Reality",belief:"BELIEF #1: PAIN",bc:"#dc2626",
+      coach:"Ground them in their current in-person reality. The question about evenings almost always surfaces real emotion \u2014 trainers have a deep relationship with how the model owns their time. Let them talk. Their exact words here become your Hamburger Transition language. Write them down.",
+      c:`"Walk me through what a typical week looks like right now \u2014 how many sessions are you doing, what does your schedule look like?"\n[prospect responds]\n\n"Morning vs. evenings \u2014 what does that split look like for you?"\n[prospect responds]\n\n"And ballpark \u2014 what does a good month look like income-wise from in-person right now?"\n[prospect responds]`},
+    {t:"block",num:2,label:"WHY NOW / URGENCY",belief:"BELIEF #4: DESIRE",bc:"#16a34a",
+      coach:"Something triggered this call. Common PT triggers: new baby or pregnancy, spouse lost job, business going slow, physical wear starting to show, or just seeing the writing on the wall. Find the trigger. This becomes your desire anchor \u2014 you'll reference it throughout.",
+      c:`"Has anything changed recently that's making this feel more urgent right now? Like, what's the trigger?"\n[prospect responds]\n\n"Tell me more about that..."\n[Dig deeper. Let them feel it.]`},
+    {t:"block",num:3,label:"THE PHYSICAL / TIME CEILING",belief:"BELIEF #1: PAIN (Deeper)",bc:"#dc2626",
+      coach:"Unique to PT Syntax \u2014 no equivalent in Goal or Problem scripts. Trainers know their body has a shelf life. The cancellation question hits hard because every trainer has felt that zero-income gap. The vacation question shows the model owns their freedom. Don't skip this block.",
+      c:`"Let me ask you something \u2014 if you maxed out your in-person schedule and ran at full speed for the next 2\u20133 years... what's the ceiling? What's the best-case scenario income-wise?"\n[prospect responds]\n\n"And to get there \u2014 what does your body have to do?"\n[Let them answer]\n\n"What happens when a client cancels? Or you get sick? Or you want to take a week off with your family?"\n[Let them answer]`},
+    {t:"block",num:4,label:"PAINT THE DREAM",belief:"BELIEF #4: DESIRE",bc:"#16a34a",
+      coach:"Get them to describe freedom in their own words. Most PTs want: done by 9:30am, check clients from the couch, vacations without guilt, say no to evening clients, be present for family. Write these down word-for-word \u2014 this is your Hamburger Transition fuel.",
+      c:`"Flip it for me \u2014 if you built the online side exactly the way you'd want it... what does a great week actually look like? Walk me through it."\n[prospect responds]\n\n"And beyond the schedule \u2014 what does that actually change for you personally?"\n[Get the emotional picture: family, freedom, not leaving home, being present, saying no]`},
+    {t:"block",num:5,label:"FINANCIAL QUALIFIER",belief:"BELIEF #5: MONEY",bc:"#d97706",
+      coach:"Trainers almost always anchor low \u2014 '$2\u20133K to start' or 'just replace my evenings.' That's fine as an anchor but push it up during pre-pitch. The '$3K is literally one client' math moment is more powerful when they've already given you the goal number. As they answer, silently enter all four numbers into the PT Pivot Calculator.",
+      c:`"What would the online piece need to produce monthly for it to feel real \u2014 like it's actually changing your life? What's the number that makes you go 'okay, this matters'?"\n[prospect responds]\n\n"Why that number \u2014 like what specifically does that change for you?"\n[Let them go deeper. This becomes your desire anchor.]\n\n"And right now, what's your monthly take-home from in-person, roughly?"\n[prospect responds]`},
+    {t:"calc",tab:"Enter Their Numbers",action:"Silently fill in the PT Pivot Calculator as they answer Block 5: Sessions/Week, Avg Session Rate, Evening Sessions/Week, Current Monthly Income, Monthly Online Goal. The Ceiling vs Opportunity and Evening Freedom sections auto-calculate \u2014 ready to screen share after the Knife Turn.",
+      note:"Don't announce it. Just fill it in while they're talking. By the time you hit the Knife Turn, the numbers are waiting on screen."},
+    {t:"block",num:6,label:"SURFACE FEAR & DOUBT",belief:"BELIEF #2: DOUBT",bc:"#7c3aed",
+      coach:"This block surfaces the three PT belief breaks: (1) 'I have no audience,' (2) 'I don't know how to deliver without Zoom workouts,' (3) 'I can't charge what I charge in-person online.' Listen carefully \u2014 the ones that come up here get addressed directly by name in your pitch.",
+      c:`"Have you made any attempts to get the online side going before? What happened?"\n[prospect responds]\n\n"What's your biggest concern about actually making this work?"\n[Let them voice the fear \u2014 no audience, tech issues, delivery, pricing, what people will think]`},
+    {t:"block",num:7,label:"THE KNIFE TURN",belief:"BELIEF #3: COST",bc:"#9f1239",
+      coach:"Most powerful moment in PT Syntax. Hit all three dimensions at once: financial ceiling + physical toll + family cost. Ask it, then sit completely silent. The weight of their own answer creates urgency \u2014 you never have to manufacture it.",
+      c:`"I hate to even ask this \u2014 but I have to. If you're still doing the same sessions, same hours, same ceiling... two years from now, what does that cost you? Financially. Physically. And for the people waiting for you at home?"\n[Long pause. Let them answer. Let them feel it.]\n\n"Yeah. That's exactly why you booked this call."`},
+    {t:"calc",tab:"Ceiling vs Opportunity \u00b7 Cost of Staying Put",action:"Share your screen NOW. Show the 'Ceiling vs The Opportunity' card \u2014 the in-person ceiling number with 20% cancellations factored in, their online goal, and the annual cost of staying put. Let it sit. Don't explain it. Then scroll to 'Evening Freedom Math' if evenings are their trigger.",
+      note:"Say nothing after you share it. The silence does the work. If they say 'wow' or 'that's a lot' \u2014 that's your bridge: 'Yeah. That's exactly why you're here.'"},
+    {t:"support",c:`"Quick question before we talk about what's possible \u2014 is this a decision you'd be able to make on your own, or would your partner be involved in something like this?"\n[prospect responds]`}
+  ]},
+  {id:4,name:"Pre-Pitch Coaching",sub:"Three Currencies + The Affinity Launch",color:"#b45309",blocks:[
+    {t:"coach",c:"This block does TWO jobs before a single pitch word is spoken: (1) it permanently kills the 'I have no audience' objection by reframing their network as their biggest asset, and (2) seeds the exact gap your pitch will solve."},
+    {t:"sec",label:"THE THREE CURRENCIES",
+      c:`"Before I walk you through what we do \u2014 let me give you something first, because this is the thing that trips up most trainers when they think about going online."\n\n"There are really only three things you need to get your first online clients. I call them the Three Currencies \u2014 and you only need ONE of them to start."\n\n"First: an Audience \u2014 social following, email list, content that's already working. Second: Cash \u2014 money you can put into paid ads. Third: Your Network \u2014 the people who already know you, trained with you, and trust you."\n\n"You've been doing this for [X] years. Which one of those three do you already have the most of?"\n[They will say: network]\n\n"Exactly. And that's actually the most powerful one to start with \u2014 because it's warmer than any ad you'll ever run. Your first clients come from people who already respect your expertise. That cash funds content. Content builds your audience. When you have all three running together? That's when it compounds."\n\n"So the thing most trainers think is their biggest weakness \u2014 'I don't have an audience' \u2014 that's actually the last thing you need. Does that make sense?"\n[prospect responds]`},
+    {t:"calc",tab:"Three Currencies Visual + Affinity Launch Funnel",action:"Share PT Pivot Calculator. Show the Three Currencies diagram \u2014 Network node is lit green. Then scroll to the Affinity Launch funnel: their contacts \u2192 expected conversations \u2192 calls booked \u2192 expected clients \u2192 contracted revenue. Say: 'Here's what that actually looks like with your numbers \u2014 this is before we run a single ad.'",
+      note:"Let them read the numbers. Most trainers get quiet here in a good way. If they say 'I didn't realize I had that many people...' \u2014 that's the exact moment you move to the Two Keys."},
+    {t:"sec",label:"THE TWO KEYS + MATH MOMENT",
+      c:`"It really comes down to two things. A desirable, scalable offer \u2014 not 'I sell online personal training,' but a specific result for a specific person with a specific method. And a system to get clients for that offer consistently. That's it."\n\n"In terms of your offer \u2014 do you have an idea of what that looks like? Like, who it's for, what problem it specifically solves, and how you'd deliver it without just doing Zoom sessions all day?"\n[prospect responds]\n\n"And what are you thinking of charging for it?"\n[If low or no offer:] "Most of our trainers start at $3,000 for a 6-month package \u2014 that's $500 a month. To hit [their stated goal], you'd only need [X] clients. Does that math change how you're thinking about this?"`},
+    {t:"calc",tab:"Clients Needed to Hit Goal",action:"Show the 'Clients Needed' hero number. 'At $3,000 per package, here's literally how many active clients you need to hit [their goal]. Does that number feel more doable than you expected?'",
+      note:"If their goal was low, challenge it now: 'Look \u2014 to hit $6K instead of $4K, you only need one more client. Want to use $6K as the real target?' Update the calculator live and let them see the number barely move."}
+  ]},
+  {id:5,name:"Hamburger Transition",sub:"",color:"#15803d",blocks:[
+    {t:"coach",c:"Use their EXACT words from discovery \u2014 not paraphrases. If they said 'I just want to be done by 9:30,' say that back verbatim. If they said 'I can't keep doing evenings,' say that. This is the moment they feel genuinely understood \u2014 don't generalize it away. Also note: reference the 1,300+ PT-specific success stories here \u2014 it builds instant credibility with this avatar."},
+    {t:"say",c:`"Well [Name], based on everything you've shared \u2014 I think what I have going on here could be a really good fit for you..."\n\n"...because you know how earlier you mentioned [recap their #1 pain/desire in their EXACT words]..."\n[prospect: yeah, exactly]\n\n"Our whole thing at IFCA is a proven four-step process to get you from where you are right now \u2014 trading time for money in-person \u2014 to a hybrid or fully online business running $5K, $10K, even $15K months, in about six months. We've done this specifically with over 1,300 in-person trainers who were exactly where you are."\n\n"Instead of spending months trying to piece this together alone and making every mistake in the book \u2014 we just help you build it right from day one. Make sense?"\n[prospect: yes]\n\n"Cool \u2014 where do you want to go from here? I can walk you through exactly how we do that, A to Z. But you tell me."\n[They will say: walk me through it]\n\n"Perfect. Grab a pen and write down 1 through 4 with some space between each."`}
+  ]},
+  {id:6,name:"The Pitch",sub:"4 Client Engine Pillars",color:"#4338ca",blocks:[
+    {t:"pitch-sop",c:"PT Pivot prospects almost always have two dominant fears: 'I'll lose my current clients' and 'I don't know how to get online clients.' P2 (Lead Engine) almost always needs Full because the Affinity Launch is the core hook \u2014 it resolves both fears simultaneously. P3 (Business Manager) can go Quick unless they expressed delivery anxiety. P1 and P4 follow the constraint \u2014 if they're confident in their offer, Quick P1. If they're nervous about selling online, Full P4."},
+    {t:"sec",label:"HIGH LEVEL PROMISE",
+      c:`"Before I walk you through the four things \u2014 the moment you enroll, the first thing we do is pair you with a 1-on-1 Success Coach who's already built a six or seven-figure fitness coaching business themselves. Half our coaching team has gone through this exact in-person to online transition \u2014 so you'll be paired with someone who's been exactly where you are."\n\n"Everything I'm about to walk you through gets shaped and personalized by them. Here's what I think it looks like for you specifically..."`},
+    {t:"pillar",num:1,label:"AI OFFER OPTIMIZATION",
+      sop_hint:"Quick if they're confident in their niche and what they'd charge online. Full if they're unsure how to position online, what to charge, or how to differentiate from '$99 app' competitors. Discovery if they used specific language in discovery about feeling like a commodity or not knowing how to stand out.",
+      quick:`"Number one \u2014 AI Offer Optimization. In 48 hours, your Success Coach works with you 1-on-1 to take your in-person expertise and position it as a premium online offer \u2014 specific result, specific person, $2,500 to $3,500 a package instead of $99 a month. You stop being a commodity and start being the only logical choice for your ideal client. Make sense?"`,
+      full:`"Number one \u2014 AI Offer Optimization."\n\n"Here's what most trainers do when they try to go online: they just offer 'online personal training.' Same thing they've been doing, just delivered differently. And the problem is it's a complete commodity \u2014 there are thousands of coaches selling that for $99 a month. You blend in entirely."\n\n"What we do instead: your Success Coach sits down with you 1-on-1 using our AI Offer Optimizer. We figure out exactly who your dream client is, what specific result they want to buy, and how to position your offer so that when they find you, they think: 'That's exactly what I need \u2014 and I need it from this person specifically.'"\n\n"Here's the difference in practice. 'I sell online personal training' \u2014 $149 a month. 'I help [specific person] achieve [specific result] through [your named method]' \u2014 $3,000 for a 6-month package. Same service. Completely different offer."\n\n"For most trainers, figuring this out takes months of trial and error. You get it done in 48 hours."\n\n"Does that make sense? What are your thoughts on that?"\n[Wait for response before moving to Pillar 2]`,
+      disc:`"You know how you mentioned [feeling like a commodity online / not knowing what to charge / 'people don't pay premium prices for online training']? That's exactly the problem we solve on day one."\n\n"Your Success Coach works through this with you 1-on-1 \u2014 we figure out exactly what [their specific client] wants to buy and position your offer so when they find you, they think: 'That's exactly what I need.'"\n\n"So instead of [their fear \u2014 competing with $99 apps / 'I'll have to lower my prices'], you're in a category of one."\n\n"Make sense?"`},
+    {t:"pillar",num:2,label:"DONE-FOR-YOU LEAD ENGINE",
+      sop_hint:"Almost always needs Full \u2014 the Affinity Launch is the core hook and resolves both dominant PT fears simultaneously: 'I'll lose clients' and 'I have no online audience.' This is the belief-breaking moment. Use Discovery if they used specific emotional language about cold messaging or 'I can't pitch to my clients.' Quick only if they're already comfortable with their network and just need the overview.",
+      quick:`"Number two \u2014 the Done-For-You Lead Engine. Three stages, and the order is everything. First: your network. The people who already trust you from the gym. Typically 3 to 7 paying clients at $3,000 each before a single dollar goes to ads. Then content to test what converts. Then paid ads to amplify what's proven \u2014 first month covered. Network, content, ads. Make sense?"`,
+      full:`"Number two \u2014 the Done-For-You Lead Generation Engine. And this is the one I want to walk you through carefully, because it's where most trainers get this completely wrong."\n\n"There are three stages. We go in this order \u2014 and the order is what makes it work."\n\n"Stage one: The Affinity Launch. Before we run a single ad, we run a structured warm outreach campaign to the people who already trust you. Not cold messaging \u2014 this is a specific conversation framework that feels completely natural. You're not pitching anyone. You're reconnecting, asking good questions, and when the time is right, mentioning what you've built. Out of every 100 people you reach out to, typically 3 to 7 become paying clients. At $3,000 a package, that's $9,000 to $21,000 from contacts already sitting in your phone \u2014 before you've spent a dollar on ads."\n\n"Stage two: AI Content System. While the Affinity Launch is running, we install your AI content system \u2014 we call her Lexi. She plugs in your exact offer, analyzes what's already working in your market, and gives you ready-to-execute content creatives. You're not staring at a blank screen. You're not guessing. Now one of two things happens \u2014 and both are wins. Either your content starts converting and you're generating inbound leads without spending a dollar on ads. Or it's warming your audience while your Affinity Launch is closing clients. You're winning either way."\n\n"Stage three: Paid Amplification. Once your offer is proven \u2014 you have clients, you have results, you have content that converts \u2014 that's when we layer in ads. Not before. Because the biggest mistake coaches make is spending money on ads before they know what works. By the time we turn ads on, we know exactly what message lands. And we even cover your first month of ad spend."\n\n"Network first. Content to test what converts. Ads to amplify what's proven. That's the order \u2014 and that's why it works when everything else fails."\n\n"Does that make sense? What are your thoughts on that?"\n[Wait for response]`,
+      disc:`"You know how you mentioned [never having to market before / clients always came from the gym / scared of cold messaging strangers]? Three stages \u2014 and the order is what makes it work for someone in your exact position."\n\n"First: your network. The people who've worked out near you, seen your face, trust your expertise for years. [Their fear resolved \u2014 'you're never messaging strangers' / 'these are people who already know your work']. Typically 3 to 7 clients at $3,000 a package \u2014 before you've spent a dollar on ads."\n\n"Then: content that tests what actually converts for your specific offer."\n\n"Then: paid ads to amplify what's proven \u2014 first month of ad spend covered."\n\n"Make sense?"`},
+    {t:"coach",c:"Preempt the 'I don't want to cold message people' objection proactively \u2014 don't wait for it. If they seem hesitant during this pillar, say: 'I want to be clear \u2014 this isn't cold messaging. These are people who already know your face, know your work, trust your expertise. We're not asking you to pitch strangers. We're giving you a conversation framework that turns existing trust into a natural conversation \u2014 and in some cases they'll just say they've been waiting to work with you.'"},
+    {t:"calc",tab:"Affinity Launch Funnel + Pipeline Math",action:"Show the Affinity Launch funnel in the PT Calculator \u2014 contacts \u2192 expected clients \u2192 contracted revenue. 'This is Stage 1 \u2014 zero ad spend.' Then scroll to the Pipeline Math section for Stage 3. 'And when we eventually get here, look at what it costs to run ads versus what you're making back.'",
+      note:"Keep the calc brief \u2014 point to the Affinity Launch revenue number: 'That's from people already in your phone.' Then point to the ad ROAS: 'And this is what happens once we turn on ads with a proven offer.' Let both numbers sit."},
+    {t:"pillar",num:3,label:"IMPACT AI BUSINESS MANAGER",
+      sop_hint:"Quick unless they expressed delivery anxiety or said 'I don't know how to deliver online.' Full if they specifically fear Zoom workouts all day or don't know how to set up tech. Discovery if they used specific language about being overwhelmed by tools or 'I can't figure out how to run programs online.'",
+      quick:`"Number three \u2014 Impact AI Business Manager. This is how online coaching delivery actually works: your client gets a professional app with their personalized program, video demos, and a weekly check-in system. You respond to their check-ins via short Loom videos \u2014 from your couch. No more showing someone a Romanian deadlift for the 400th time. One platform replaces 5 to 7 apps. $1 a month while you're enrolled. Set up in your first week. Make sense?"`,
+      full:`"Number three \u2014 and I want to spend a second on this, because I know it's the one trainers worry about most."\n\n"Most trainers think going online means doing Zoom workouts all day. Here's the truth: the best online coaching is NOT Zoom workouts. It's actually more accountable than in-person \u2014 because your client has you in their pocket 24/7, not just for an hour three times a week."\n\n"Here's how delivery actually works: your client gets a professional app with their personalized program, video demos for every exercise, and a weekly check-in system. You respond to their check-ins via short Loom videos \u2014 from your couch. No more showing someone how to do a Romanian deadlift for the 400th time. One Loom video, done."\n\n"The Impact AI Business Manager is the infrastructure that runs all of this \u2014 program delivery, your CRM, scheduling, lead follow-up, automated text sequences when someone applies. One platform that replaces 5 to 7 separate apps."\n\n"$1 a month while you're in the program. Saves you $300 to $1,000 from day one."\n\n"Does that make sense? What are your thoughts?"\n[Wait for response]`,
+      disc:`"You know how you mentioned [worried about delivering online / not sure how to run programs without being there / 'I don't want to just do Zoom calls all day']? Here's how it actually works."\n\n"Your clients get a professional app with their personalized programs and video demos. You respond to their weekly check-ins via short Loom videos \u2014 from your couch. [Their specific fear resolved \u2014 'no Zoom workouts' / 'your clients get a better experience than in-person because they have you 24/7']."\n\n"One platform handles everything \u2014 program delivery, CRM, scheduling, automated follow-up. $1 a month. Fully set up in your first week."\n\n"Make sense?"`},
+    {t:"pillar",num:4,label:"CONVERSION + RETENTION",
+      sop_hint:"Quick if they're comfortable with the sales conversation. Full if they expressed nervousness about 'selling online' or 'I've never had to close someone before.' Always highlight the in-person client transition angle \u2014 their current clients are their easiest first online clients. Discovery if they said specific things about being uncomfortable closing or worried about their existing clients leaving.",
+      quick:`"Number four \u2014 Conversion and Retention. Proven scripts plus unlimited 1-on-1 call reviews to close 30 to 50% of calls instead of the 10 to 20% industry average. And your existing in-person clients? They're your easiest first online clients \u2014 with the right conversation, a $400/month in-person client becomes a $350/month online client that takes 20 minutes a week instead of 4 hours. Our LTV system keeps clients 17-plus months. Make sense?"`,
+      full:`"Number four \u2014 the Conversion and Retention System. Two parts."\n\n"Part one: closing. Average coaches starting out close 10 to 20% of their calls. Our coaches close 30 to 50%. You get proven DM and sales call scripts built specifically for fitness coaches, plus unlimited 1-on-1 call reviews \u2014 our coaches listen to your actual recorded calls and tell you exactly what to say and where you're losing people."\n\n"Part two: retention. Here's something most trainers don't think about \u2014 your current in-person clients who transition online become some of your most loyal long-term online clients. With the right conversation, a $400/month in-person client becomes a $350/month online client that takes 20 minutes a week instead of 4 hours."\n\n"Our LTV Retention System keeps clients for an average of 17-plus months. Ten clients at $3K a package \u2014 at 17-month retention, each client is worth $8K-plus in lifetime value. That's a predictable, compounding business."\n\n"Does that make sense? What are your thoughts?"\n[Wait for response]`,
+      disc:`"You know how you mentioned [never having to close anyone before / being nervous about online sales / 'I don't want to be pushy']: two parts."\n\n"On closing: proven scripts plus unlimited call reviews \u2014 we watch your actual calls and tell you exactly where you're losing people. [Their fear resolved \u2014 'you're not guessing what went wrong' / 'you go from 10\u201320% to 30\u201350%']."\n\n"On retention: your existing in-person clients are your easiest first online clients. With the right conversation, [their specific situation \u2014 '$400/month in-person becomes $350/month online that takes 20 minutes instead of 4 hours']. Our LTV system keeps clients 17-plus months."\n\n"Make sense?"`},
+    {t:"sec",label:"DELIVERY RECAP",
+      c:`"One quick thing \u2014 do you have any system right now to deliver programs and track clients online?"\n[If no:] "Perfect \u2014 we set you up with Trainerized. Pre-built for fitness coaches, completely done for you."\n\n"So to recap: your offer positioned so you stand out and charge premium. First clients from your Affinity Launch \u2014 the people who already trust you, zero ad spend. Then content that tests what converts. Then ads to amplify what's proven, and we cover month one. One platform that replaces all your apps and delivers programs professionally. And a sales and retention system that closes 30 to 50% of calls and keeps clients 17-plus months."\n\n"Everything is customized to your situation. Your onboarding call with your Success Coach maps out your complete 6-month plan \u2014 what we do for you, what we need from you, and in what order. Zero guesswork."\n\n"Does that sound good?"\n[If they hesitate, surface the concern NOW before moving to price]`}
+  ]},
+  {id:7,name:"Committing Phase",sub:"Price Drop",color:"#b91c1c",blocks:[
+    {t:"sec",label:"TEMP CHECK",
+      c:`"How do you feel about the process specifically? Do you feel like this is what you need to make this transition happen?"\n[If yes \u2192 move to next steps]\n[If hesitant:] "On a scale of 1 to 10 \u2014 where do you fall in terms of alignment with what we do?"\n[If less than 8:] "What would make it a 10 for you?"\n[Surface the hidden objection NOW \u2014 before the price]`},
+    {t:"calc",tab:"12-Month Hybrid Trajectory",action:"Show the 12-Month Hybrid Trajectory chart. Two lines: Hybrid (online + in-person, green) vs In-Person Only (amber, flat). Say: 'Let me show you what the next 12 months looks like if we do this.' Then go silent. Let both lines sit on screen. The gap between them is the entire argument.",
+      note:"Don't narrate the graph. Just say the one sentence and go quiet. If they ask 'is that realistic?' \u2014 point to Stage 1: 'Month 1 is literally just your network. We've shown you the math already.' Then drop the price."},
+    {t:"rule",c:"After you drop the price \u2014 STOP. Complete silence. The first person to speak loses the momentum. Every single time, no exceptions. Do not fill the silence."},
+    {t:"sec",label:"PRICE DROP",
+      c:`"So basically next steps \u2014 you process the investment with me today, we get your onboarding call scheduled, and you'll have complete clarity on everything that happens over the next six months. Does that sound good?"\n[wait for yes]\n\n"And the investment is just [PRICE]."\n[STOP. Silence. Let them speak first.]\n\n[When they agree but go quiet:] "Can I just welcome you to the family?"\n[If yes:] "Perfect. What's a good email to send the receipt to? And what card do you want to put down?"`}
+  ]},
+  {id:8,name:"Objection Handling",sub:"",color:"#374151",blocks:[
+    {t:"rule",c:"Run the Master Sequence FIRST on every objection before going to a specific handle. Never book a follow-up for a fear-based objection \u2014 close it on the call. Complaints \u2260 objections. Don't handle complaints."},
+    {t:"sec",label:"MASTER SEQUENCE \u2014 RUN FIRST ON EVERY OBJECTION",
+      c:`"[Objection] aside \u2014 do you feel this is exactly what you need to make this transition?"\n"So you're 100% in on the process... it's just a matter of solving [objection], and then you're ready to move forward. Is that right?"\n[Now you're problem-solving together \u2014 not fighting]`},
+    {t:"obj",label:"PT-SPECIFIC: 'I DON'T HAVE AN AUDIENCE'",
+      c:`"Good \u2014 you don't need one to start. And I mean that literally."\n\n"Your first clients don't come from an audience. They come from your network \u2014 the people who've trained with you, worked out near you, watched you coach for years. Those people already trust you. We call it the Affinity Launch \u2014 it's a structured outreach campaign to your existing contacts using a conversation framework that feels completely natural. Not pitching. Not cold DMs. Just reconnecting with people who already respect your work."\n\n"Out of every 100 contacts, we typically see 3 to 7 clients sign. At $3,000 a package, that's up to $21,000 from people already in your phone \u2014 before we've touched ads."\n\n"The audience is the last thing we build. The network is where we start. You've already got the most important currency."`},
+    {t:"obj",label:"PT-SPECIFIC: 'I DON'T KNOW HOW TO DELIVER ONLINE'",
+      c:`"That's exactly why Pillar 3 exists. The Impact Business Manager is set up for you in your first week \u2014 you get a dedicated 1-on-1 tech onboarding call. No Zoom workouts. Your clients get a professional app. You respond to check-ins from your phone. You don't figure out a single thing alone."\n\n"How tech-savvy do you need to be to use an app on your phone?"`},
+    {t:"obj",label:"PT-SPECIFIC: 'I DON'T WANT TO LOSE MY IN-PERSON CLIENTS'",
+      c:`"Nobody's asking you to \u2014 that's the whole point of the hybrid model. You keep the in-person clients you love, especially your morning people. What we're building is the online side that replaces the evenings and adds a second income stream.\n\n"At worst, you end up with both. At best, the online grows to where you have real choices. Either way, you win."`},
+    {t:"obj",label:"PT-SPECIFIC: 'I DON'T HAVE TIME TO BUILD THIS'",
+      c:`"Our most successful students were the busiest when they started \u2014 not because they had spare time, but because they had momentum and a real reason to get it done."\n\n"The done-for-you pieces \u2014 lead gen, content system, tech setup \u2014 that's exactly why they exist. We're not asking you to figure this out between clients. We're building it alongside you."`},
+    {t:"obj",label:"'I NEED TO THINK ABOUT IT'",
+      c:`1. Clarify: "What specifically is it that you'd like to think about?"\n2. Isolate: "Outside of [what they said] \u2014 is there anything else holding you back?"\n3. Reframe: "People who say 'think about it' are usually asking one of two things: 'Will this actually work for me?' or 'Can I afford this right now?' Which one is it for you?"\n4. Cost Flip: "Trainers who keep saying 'let me think about it' are the same ones still doing evening sessions 12 months from now. What does another year at the same ceiling actually cost you?"`},
+    {t:"obj",label:"MONEY \u2014 TRIPLE TIE-DOWN",
+      c:`Step 1 \u2014 Isolate: "Investment aside \u2014 is there anything else that would keep you less than 100% certain you'd want to work with us? Or is it just a cash flow thing?"\n\nStep 2 \u2014 Tie Down: "If you had $[PRICE] completely liquid right now... would you do it? Are you 10/10 on the process specifically?"\n\nPermission Bridge: "Got it. The last thing I want is for finances to hold you back from getting the help you need. I do have some flexibility here. Do you mind if I ask you a personal question?"\n\nOpen Wallet: "Just so I can see if I can help \u2014 what would you have available today? Checking, savings, or credit?"\n[Probe 3 buckets: checking / savings / credit]\n\nStep 3 \u2014 Close: "If I was able to break this up and allow you in today \u2014 we'd still treat you like you paid in full. If I can make this more digestible based on what you have, would you be ready to get started today?"`},
+    {t:"obj",label:"SPOUSE OBJECTION",
+      c:`[Path A \u2014 Haven't talked yet:]\n"Are they generally supportive of you building something for yourself, or is that a conversation you need to have?"\n[If supportive:] "So it's more of a formality \u2014 you just want them in the loop. Is that fair? Let's make sure this makes sense for YOU first. What's holding you back personally?"\n\n[Path B \u2014 They have concerns:]\n"What do you think their biggest concern would be? Let's talk through that now so you're completely prepared."`},
+    {t:"obj",label:"EGO \u2014 'I CAN FIGURE THIS OUT MYSELF'",
+      c:`"I love that confidence \u2014 and you probably could figure parts of it out. How long have you been thinking about building the online side? And how far along are you right now?"\n[Let them answer]\n\n"So what makes you think the next 6 months are going to look different from the last [X months]?"\n[Pause]\n\n"The issue isn't your ability \u2014 you clearly know your craft. It's that you're trying to solve a systems problem with hustle. The system is what's missing, not your work ethic."`}
+  ]}
 ];
 
-// ─── HELPERS ───────────────────────────────────────────
-function fmt(text) {
-  if (!text) return '';
-  return text.split('\n\n').map(p => {
-    const html = p.split('\n').map(line =>
-      line.replace(/\[([^\]]+)\]/g, '<span class="cue">[$1]</span>')
-    ).join('<br>');
-    return `<p>${html}</p>`;
-  }).join('');
+function fmt(t){if(!t)return '';return t.split('\n\n').map(p=>{const h=p.split('\n').map(l=>l.replace(/\[([^\]]+)\]/g,'<span class="cue">[$1]</span>')).join('<br>');return`<p>${h}</p>`;}).join('');}
+function fmtDisc(t){if(!t)return '';return t.split('\n\n').map(p=>{const h=p.split('\n').map(l=>l.replace(/\[([^\]]+)\]/g,'<span class="disc-bracket">[$1]</span>')).join('<br>');return`<p>${h}</p>`;}).join('');}
+
+let globalPM='quick';const pillarModes={};
+function getPM(n){return pillarModes[n]||globalPM;}
+function setGlobalPM(m){
+  globalPM=m;
+  ['quick','full','disc'].forEach(x=>{const b=document.getElementById('ptgl-'+x);if(b)b.classList.toggle('active',x===m);});
+  for(let i=1;i<=4;i++){if(!pillarModes[i])updatePD(i);}
 }
+function setPM(n,m){if(m===null){delete pillarModes[n];}else{pillarModes[n]=m;}updatePD(n);updatePOB(n);}
+function updatePD(n){const m=getPM(n);const el=document.getElementById('pillar-p'+n);if(!el)return;el.querySelectorAll('.pm-block').forEach(b=>b.classList.remove('pm-visible'));const a=el.querySelector('.pm-'+m+'-block');if(a)a.classList.add('pm-visible');}
+function updatePOB(n){const ov=pillarModes[n]||null;const el=document.getElementById('pillar-p'+n);if(!el)return;el.querySelectorAll('.pmo-btn[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===ov));}
+function initPMs(){for(let i=1;i<=4;i++){updatePD(i);updatePOB(i);}}
 
-// ─── RENDER ────────────────────────────────────────────
-function renderBlock(b, pc) {
-  switch(b.t) {
-    case 'say':
-      return `<div class="block-say"><div class="say-label">SAY THIS</div><div class="say-text">${fmt(b.c)}</div></div>`;
-
-    case 'coach':
-      return `<div class="block-coach coach-only"><div class="coach-head"><span class="coach-lbl">📝 Coaching Note</span></div><div class="coach-body">${b.c}</div></div>`;
-
-    case 'rule':
-      return `<div class="block-rule"><div class="rule-lbl">⚠ RULE</div><div class="rule-body">${b.c}</div></div>`;
-
-    case 'calc':
-      return `<div class="block-calc">
-        <div class="calc-head">
-          <span class="calc-icon">📊</span>
-          <div class="calc-info">
-            <div class="calc-tab">Open: ${b.tab}</div>
-            <div class="calc-action">${b.action}</div>
-          </div>
-        </div>
-        ${b.note ? `<div class="calc-note">${b.note}</div>` : ''}
-      </div>`;
-
-    case 'opening':
-      return `<div class="block-opening"><div class="opening-head"><div class="opening-lbl">Opening Question</div></div><div class="opening-body"><div class="block-say" style="background:transparent;border:none;padding:0"><div class="say-text">${fmt(b.c)}</div></div></div></div>`;
-
-    case 'block':
-      const chipStyle = `background:${b.bc}18;color:${b.bc}`;
-      return `<div class="block-disc">
-        <div class="disc-head">
-          <div class="disc-num" style="background:${pc}">${b.num}</div>
-          <div class="disc-lbl">${b.label}</div>
-          <span class="belief-chip" style="${chipStyle}">${b.belief}</span>
-        </div>
-        <div class="disc-body">
-          ${b.coach ? `<div class="block-coach coach-only"><div class="coach-head"><span class="coach-lbl">📝 Coaching Note</span></div><div class="coach-body">${b.coach}</div></div>` : ''}
-          <div class="block-say" style="background:transparent;border:none;padding:0"><div class="say-text">${fmt(b.c)}</div></div>
-        </div>
-      </div>`;
-
-    case 'support':
-      return `<div class="block-support"><div class="support-lbl">Support Check</div><div class="btext">${fmt(b.c)}</div></div>`;
-
-    case 'sec':
-      return `<div class="block-sec"><div class="sec-head"><div class="sec-lbl">${b.label}</div></div><div class="sec-body"><div class="block-say" style="background:transparent;border:none;padding:0"><div class="say-text">${fmt(b.c)}</div></div></div></div>`;
-
-    case 'pillar':
-      return `<div class="block-pillar">
-        <div class="pillar-head"><div class="pillar-num">${b.num}</div><div class="pillar-lbl">${b.label}</div></div>
-        <div class="prob-link"><div class="prob-tag">Benefit Link</div><div class="prob-text">${b.link}</div></div>
-        <div class="pillar-body"><div class="block-say" style="background:transparent;border:none;padding:0"><div class="say-text">${fmt(b.c)}</div></div></div>
-      </div>`;
-
-    case 'obj':
-      return `<div class="block-obj"><div class="obj-head"><div class="obj-lbl">${b.label}</div></div><div class="obj-body"><div class="block-say" style="background:transparent;border:none;padding:0"><div class="say-text">${fmt(b.c)}</div></div></div></div>`;
-
-    case 'list':
-      return `<div class="block-list"><div class="list-title">${b.label}</div>
-        <ul class="closer-beliefs">${b.items.map(i=>`<li>${i}</li>`).join('')}</ul></div>`;
-
-    case 'beliefs':
-      return `<div class="block-beliefs">
-        <div class="beliefs-label">${b.label}</div>
-        ${b.coach ? `<div class="block-coach coach-only"><div class="coach-head"><span class="coach-lbl">📝 Coaching Note</span></div><div class="coach-body">${b.coach}</div></div>` : ''}
-        <table class="beliefs-table">
-          <thead><tr><th>#</th><th>Belief</th><th>What It Means</th><th>✓</th></tr></thead>
-          <tbody>${b.rows.map(r=>`<tr>
-            <td class="b-num">${r.n}</td>
-            <td class="b-name">${r.name}</td>
-            <td class="b-desc">${r.desc}</td>
-            <td class="b-check" onclick="this.textContent=this.textContent==='☐'?'✅':'☐'" title="Click to check off">☐</td>
-          </tr>`).join('')}</tbody>
-        </table>
-      </div>`;
-
+function renderBlock(b,pc){
+  switch(b.t){
+    case 'say': return`<div class="block-say"><div class="say-label">SAY THIS</div><div class="say-text">${fmt(b.c)}</div></div>`;
+    case 'coach': return`<div class="block-coach coach-only"><div class="coach-head"><span class="coach-lbl">\ud83d\udcdd Coaching Note</span></div><div class="coach-body">${b.c}</div></div>`;
+    case 'pitch-sop': return`<div class="block-coach coach-only"><div class="coach-head"><span class="coach-lbl">\ud83d\udcdd Pitch Mode Guide \u2014 PT Pivot</span></div><div class="coach-body">${b.c}</div></div>`;
+    case 'rule': return`<div class="block-rule"><div class="rule-lbl">\u26a0 RULE</div><div class="rule-body">${b.c}</div></div>`;
+    case 'calc': return`<div class="block-calc"><div class="calc-head"><span class="calc-icon">\ud83d\udcca</span><div class="calc-info"><div class="calc-tab">Open: ${b.tab}</div><div class="calc-action">${b.action}</div></div></div>${b.note?`<div class="calc-note">${b.note}</div>`:''}</div>`;
+    case 'opening': return`<div class="block-opening"><div class="opening-head"><div class="opening-lbl">Opening Question</div></div><div class="opening-body"><div class="block-say" style="background:transparent;border:none;padding:0"><div class="say-text">${fmt(b.c)}</div></div></div></div>`;
+    case 'block':{const cs=`background:${b.bc}18;color:${b.bc}`;return`<div class="block-disc"><div class="disc-head"><div class="disc-num" style="background:${pc}">${b.num}</div><div class="disc-lbl">${b.label}</div><span class="belief-chip" style="${cs}">${b.belief}</span></div><div class="disc-body">${b.coach?`<div class="block-coach coach-only"><div class="coach-head"><span class="coach-lbl">\ud83d\udcdd Coaching Note</span></div><div class="coach-body">${b.coach}</div></div>`:''}<div class="block-say" style="background:transparent;border:none;padding:0"><div class="say-text">${fmt(b.c)}</div></div></div></div>`;}
+    case 'support': return`<div class="block-support"><div class="support-lbl">Support Check</div><div class="btext">${fmt(b.c)}</div></div>`;
+    case 'sec': return`<div class="block-sec"><div class="sec-head"><div class="sec-lbl">${b.label}</div></div><div class="sec-body"><div class="block-say" style="background:transparent;border:none;padding:0"><div class="say-text">${fmt(b.c)}</div></div></div></div>`;
+    case 'pillar': return`<div class="block-pillar" id="pillar-p${b.num}"><div class="pillar-head"><div class="pillar-num">${b.num}</div><div class="pillar-lbl">${b.label}</div><div class="pillar-mode-btns"><button class="pmo-btn" data-mode="quick" title="Quick" onclick="setPM(${b.num},'quick')">\u26a1</button><button class="pmo-btn" data-mode="full" title="Full" onclick="setPM(${b.num},'full')">\ud83d\udccb</button><button class="pmo-btn" data-mode="disc" title="Discovery" onclick="setPM(${b.num},'disc')">\ud83d\udd17</button><button class="pmo-btn pmo-reset" title="Reset to global" onclick="setPM(${b.num},null)">\u21ba</button></div></div>${b.sop_hint?`<div class="pillar-sop-hint"><div class="coach-lbl">\ud83d\udcdd When to Use Each Mode</div><div class="coach-body">${b.sop_hint}</div></div>`:''}<div class="pm-block pm-quick-block"><div class="pm-tag pm-quick-tag">\u26a1 Quick</div><div class="pm-text">${fmt(b.quick)}</div></div><div class="pm-block pm-full-block"><div class="pm-tag pm-full-tag">\ud83d\udccb Full</div><div class="pm-text">${fmt(b.full)}</div></div><div class="pm-block pm-disc-block"><div class="pm-tag pm-disc-tag">\ud83d\udd17 Discovery</div><div class="pm-text">${fmtDisc(b.disc)}</div></div></div>`;
+    case 'obj': return`<div class="block-obj"><div class="obj-head"><div class="obj-lbl">${b.label}</div></div><div class="obj-body"><div class="block-say" style="background:transparent;border:none;padding:0"><div class="say-text">${fmt(b.c)}</div></div></div></div>`;
+    case 'list': return`<div class="block-list"><div class="list-title">${b.label}</div><ul class="closer-beliefs">${b.items.map(i=>`<li>${i}</li>`).join('')}</ul></div>`;
+    case 'beliefs': return`<div class="block-beliefs"><div class="beliefs-label">${b.label}</div>${b.coach?`<div class="block-coach coach-only"><div class="coach-head"><span class="coach-lbl">\ud83d\udcdd Coaching Note</span></div><div class="coach-body">${b.coach}</div></div>`:''}<table class="beliefs-table"><thead><tr><th>#</th><th>Belief</th><th>What It Means</th><th>\u2713</th></tr></thead><tbody>${b.rows.map(r=>`<tr><td class="b-num">${r.n}</td><td class="b-name">${r.name}</td><td class="b-desc">${r.desc}</td><td class="b-check" onclick="this.textContent=this.textContent==='\u2610'?'\u2705':'\u2610'">\u2610</td></tr>`).join('')}</tbody></table></div>`;
     default: return '';
   }
 }
 
-function renderNav() {
-  document.getElementById('phase-nav').innerHTML = PHASES.map(p =>
-    `<div class="nav-item" id="nav-${p.id}" style="--nc:${p.color}" onclick="jumpTo(${p.id})">
-      <div class="nav-dot" style="background:${p.color}">${p.id}</div>
-      <div class="nav-text">
-        <div class="nav-name">${p.name}</div>
-        ${p.sub ? `<div class="nav-sub">${p.sub}</div>` : ''}
-      </div>
-    </div>`
-  ).join('');
+function pitchGuideHtml(){
+  return`<div class="phase" id="phase-guide"><div class="phase-head" style="background:#7c3aed"><div class="phase-badge">\ud83d\udccb</div><div class="phase-info"><div class="phase-name">Pitch Guide</div><div class="phase-sub">Mode Reference \u00b7 PT Pivot Framework</div></div></div><div class="phase-body">
+  <div class="guide-section"><div class="guide-section-title">When to Use Each Mode</div><table class="guide-table"><thead><tr><th>Situation</th><th>Use</th></tr></thead><tbody>
+  <tr><td>Pillar directly addresses their named fear from discovery</td><td><span class="guide-mode-chip chip-f">\ud83d\udccb Full</span></td></tr>
+  <tr><td>Pillar is relevant but not the primary fear</td><td><span class="guide-mode-chip chip-q">\u26a1 Quick</span></td></tr>
+  <tr><td>They used strong emotional or specific language in discovery</td><td><span class="guide-mode-chip chip-d">\ud83d\udd17 Discovery</span></td></tr>
+  <tr><td>Running long on time</td><td><span class="guide-mode-chip chip-q">\u26a1 Quick</span> on 2\u20133 pillars + <span class="guide-mode-chip chip-f">\ud83d\udccb Full</span> on P2</td></tr>
+  </tbody></table></div>
+  <div class="guide-section"><div class="guide-section-title">PT Pivot \u2014 Default Mode by Pillar</div><table class="guide-table"><thead><tr><th>Pillar</th><th>Default</th><th>Override When</th></tr></thead><tbody>
+  <tr><td>P1 \u2014 AI Offer Optimization</td><td><span class="guide-mode-chip chip-q">\u26a1 Quick</span></td><td>Unsure how to position online or what to charge \u2192 Full</td></tr>
+  <tr><td>P2 \u2014 Done-For-You Lead Engine</td><td><span class="guide-mode-chip chip-f">\ud83d\udccb Full</span></td><td>Expressed fear of cold messaging \u2192 Discovery</td></tr>
+  <tr><td>P3 \u2014 Impact AI Business Manager</td><td><span class="guide-mode-chip chip-q">\u26a1 Quick</span></td><td>Delivery anxiety expressed \u2192 Full or Discovery</td></tr>
+  <tr><td>P4 \u2014 Conversion + Retention</td><td><span class="guide-mode-chip chip-q">\u26a1 Quick</span></td><td>Nervous about selling online \u2192 Full or Discovery</td></tr>
+  </tbody></table></div>
+  <div class="guide-section"><div class="guide-section-title">High Level Promise Formula</div><div class="guide-formula">"This is going to be <strong>[# pillars] steps</strong> to get you from <strong>[current situation]</strong> to <strong>[desired situation]</strong> in <strong>[approximate timeframe]</strong>."</div></div>
+  <div class="guide-section"><div class="guide-section-title">Tie-Down Rule</div><div class="guide-rule">Every single pillar ends with "Make sense?" + wait for response. No exceptions. Do not move to the next pillar until they confirm.</div></div>
+  <div class="guide-section"><div class="guide-section-title">Discovery Mode \u2014 How to Use Brackets</div><div class="guide-formula">Amber brackets <span class="disc-bracket">[like this]</span> are fill-in placeholders from your discovery notes. Before the pitch, mentally assign the prospect's exact words to each bracket. Read around them naturally \u2014 no typing required mid-call.</div></div>
+  </div></div>`;
 }
 
-function renderContent() {
-  document.getElementById('content').innerHTML = PHASES.map(p =>
-    `<div class="phase" id="phase-${p.id}">
-      <div class="phase-head" style="background:${p.color}">
-        <div class="phase-badge">${p.id}</div>
-        <div class="phase-info">
-          <div class="phase-name">${p.name}</div>
-          ${p.sub ? `<div class="phase-sub">${p.sub}</div>` : ''}
-        </div>
-      </div>
-      <div class="phase-body">${p.blocks.map(b=>renderBlock(b,p.color)).join('')}</div>
-    </div>`
-  ).join('') + '<div class="calc-footer">IFCA · Impact Fitness Coaching Academy · impactcoachacademy.com</div>';
+function renderNav(){document.getElementById('phase-nav').innerHTML=PHASES.map(p=>`<div class="nav-item" id="nav-${p.id}" style="--nc:${p.color}" onclick="jumpTo(${p.id})"><div class="nav-dot" style="background:${p.color}">${p.id}</div><div class="nav-text"><div class="nav-name">${p.name}</div>${p.sub?`<div class="nav-sub">${p.sub}</div>`:''}</div></div>`).join('');}
+
+function renderContent(){
+  document.getElementById('content').innerHTML=PHASES.map(p=>{
+    const isPitch=p.id===6;
+    return`<div class="phase" id="phase-${p.id}"><div class="phase-head" style="background:${p.color}"><div class="phase-badge">${p.id}</div><div class="phase-info"><div class="phase-name">${p.name}</div>${p.sub?`<div class="phase-sub">${p.sub}</div>`:''}</div>${isPitch?`<div class="pitch-toggle-bar"><button class="ptgl-btn active" id="ptgl-quick" onclick="setGlobalPM('quick')">\u26a1 Quick</button><button class="ptgl-btn" id="ptgl-full" onclick="setGlobalPM('full')">\ud83d\udccb Full</button><button class="ptgl-btn" id="ptgl-disc" onclick="setGlobalPM('disc')">\ud83d\udd17 Discovery</button></div>`:''}</div><div class="phase-body">${p.blocks.map(b=>renderBlock(b,p.color)).join('')}</div></div>`;
+  }).join('')+pitchGuideHtml()+'<div class="calc-footer">IFCA \u00b7 Impact Fitness Coaching Academy \u00b7 impactcoachacademy.com</div>';
 }
 
-// ─── STATE ──────────────────────────────────────────────
-let mode='quick', coaching=false;
-function applyClasses(){
-  document.body.classList.toggle('sop-mode', mode==='sop');
-  document.body.classList.toggle('notes-on', coaching);
-}
-function setMode(m){
-  mode=m;
-  document.querySelectorAll('.tab-btn').forEach((btn,i)=>btn.classList.toggle('active',(i===0&&m==='quick')||(i===1&&m==='sop')));
-  if(m==='quick'){coaching=false;document.getElementById('coach-btn').classList.remove('on');}
-  applyClasses();
-}
-function toggleCoaching(){
-  if(mode==='quick'){setMode('sop');return;}
-  coaching=!coaching;
-  document.getElementById('coach-btn').classList.toggle('on',coaching);
-  applyClasses();
-}
-function jumpTo(id){
-  const el=document.getElementById(`phase-${id}`);
-  if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  const an=document.getElementById(`nav-${id}`);
-  if(an){an.classList.add('active');}
-}
+let mode='quick',coaching=false;
+function applyClasses(){document.body.classList.toggle('sop-mode',mode==='sop');document.body.classList.toggle('notes-on',coaching);}
+function setMode(m){mode=m;document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',(i===0&&m==='quick')||(i===1&&m==='sop')));if(m==='quick'){coaching=false;document.getElementById('coach-btn').classList.remove('on');}applyClasses();}
+function toggleCoaching(){if(mode==='quick'){setMode('sop');return;}coaching=!coaching;document.getElementById('coach-btn').classList.toggle('on',coaching);applyClasses();}
+function jumpTo(id){const el=document.getElementById(`phase-${id}`);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));const an=document.getElementById(`nav-${id}`);if(an)an.classList.add('active');}
+function jumpToGuide(){const el=document.getElementById('phase-guide');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.getElementById('nav-guide').classList.add('active');}
 document.addEventListener('DOMContentLoaded',()=>{
   const content=document.getElementById('content');
   content.addEventListener('scroll',()=>{
     let active=0;
     PHASES.forEach(p=>{const el=document.getElementById(`phase-${p.id}`);if(el&&el.offsetTop-40<=content.scrollTop)active=p.id;});
+    const ge=document.getElementById('phase-guide');
+    if(ge&&ge.offsetTop-40<=content.scrollTop){document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.getElementById('nav-guide').classList.add('active');return;}
     document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
     const an=document.getElementById(`nav-${active}`);
     if(an){an.classList.add('active');an.scrollIntoView({block:'nearest'});}
   });
 });
-renderNav();
-renderContent();
-document.getElementById('nav-0').classList.add('active');
+renderNav();renderContent();initPMs();document.getElementById('nav-0').classList.add('active');
 </script>
 </body>
 </html>
